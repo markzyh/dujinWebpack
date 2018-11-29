@@ -16,9 +16,7 @@
             <swiper-slide class="slider1">
               <span></span>
             </swiper-slide>
-            <swiper-slide ref="swiper-no-swiping" class="swiper-no-swiping slider2">
-
-            </swiper-slide>
+            <swiper-slide ref="swiper-no-swiping" class="swiper-no-swiping slider2"></swiper-slide>
             <!-- 无法滑动 -->
             <!-- Optional controls -->
             <!--  <div class="swiper-pagination" slot="pagination"></div> -->
@@ -65,6 +63,25 @@ export default {
         // ...
         //virtualTranslate: true, //不显示滑动效果
         noSwiping: true, //禁止滑动,没用
+        freeMode: true,
+        freeModeMomentumBounceRatio: 1,
+        watchSlidesProgress: true,
+        on: {
+          progress: function(progress) {
+            //console.log(this.progress)
+            if (this.progress == 1) {
+              console.log(0);
+            }
+            /*  $("#SwiperP").html(this.progress);
+            $("#Slide1P").html(this.slides[0].progress);
+            $("#Slide2P").html(this.slides[1].progress);
+            $("#Slide3P").html(this.slides[2].progress);
+            $("#Slide4P").html(this.slides[3].progress);
+            $("#Slide5P").html(this.slides[4].progress);
+            $("#Slide6P").html(this.slides[5].progress); */
+            //alert(0)
+          }
+        },
         pagination: {
           el: ".swiper-pagination",
           type: "progressbar"
@@ -96,15 +113,14 @@ export default {
       display: inline-block;
       width: 40px;
       height: 40px;
-      border:1px;
+      border: 1px;
       background: #fff;
     }
   }
-  .slider2{
+  .slider2 {
     background: #19be6b !important;
     text-align: right;
-    span{
-      
+    span {
     }
   }
 }
