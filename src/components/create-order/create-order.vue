@@ -1,5 +1,5 @@
 <template>
-  <div class="create-order">嘻嘻嘻</div>
+  <div class="create-order"></div>
 </template>
 
 <script>
@@ -15,8 +15,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-.htHeader {
-  display: none;
-}
+
 </style>
 

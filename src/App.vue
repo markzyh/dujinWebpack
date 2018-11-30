@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-   <!--  <slider-verification :isShowLoginForm="isShowLoginForm" @hideLoginForm="hideLoginForm"></slider-verification> -->
-    <login-register :isShowLoginForm="isShowLoginForm" @hideLoginForm="hideLoginForm"/> 
+    <!--  <slider-verification :isShowLoginForm="isShowLoginForm" @hideLoginForm="hideLoginForm"></slider-verification> -->
+    <login-register
+      :isShowLoginForm="isShowLoginForm"
+      @hideLoginForm="hideLoginForm"
+      @getUsername="getUsername"
+    />
     <div class="htHeader">
       <div class="htHeader_con">
         <div class="ht_logo fl">
@@ -22,13 +26,13 @@
           </li>
         </div>
         <div class="ht_person fr">
-          <div class="user_is_login">
+          <div class="user_is_login" v-if="isLogin">
             <img src="@/images/ht_yh_icon.png" alt>
-            <span class="user_login_name">倒影年华</span> &nbsp;&nbsp; |
+            <span class="user_login_name">{{watchUserName}}</span> &nbsp;&nbsp; |
             &nbsp;&nbsp;
-            <span >退出</span>
+            <span @click="loginOut">退出</span>
           </div>
-          <div class="user_isnot_login show" @click="openUserLogin">注册/登录</div>
+          <div class="user_isnot_login show" @click="openUserLogin" v-if="!isLogin">注册/登录</div>
         </div>
       </div>
     </div>
@@ -39,8 +43,8 @@
 </template>
 
 <script>
-import SliderVerification from "@/base/slider-verification/slider-verification"
-import LoginRegister from "@/components/login-register/login-register"
+import SliderVerification from "@/base/slider-verification/slider-verification";
+import LoginRegister from "@/components/login-register/login-register";
 //import Index from "@/components/index/index.html";
 export default {
   components: {
@@ -50,17 +54,49 @@ export default {
   name: "App",
   data() {
     return {
-      isShowLoginForm:true
+      isShowLoginForm: false,
+      userName: "", //用户名
+      isLogin: false //是否登录
     };
   },
   methods: {
+    //用户手动退出登录
+    loginOut() {
+      this.deleteCookie("userName", '', -1);
+      this.deleteCookie("userPhone", '', -1);
+      this.deleteCookie("token", '', -1);
+      this.deleteCookie("douyinId", '', -1);
+      this.isLogin = false;
+      alert('您已经退出登录')
+      //this.deleteCookie();
+    },
+    //获取用户名
+    getUsername() {
+      if (this.getCookie("userName") != "") {
+        this.userName = this.getCookie("userName");
+        this.isLogin = true;
+      } else {
+        this.isLogin = false;
+      }
+
+      console.log("name");
+    },
     //打开登录窗口,控制子组件显示隐藏
     openUserLogin() {
       this.isShowLoginForm = true;
     },
+
     hideLoginForm() {
       this.isShowLoginForm = false;
     }
+  },
+  computed: {
+    watchUserName() {
+      return this.userName;
+    }
+  },
+  mounted() {
+    this.getUsername();
   }
 };
 </script>
@@ -170,6 +206,9 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+li {
+  list-style: none;
+}
 /* 重置 hr*/
 hr {
   border: none;
@@ -226,11 +265,11 @@ html {
   overflow: hidden;
 }
 
-.flied_td .flied_te img {
+/* .flied_td .flied_te img {
   vertical-align: middle;
   margin-left: 18px;
   margin-right: 18px;
-}
+} */
 
 .flied_td .flied_te input {
   border: none;
@@ -355,13 +394,12 @@ input.flied_tj {
 }
 
 .ht_person div {
-  display: none;
   cursor: pointer;
 }
-
+/* 
 .ht_person div.show {
   display: block;
-}
+} */
 
 .ht_person img {
   margin-bottom: -12px;
