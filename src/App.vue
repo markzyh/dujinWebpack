@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <slider-verification :isShowLoginForm="isShowLoginForm" @hideLoginForm="hideLoginForm"></slider-verification>
+   <!--  <slider-verification :isShowLoginForm="isShowLoginForm" @hideLoginForm="hideLoginForm"></slider-verification> -->
+    <login-register :isShowLoginForm="isShowLoginForm" @hideLoginForm="hideLoginForm"/> 
     <div class="htHeader">
       <div class="htHeader_con">
         <div class="ht_logo fl">
@@ -38,10 +39,13 @@
 </template>
 
 <script>
-import SliderVerification from "@/base/slider-verification/slider-verification";
+import SliderVerification from "@/base/slider-verification/slider-verification"
+import LoginRegister from "@/components/login-register/login-register"
+//import Index from "@/components/index/index.html";
 export default {
   components: {
-    SliderVerification
+    SliderVerification,
+    LoginRegister
   },
   name: "App",
   data() {
