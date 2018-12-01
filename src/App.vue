@@ -13,16 +13,19 @@
         </div>
         <div class="ht_nav fl">
           <li>
-            <a href>首页</a>
+            <a href="personal_center.html">首页</a>
           </li>
           <li>
-            <a href>抖音运营</a>
+            <a href="http://www.dujin021.com/douyin">抖音运营</a>
           </li>
           <li>
-            <a href>DOU+加速</a>
+            <a href="/">DOU+加速</a>
           </li>
           <li>
-            <a href>关于我们</a>
+            <a href="http://www.dujin021.com/about">关于我们</a>
+          </li>
+          <li>
+            <a href="http://www.dujin021.com/contact/1.html">常见问题</a>
           </li>
         </div>
         <div class="ht_person fr">
@@ -37,6 +40,7 @@
       </div>
     </div>
     <div class="dybox" id="dybox">
+      <nav-bar></nav-bar>
       <router-view></router-view>
     </div>
   </div>
@@ -45,11 +49,13 @@
 <script>
 import SliderVerification from "@/base/slider-verification/slider-verification";
 import LoginRegister from "@/components/login-register/login-register";
+import NavBar from "@/components/navbar/navbar";
 //import Index from "@/components/index/index.html";
 export default {
   components: {
     SliderVerification,
-    LoginRegister
+    LoginRegister,
+    NavBar
   },
   name: "App",
   data() {
@@ -62,12 +68,12 @@ export default {
   methods: {
     //用户手动退出登录
     loginOut() {
-      this.deleteCookie("userName", '', -1);
-      this.deleteCookie("userPhone", '', -1);
-      this.deleteCookie("token", '', -1);
-      this.deleteCookie("douyinId", '', -1);
+      this.deleteCookie("userName", "", -1);
+      this.deleteCookie("userPhone", "", -1);
+      this.deleteCookie("token", "", -1);
+      this.deleteCookie("douyinId", "", -1);
       this.isLogin = false;
-      alert('您已经退出登录')
+      alert("您已经退出登录");
       //this.deleteCookie();
     },
     //获取用户名

@@ -11,7 +11,13 @@ export default new Router({
     {
       path: '/',
       name: 'CreateOrder',
+      redirect: '/create-order',
       component: CreateOrder
-    }
+    },
+    {
+      path: '/create-order',
+      name: 'CreateOrder',
+      component: CreateOrder
+    },
   ]
 })
