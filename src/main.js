@@ -90,7 +90,15 @@ Vue.prototype.btnSeconds = function () {
     }
   }, 1000)
 }
-
+//限制浏览
+Vue.prototype.limit = function () {
+  if (this.checkCookie() == false) {
+    alert("登录状态已过期,请您重新登录");
+    this.$router.push({
+      path: "/"
+    });
+  }
+}
 
 
 Vue.config.productionTip = false

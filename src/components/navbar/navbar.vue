@@ -39,7 +39,7 @@ export default {
         },
         {
           name: "个人资料",
-          //path: '/'
+          path: '/personal-data'
         },
         {
           name: "资料编辑",
@@ -58,6 +58,7 @@ export default {
         },
         {
           name: "增值服务",
+          path: "/company-auth",
           
         },
         {
@@ -67,17 +68,17 @@ export default {
         },
         {
           name: "商品分享功能",
-          path: false,
+          path: '/',
           isChild: true
         },
         {
           name: "直播权限",
-          path: false,
+          path: '/',
           isChild: true
         },
         {
           name: "60秒权限",
-          path: false,
+          path: '/',
           isChild: true
         },
         {
@@ -127,26 +128,6 @@ export default {
   cursor: pointer;
 }
 
-.ht_content_ul > li.selected {
-  color: #eb5169 !important;
-  background: #f0f0f0;
-  border-left: 2px solid #eb5169;
-}
-.ht_content_ul > li.selected a {
-  color: #eb5169 !important;
-}
-.ht_content_ul > li.official i {
-  background: url(/images/djback_consumption.png) no-repeat;
-}
-.ht_content_ul > li .show_problem i {
-  background: url(/images/djback_problems.png) no-repeat;
-}
-.ht_content_ul > li.official.selected i {
-  background: url(/images/djback_consumption_hover.png) no-repeat;
-}
-.ht_content_ul > li.show_problem_li.selected i {
-  background: url(/images/djback_problems_hover.png) no-repeat;
-}
 
 .ht_content_ul > li i {
   display: inline-block;
@@ -157,45 +138,76 @@ export default {
 }
 
 .ht_content_ul > li:nth-child(1) i {
-  background: url(/images/ht_list01.png) no-repeat;
+  background: url(../../assets/ht_list01.png) no-repeat;
 }
 
 .ht_content_ul > li:nth-child(2) i {
-  background: url(/images/dy-putin-icon.png) no-repeat;
+  background: url(../../assets/dy-putin-icon.png) no-repeat;
 }
 
 .ht_content_ul > li:nth-child(3) i {
-  background: url(/images/ht_list02.png) no-repeat;
+  background: url(../../assets/ht_list02.png) no-repeat;
 }
 
 .ht_content_ul > li:nth-child(4) i {
-  background: url(/images/ht_list03.png) no-repeat;
+  background: url(../../assets/ht_list03.png) no-repeat;
 }
 
 .ht_content_ul > li:nth-child(5) i {
-  background: url(/images/ht_list04.png) no-repeat;
+  background: url(../../assets/ht_list04.png) no-repeat;
 }
 
 .ht_content_ul > li.selected:nth-child(1) i {
-  background: url(/images/ht_hover01.png) no-repeat;
+  background: url(../../assets/ht_hover01.png) no-repeat;
 }
 
 .ht_content_ul > li.selected:nth-child(2) i {
-  background: url(/images/dy-putin-icon-hover.png) no-repeat;
+  background: url(../../assets/dy-putin-icon-hover.png) no-repeat;
 }
 
 .ht_content_ul > li.selected:nth-child(3) i {
-  background: url(/images/ht_hover02.png) no-repeat;
+  background: url(../../assets/ht_hover02.png) no-repeat;
 }
 
 .ht_content_ul > li.selected:nth-child(4) i {
-  background: url(/images/ht_hover03.png) no-repeat;
+  background: url(../../assets/ht_hover03.png) no-repeat;
 }
 
 .ht_content_ul > li.selected:nth-child(5) i {
-  background: url(/images/ht_hover04.png) no-repeat;
+ /*  background: url(../../assets/ht_hover04.png) no-repeat; */
+}
+.ht_content_ul > li.selected:nth-child(5){
+color: #333333 !important;
+  background: none;
+  border:none;
 }
 
+
+.ht_content_ul > li.selected {
+  color: #eb5169 !important;
+  background: #f0f0f0;
+  border-left: 2px solid #eb5169;
+}
+.ht_content_ul > li.selected a {
+  color: #eb5169 !important;
+}
+.ht_content_ul > li:nth-child(9) i {
+  background: url(../../assets/djback_consumption.png) no-repeat;
+}
+.ht_content_ul > li:last-child i {
+  background: url(../../assets/djback_problems.png) no-repeat;
+}
+.ht_content_ul > li:nth-child(9).selected i {
+  /* background: url(../../assets/djback_consumption_hover.png) no-repeat; */
+}
+.ht_content_ul > li:nth-child(9).selected{
+  color: #333333 !important;
+  background: none;
+  border:none;
+}
+.ht_content_ul > li:last-child.selected i {
+  background: url(../../assets/djback_problems_hover.png) no-repeat;
+}
 /*.ht_content_ul > li:nth-child(6) a, .ht_content_ul > li:nth-child(7) a, .ht_content_ul > li:nth-child(8) a, .ht_content_ul > li:nth-child(9) a{ font-size: 16px; color: #999999; }*/
 .ht_content_ul li.child {
   font-size: 16px;
@@ -209,19 +221,19 @@ export default {
 }
 
 .ht_content_ul > li:nth-child(1).on i {
-  background: url(/images/ht_hover01.png) no-repeat;
+  background: url(../../assets/ht_hover01.png) no-repeat;
 }
 
 .ht_content_ul > li:nth-child(2).on i {
-  background: url(/images/ht_hover02.png) no-repeat;
+  background: url(../../assets/ht_hover02.png) no-repeat;
 }
 
 .ht_content_ul > li:nth-child(3).on i {
-  background: url(/images/ht_hover03.png) no-repeat;
+  background: url(../../assets/ht_hover03.png) no-repeat;
 }
 
 .ht_content_ul > li:nth-child(4).on i {
-  background: url(/images/ht_list04.png) no-repeat;
+  background: url(../../assets/ht_list04.png) no-repeat;
 }
 </style>
 

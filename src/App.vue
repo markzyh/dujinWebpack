@@ -9,7 +9,7 @@
     <div class="htHeader">
       <div class="htHeader_con">
         <div class="ht_logo fl">
-          <img src="@/images/ht_logo.png" alt>
+          <img src="./assets/ht_logo.png" alt>
         </div>
         <div class="ht_nav fl">
           <li>
@@ -30,7 +30,7 @@
         </div>
         <div class="ht_person fr">
           <div class="user_is_login" v-if="isLogin">
-            <img src="@/images/ht_yh_icon.png" alt>
+            <img src="./assets/ht_yh_icon.png" alt>
             <span class="user_login_name">{{watchUserName}}</span> &nbsp;&nbsp; |
             &nbsp;&nbsp;
             <span @click="loginOut">退出</span>
@@ -41,7 +41,9 @@
     </div>
     <div class="dybox" id="dybox">
       <nav-bar></nav-bar>
-      <router-view></router-view>
+      <div class="dy-content create_box">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -280,7 +282,7 @@ html {
 .flied_td .flied_te input {
   border: none;
   background-color: transparent;
-  background-image: url(images/ion_yzma.png);
+  background-image: url(assets/ion_yzma.png);
   background-repeat: no-repeat;
   text-indent: 2em;
   color: #999;
@@ -467,4 +469,6 @@ input[type="radio"] {
   height: 100%;
   opacity: 0.5;
 }
+.create_title { font-size: 20px; font-weight: normal; text-align: left; margin: 0 auto; border-bottom: 1px solid #868686; padding-bottom: 20px; }
+
 </style>
