@@ -133,22 +133,26 @@ export default {
         let Password = this.registerPassword;
         let Code = this.phoneCheckCode;
         axios
-          .post("account/register", {
-            Phone: Phone,
-            Password: Password,
-            Code: Code
-          },{
-          headers:{
-            'content-type': 'application/x-www-form-urlencoded'
-          }
-        })
+          .post(
+            "account/register",
+            {
+              Phone: Phone,
+              Password: Password,
+              Code: Code
+            },
+            {
+              headers: {
+                "content-type": "application/x-www-form-urlencoded"
+              }
+            }
+          )
           .then(res => {
             console.res;
             if (res.data.Code == 13) {
               alert("该手机号已经注册");
               return false;
-            }else{
-              alert('注册成功')
+            } else {
+              alert("注册成功");
             }
           });
       }
@@ -179,19 +183,23 @@ export default {
         let registerPhone = this.registerPhone; //注册的手机号
         let url = "/account/GetSmsCode/" + registerPhone;
         axios
-          .post(url, {
-            Key: Key,
-            Data: Data
-          },{
-          headers:{
-            'content-type': 'application/x-www-form-urlencoded'
-          }
-        })
+          .post(
+            url,
+            {
+              Key: Key,
+              Data: Data
+            },
+            {
+              headers: {
+                "content-type": "application/x-www-form-urlencoded"
+              }
+            }
+          )
           .then(res => {
             console.log(res);
-            if(res.data.Code == 1){
-              alert('验证码错误,请重新输入')
-              return false
+            if (res.data.Code == 1) {
+              alert("验证码错误,请重新输入");
+              return false;
             }
           });
       }
@@ -246,19 +254,25 @@ export default {
         let Phone = this.userLoginPhone;
         let Password = this.userLoginPassword;
         axios
-          .post("/account/login", {
-            Phone: Phone,
-            Password: Password
-          },{
-          headers:{
-            'content-type': 'application/x-www-form-urlencoded'
-          }
-        })
+          .post(
+            "/account/login",
+            {
+              Phone: Phone,
+              Password: Password
+            },
+            {
+              headers: {
+                "content-type": "application/x-www-form-urlencoded"
+              }
+            }
+          )
           .then(res => {
             if (res.data.Code == 1) {
               alert("账号或者密码错误,请您重新输入");
               return false;
             }
+            this.$store.dispatch("loginAction", true); //vuex存储登录的状态
+            //console.log(this.$store.getters.getLoginStatus);
             console.log(res.data);
             //this.userName = res.data.Data.Name;
             let userName = res.data.Data.Name;

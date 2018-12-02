@@ -97,6 +97,9 @@ export default {
   computed: {
     watchUserName() {
       return this.userName;
+    },
+    watchLoginStatus(){
+        return this.$store.getters.getLoginStatus//监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
     }
   },
   mounted() {
