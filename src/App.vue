@@ -40,8 +40,8 @@
       </div>
     </div>
     <div class="dybox" id="dybox">
-      <nav-bar></nav-bar>
-      <div class="dy-content create_box">
+      <nav-bar v-if="$route.path != '/order-details'"></nav-bar>
+      <div class=" create_box" :class="{dy_content:$route.path != '/order-details'}">
         <router-view></router-view>
       </div>
     </div>
@@ -70,10 +70,7 @@ export default {
   methods: {
     //用户手动退出登录
     loginOut() {
-      this.deleteCookie("userName", "", -1);
-      this.deleteCookie("userPhone", "", -1);
-      this.deleteCookie("token", "", -1);
-      this.deleteCookie("douyinId", "", -1);
+      this.globalLoginOut()
       this.isLogin = false;
       alert("您已经退出登录");
       //this.deleteCookie();
@@ -450,7 +447,7 @@ input[type="radio"] {
   width: 218px;
 }
 
-.dy-content {
+.dy_content {
   width: 1034px;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -470,5 +467,14 @@ input[type="radio"] {
   opacity: 0.5;
 }
 .create_title { font-size: 20px; font-weight: normal; text-align: left; margin: 0 auto; border-bottom: 1px solid #868686; padding-bottom: 20px; }
+.create_order_tips { position: relative; display: inline-block; width: 19px; text-indent: 0; }
 
+.order_tips_description { position: absolute; width: 270px; height: auto; border: 1px solid #ccc; padding: 20px; background: #fff; left: 50%; margin-left: -135px; top: 36px; line-height: 1.65em; color: #999; box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; display: none; z-index: 2222;text-align: left;}
+.order_tips_description b { text-indent: 0; display: block; text-align: center; width: 100%; font-weight: normal; color: #666; margin-bottom: 10px; font-size: 16px}
+.order_tips_description strong{font-size: 16px;color: #333;font-weight: normal;}
+.order_tips_description_tri { width: 21px; height: 11px; position: absolute; top: -11px; left: 50%; margin-left: -10px; z-index: 3; }
+
+.order_tips_icon { cursor: pointer; margin-bottom: -3px; }
+
+.create_order_tips:hover .order_tips_description { display: block; }
 </style>

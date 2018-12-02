@@ -583,9 +583,13 @@ export default {
             Serving: _this.increNumber, //播放量暂时没做
             Money: payNumber, //投放金额
             Token: token //token值
+          },{
+          headers:{
+            'content-type': 'application/x-www-form-urlencoded'
           }
+        }
         )
-        .then(function(res) {
+        .then((res) =>{
           if (res.data.Code == 11) {
             //alert('登录状态已过期,请重新登录')
             userLoginOut(); //退出登录
@@ -593,12 +597,13 @@ export default {
             console.log(res);
             console.log("put in is done");
             _this.isPaySuccess = true;
-            var interval = setInterval(function() {
+            var interval = setInterval(()=> {
               //倒计时
               _this.successCountDownNumber--;
               if (_this.successCountDownNumber == 0) {
                 clearInterval(interval);
-                this.$route.push({path: "/order-center"})
+                console.log(this)
+                this.$router.push({path: "/order-center"})
                 //window.location.href = "/order_center.html";
                 //alert('订单完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
               }

@@ -79,6 +79,10 @@ export default {
       axios
         .post("/account/GetUserInfo", {
           Token: token
+        },{
+          headers:{
+            'content-type': 'application/x-www-form-urlencoded'
+          }
         })
         .then(function(res) {
           if (res.data.Code == 11) {

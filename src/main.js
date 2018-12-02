@@ -5,10 +5,11 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 Vue.prototype.axios = axios
+
 axios.defaults.baseURL = 'http://dou.fudayiliao.com'
-axios.defaults.headers = {
+/* axios.defaults.headers = {
   'content-type': 'application/x-www-form-urlencoded'
-}
+} */
 //设置cookie
 Vue.prototype.setCookie = function (cname, cvalue, exdays) {
   var d = new Date()
@@ -99,8 +100,36 @@ Vue.prototype.limit = function () {
     });
   }
 }
+//退出登录,,删除用户信息 
+Vue.prototype.globalLoginOut = function () {
+  this.deleteCookie("userName", "", -1);
+  this.deleteCookie("userPhone", "", -1);
+  this.deleteCookie("token", "", -1);
+  this.deleteCookie("douyinId", "", -1);
+}
+//把时间戳转换为中文时间
+Vue.prototype.transformDateStamp = function (param) {
+  var date = new Date(parseInt(param.substr(6, 19)))
+  var timeYear = new Date(date).getFullYear();
+  var timeMouth = new Date(date).getMonth() + 1;
+  var timeDate = new Date(date).getDate();
+  var timeHours = new Date(date).getHours();
+  var timeMinutes = new Date(date).getMinutes();
+  var timeSeconds = new Date(date).getSeconds();
+  var time = this.checkTen(timeYear) + "-" + this.checkTen(timeMouth) + "-" + this.checkTen(timeDate) + "   " + this.checkTen(timeHours) + ":" + this.checkTen(timeMinutes) + ":" + this.checkTen(timeSeconds)
+  return time
+}
+Vue.prototype.checkTen = function (num) {
+  if (num < 10) {
+    num = "0" + num
+  }
+  return num
+}
 
-
+router.beforeEach((to, from, next) => {
+  window.document.title = to.meta.title;
+  next()
+})
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

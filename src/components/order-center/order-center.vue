@@ -58,7 +58,7 @@
               <!-- <td @click="searchOrderNumber(item.OrderNumber)" class="order_detais_link">
                 <a href="order_details.html">{{item.OrderNumber}}</a>
               </td> -->
-              <router-link to="/order-details" tag="td" @click.native="searchOrderNumber(item.OrderNumber)"><a>{{item.OrderNumber}}</a></router-link>
+              <router-link :to="{path:'/order-details',query:{orderNumber:item.OrderNumber}}" tag="td"><a>{{item.OrderNumber}}</a></router-link>
               <td>{{transformDateStamp(item.CreateDateTime)}}</td>
               <!-- <td>{{test(item.CreateDateTime)}}</td> -->
               <td>{{item.Money}}</td>
@@ -189,7 +189,7 @@ export default {
           console.log(_this.startDateVal);
         });
     }, */
-    endDatePicker: function() {
+   /*  endDatePicker: function() {
       //-_-!!!!!万不得已,用基于dom的插件了
       var _this = this;
       $(".end_date")
@@ -221,7 +221,7 @@ export default {
             return false;
           }
         });
-    },
+    }, */
     closeProblems: function() {
       this.isShowProblems = false;
     },
@@ -251,7 +251,7 @@ export default {
     //点击查询订单,把订单号写入cookie
     searchOrderNumber: function(orderNumber) {
       //把orderNumber写入localStorage
-      this.setCookie('orderNumber',orderNumber,1)
+      //this.setCookie('orderNumber',orderNumber,1)
       console.log(this.getCookie('orderNumber'))
       //localStorage.orderNumber = orderNumber;
       //alert(localStorage.orderNumber)
@@ -269,10 +269,14 @@ export default {
           Start: start,
           End: end,
           DateType: dateType
+        },{
+          headers:{
+            'content-type': 'application/x-www-form-urlencoded'
+          }
         })
         .then(res => {
           if (res.data.Code == 11) {
-            //alert('登录状态已过期,请重新登录')
+            alert('登录状态已过期,请重新登录')
             this.limit(); //退出登录
           }
           console.log(res);

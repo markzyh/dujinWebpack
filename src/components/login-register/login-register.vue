@@ -137,7 +137,11 @@ export default {
             Phone: Phone,
             Password: Password,
             Code: Code
-          })
+          },{
+          headers:{
+            'content-type': 'application/x-www-form-urlencoded'
+          }
+        })
           .then(res => {
             console.res;
             if (res.data.Code == 13) {
@@ -178,7 +182,11 @@ export default {
           .post(url, {
             Key: Key,
             Data: Data
-          })
+          },{
+          headers:{
+            'content-type': 'application/x-www-form-urlencoded'
+          }
+        })
           .then(res => {
             console.log(res);
             if(res.data.Code == 1){
@@ -241,7 +249,11 @@ export default {
           .post("/account/login", {
             Phone: Phone,
             Password: Password
-          })
+          },{
+          headers:{
+            'content-type': 'application/x-www-form-urlencoded'
+          }
+        })
           .then(res => {
             if (res.data.Code == 1) {
               alert("账号或者密码错误,请您重新输入");
