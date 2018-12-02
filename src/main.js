@@ -36,7 +36,7 @@ Vue.prototype.getCookie = function (cname) {
 }
 //检测cookie
 Vue.prototype.checkCookie = function (cname) {
-  var user = this.getCookie('userName');
+  var user = this.getCookie(cname);
   if (user != "") {
     return true
   } else {
@@ -125,9 +125,9 @@ Vue.prototype.checkTen = function (num) {
   }
   return num
 }
-
+//router-link改title
 router.beforeEach((to, from, next) => {
-  window.document.title = to.meta.title;
+  window.document.title = to.meta.title + "-上海度进信息科技有限公司";
   next()
 })
 Vue.config.productionTip = false

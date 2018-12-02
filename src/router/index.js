@@ -9,6 +9,8 @@ import Consumption from '@/components/consumption/consumption'
 import PersonalData from '@/components/personal-data/personal-data'
 import ChangePhone from '@/components/change-phone/change-phone'
 import ChangePassword from '@/components/change-password/change-password'
+import CompanyAuth from '@/components/company-auth/company-auth'
+import CommonProblem from '@/components/common-problem/common-problem'
 
 Vue.use(Router)
 
@@ -91,6 +93,22 @@ export default new Router({
       },
       name:'ChangePassword',
       component:ChangePassword
+    },
+    {
+      path:'/company-auth',
+      meta:{
+        title:'企业认证'
+      },
+      name:'CompanyAuth',
+      component:CompanyAuth
+    },
+    {
+      path:'/common-problem',
+      meta:{
+        title:'常见问题'
+      },
+      name:'CommonProblem',
+      component:CommonProblem
     }
   ]
 })

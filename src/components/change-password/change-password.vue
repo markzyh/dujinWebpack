@@ -58,6 +58,7 @@ import axios from 'axios'
 export default {
   data() {
     return {
+      props:['testparam'],
       userCellphoneNumber: "",
       checkCode: "", //图形验证码
       oldPassword: "",
@@ -105,6 +106,10 @@ export default {
               alert("您的原密码输入有误,请您重新输入");
               return false
             }
+            if(res.data.Code == 11){
+              alert('登录状态失效,请您重新登录')
+              return false
+            }
             alert('修改密码成功,请您重新登录')
           });
       }
@@ -125,6 +130,9 @@ export default {
         this.douyinNumberVal = "请输入您要投放的抖音号";
       }
     }
+  },
+  mounted(){
+    console.log(this.testparam)
   }
 };
 </script>

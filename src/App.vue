@@ -77,14 +77,13 @@ export default {
     },
     //获取用户名
     getUsername() {
-      if (this.getCookie("userName") != "") {
+      if (this.checkCookie('userName') == true ) {
         this.userName = this.getCookie("userName");
         this.isLogin = true;
       } else {
         this.isLogin = false;
+        alert('登录信息已过期,请您重新登录')
       }
-
-      console.log("name");
     },
     //打开登录窗口,控制子组件显示隐藏
     openUserLogin() {
