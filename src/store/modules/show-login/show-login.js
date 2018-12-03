@@ -1,18 +1,18 @@
 const getters = {
-  getLoginStatus(state) {
+  getshowLoginForm(state) {
     return state.isLogin
-  },
+  }
 }
 const actions = {
-  loginAction(state, status) {
-    state.commit('login', status)
+
+  showLoginFormAction(state, status) {
+    state.commit('showLoginForm', status)
   },
 }
 const mutations = {
-  login(state, status) {
+  showLoginForm(state, status) {
     state.isLogin = status
   },
-
 }
 const state = {
   isLogin: false

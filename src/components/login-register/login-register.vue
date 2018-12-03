@@ -2,7 +2,7 @@
   <div class="login-register">
     <!-- 登录注册模块 -->
     <transition name="show">
-      <div class="flied_tc" :class="{show:isShowLoginForm == true}" v-if="isShowLoginForm">
+      <div class="flied_tc" :class="{show:watchShowLoginForm}" v-if="watchShowLoginForm">
         <div class="close_login_form" @click="hideLoginForm">x</div>
         <div class="flied_td">
           <h4 class="login_title">
@@ -284,7 +284,7 @@ export default {
             this.setCookie("userPhone", userPhone, 1);
             this.setCookie("token", token, 1);
             this.setCookie("douyinId", douyinId, 1);
-            this.$dispatch('loginAction',true)
+            //this.$dispatch('loginAction',true)
             //this.getUserName()
             this.hideLoginForm(); //父组件事件,隐藏窗口
             this.emitGetUsername(); //触发父组件获取用户名
@@ -306,16 +306,35 @@ export default {
     },
     //隐藏登录窗口,给父组件传值
     hideLoginForm() {
-      this.$emit("hideLoginForm");
+      //this.$emit("hideLoginForm");
+      this.$store.dispatch("showLoginFormAction", false);
+    },
+    chekIsLogin() {
+      if (this.checkCookie("userName") != false) {
+        //cookie中存在
+        this.$store.dispatch("showLoginFormAction", false);
+        this.$store.dispatch("loginAction", true);
+      } else {
+        this.$store.dispatch("loginAction", false);
+        this.$store.dispatch("showLoginFormAction", true);
+
+      }
     }
   },
   computed: {
     watchUserName() {
       return this.userName;
+    },
+    watchLoginStatus() {
+      return this.$store.getters.getLoginStatus; //监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
+    },
+    watchShowLoginForm() {
+      return this.$store.getters.getshowLoginForm; //监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
     }
   },
   mounted() {
     this.getImgCode();
+    this.chekIsLogin();
   }
 };
 </script>

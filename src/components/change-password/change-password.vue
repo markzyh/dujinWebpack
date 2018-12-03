@@ -100,7 +100,7 @@ export default {
               }
             }
           )
-          .then(function(res) {
+          .then((res) =>{
             console.log(res);
             if (res.data.Code == 14) {
               alert("您的原密码输入有误,请您重新输入");
@@ -112,7 +112,9 @@ export default {
             }
             alert('修改密码成功,请您重新登录')
             this.globalLoginOut();//清除cookie
-            this.$dispatch('loginAction',false)
+            this.$store.dispatch('loginAction',false)
+            this.$store.dispatch('showLoginFormAction',true)
+            console.log(this.$store.getters.getshowLoginForm)
           });
       }
     },

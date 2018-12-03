@@ -100,6 +100,8 @@ export default {
 						alert('您修改的手机号与原手机号一致,请您输入新的手机号')
 					}
 					console.log(res)
+					this.$store.dispatch('loginAction',false)
+          this.$store.dispatch('showLoginFormAction',true)
 				})
 			}
 

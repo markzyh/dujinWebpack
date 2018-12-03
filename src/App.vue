@@ -29,13 +29,13 @@
           </li>
         </div>
         <div class="ht_person fr">
-          <div class="user_is_login" v-if="isLogin">
+          <div class="user_is_login" v-if="watchLoginStatus">
             <img src="./assets/ht_yh_icon.png" alt>
             <span class="user_login_name">{{watchUserName}}</span> &nbsp;&nbsp; |
             &nbsp;&nbsp;
             <span @click="loginOut">退出</span>
           </div>
-          <div class="user_isnot_login show" @click="openUserLogin" v-if="!isLogin">注册/登录</div>
+          <div class="user_isnot_login show" @click="openUserLogin" v-if="!watchLoginStatus">注册/登录</div>
         </div>
       </div>
     </div>
@@ -76,6 +76,8 @@ export default {
       this.globalLoginOut();
       this.isLogin = false;
       alert("您已经退出登录");
+      this.$store.dispatch("loginAction", false);
+      this.$store.dispatch("showLoginFormAction", true);
       //this.deleteCookie();
     },
     //获取用户名
@@ -92,17 +94,21 @@ export default {
     //打开登录窗口,控制子组件显示隐藏
     openUserLogin() {
       this.isShowLoginForm = true;
+      this.$store.dispatch('showLoginFormAction',true)
     },
 
     hideLoginForm() {
       this.isShowLoginForm = false;
     },
     chekIsLogin() {
-      if (this.checkCookie("userName") != fasle) {
+      if (this.checkCookie("userName") != false) {
         //cookie中存在
-        return true
+        this.$store.dispatch("loginAction", true);
+        //this.$store.dispatch("showLoginFormAction", true);
+        this.$store.dispatch("showLoginFormAction", false);
       } else {
-        return fasle;
+        this.$store.dispatch("loginAction", false);
+        //this.$store.dispatch("showLoginFormAction", false);
       }
     }
   },
@@ -110,14 +116,18 @@ export default {
     watchUserName() {
       return this.userName;
     },
+    //
     watchLoginStatus() {
       return this.$store.getters.getLoginStatus; //监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
+    },
+    watchShowLoginForm() {
+      return this.$store.getters.getshowLoginForm; //监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
     }
   },
   mounted() {
     this.getUsername();
     //this.$store.dispatch('decre',this.num)
-    chekIsLogin()
+    this.chekIsLogin();
   }
 };
 </script>
