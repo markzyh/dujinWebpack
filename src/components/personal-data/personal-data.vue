@@ -142,7 +142,7 @@
               <span>
                 <em>*</em>营业执照注册号 ：
               </span>
-              <input type="number" v-model="companyNumber" placeholder="请输入18位统一社会信用代码">
+              <input type="text" v-model="companyNumber" placeholder="请输入18位或者15位统一社会信用代码">
             </p>
             <div class="personal_auth_idcard dis-inline personal_auth_comlience">
               <span>
@@ -325,6 +325,10 @@ export default {
         alert("真实姓名为必填选项");
         return false;
       }
+       if(!/^[\u4E00-\u9FA5]{2,4}$/.test(realName)){
+        alert('请您填写正确的姓名')
+        return false
+      } 
       if (isUploadFace == false) {
         alert("个人身份证正面还未上传哦!");
         return false;
@@ -344,6 +348,14 @@ export default {
       if (companyName == "" || companyNumber == "") {
         alert("企业名称和营业执照注册号为必填选项!");
         return false;
+      }
+      /* if(!/^[\u4E00-\u9FA5]{2,20}$/.test(companyName)){
+        alert('请您填写正确的公司名称')
+        return false
+      }  */
+      if(!/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/.test(companyNumber)){
+        alert('请您填写正确的营业执照注册号,注册号为15位或18位')
+        return false
       }
       if (isUploadCompany == false) {
         alert("营业执照还未上传!");
@@ -481,7 +493,11 @@ dl.htlist_dla em {
 dl.htlist_dla dd:first-child label {
   letter-spacing: 4px;
 }
-
+.personal-data{
+  dl.htlist_dla input{
+    width: 295px;
+  }
+}
 dl.htlist_dla input {
   border: 1px solid #bbbbbb;
   border-radius: 4px;
@@ -505,10 +521,10 @@ dl.htlist_dla input.htlist_dlc {
 dl.htlist_dla dd:first-child {
   margin-top: 0px;
 }
-
+/* 
 dl.htlist_dla dd:last-child {
   margin-top: 44px;
-}
+} */
 
 dl.htlist_dla dd {
   margin-top: 28px;

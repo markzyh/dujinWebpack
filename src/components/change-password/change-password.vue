@@ -29,7 +29,7 @@
               placeholder="请输入新密码"
               v-model="userNewPassword"
             >
-            <img :src="checkCode" alt srcset>
+<!--             <img :src="checkCode" alt srcset> -->
           </dd>
           <dd>
             <span class="htlist_dld">
@@ -114,7 +114,7 @@ export default {
             this.globalLoginOut();//清除cookie
             this.$store.dispatch('loginAction',false)
             this.$store.dispatch('showLoginFormAction',true)
-            console.log(this.$store.getters.getshowLoginForm)
+            //console.log(this.$store.getters.getshowLoginForm)
           });
       }
     },
@@ -136,7 +136,7 @@ export default {
     }
   },
   mounted(){
-    console.log(this.testparam)
+    //console.log(this.testparam)
   }
 };
 </script>

@@ -241,10 +241,10 @@ export default {
           }
         )
         .then(res => {
-          if (res.data.Code == 11) {
+          /* if (res.data.Code == 11) {
             alert("登录状态已过期,请重新登录");
             this.limit(); //退出登录
-          }
+          } */
           console.log(res);
           this.orderList = res.data.Data;
         });

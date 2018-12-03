@@ -1,5 +1,5 @@
 <template>
-  <div class="personal-data">
+  <div class="personal-center">
     <h3 class="create_title">生成订单</h3>
     <div class="person_info">
       <img src="../../assets/grxx_icon.png" alt>
@@ -85,10 +85,10 @@ export default {
           }
         })
         .then(function(res) {
-          if (res.data.Code == 11) {
-            userLoginOut();
+          /* if (res.data.Code == 11) {
+            //userLoginOut();
             return false;
-          }
+          } */
           _this.userInfo = res.data.Data;
           _this.setUserInfo();
           _this.setOrderInfo();
@@ -116,7 +116,7 @@ export default {
     this.getUserInfo();
   },
   beforeCreate() {
-    this.limit()//全局
+    //this.limit()//全局
   }
 };
 </script>

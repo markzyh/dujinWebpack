@@ -30,8 +30,10 @@
         </div>
         <div class="ht_person fr">
           <div class="user_is_login" v-if="watchLoginStatus">
-            <img src="./assets/ht_yh_icon.png" alt>
-            <span class="user_login_name">{{watchUserName}}</span> &nbsp;&nbsp; |
+            <router-link to="/personal-center">
+              <img src="./assets/ht_yh_icon.png" alt>
+              <span class="user_login_name">{{watchUserName}}</span> &nbsp;&nbsp;
+            </router-link>|
             &nbsp;&nbsp;
             <span @click="loginOut">退出</span>
           </div>
@@ -94,7 +96,7 @@ export default {
     //打开登录窗口,控制子组件显示隐藏
     openUserLogin() {
       this.isShowLoginForm = true;
-      this.$store.dispatch('showLoginFormAction',true)
+      this.$store.dispatch("showLoginFormAction", true);
     },
 
     hideLoginForm() {
@@ -103,12 +105,13 @@ export default {
     chekIsLogin() {
       if (this.checkCookie("userName") != false) {
         //cookie中存在
+        this.userName = this.getCookie("userName");
         this.$store.dispatch("loginAction", true);
         //this.$store.dispatch("showLoginFormAction", true);
         this.$store.dispatch("showLoginFormAction", false);
       } else {
         this.$store.dispatch("loginAction", false);
-        //this.$store.dispatch("showLoginFormAction", false);
+        this.$store.dispatch("showLoginFormAction", true);
       }
     }
   },
@@ -116,23 +119,21 @@ export default {
     watchUserName() {
       return this.userName;
     },
-    //
+    //监听store,控制用户名显示隐藏
     watchLoginStatus() {
       return this.$store.getters.getLoginStatus; //监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
-    },
-    watchShowLoginForm() {
-      return this.$store.getters.getshowLoginForm; //监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
     }
   },
   mounted() {
-    this.getUsername();
+    //this.getUsername();
     //this.$store.dispatch('decre',this.num)
-    this.chekIsLogin();
+    this.chekIsLogin(); //检测cookie是否存在,改变store,通过监听store的变化,来改变页面显示
   }
 };
 </script>
 
-<style>
+<style lang="scss">
+
 /* 清除内外边距*/
 * {
   margin: 0px;
@@ -248,6 +249,25 @@ hr {
 /* 让非ie浏览器默认也显示垂直滚动条，防止因滚动条引起的闪烁*/
 html {
   overflow-y: scroll;
+}
+input::-webkit-input-placeholder {
+  color: #999;
+  font-size: 14px;
+}
+input::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #999;
+  font-size: 14px;
+}
+input:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #999;
+  font-size: 14px;
+}
+input:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #999;
+  font-size: 14px;
 }
 .mara {
   margin: auto;
@@ -422,10 +442,14 @@ input.flied_tj {
   color: #b7b7b7;
   line-height: 31px;
   margin-top: 25px;
+  a{
+    color:#999;
+  }
 }
 
 .ht_person div {
   cursor: pointer;
+  font-size: 16px;
 }
 /* 
 .ht_person div.show {

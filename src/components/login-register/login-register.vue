@@ -1,5 +1,6 @@
 <template>
   <div class="login-register">
+    <div class="login-register-cover" v-if="watchShowLoginForm"></div> 
     <!-- 登录注册模块 -->
     <transition name="show">
       <div class="flied_tc" :class="{show:watchShowLoginForm}" v-if="watchShowLoginForm">
@@ -325,9 +326,6 @@ export default {
     watchUserName() {
       return this.userName;
     },
-    watchLoginStatus() {
-      return this.$store.getters.getLoginStatus; //监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
-    },
     watchShowLoginForm() {
       return this.$store.getters.getshowLoginForm; //监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
     }
@@ -341,6 +339,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+.login-register-cover{
+  position: fixed;
+  width: 100%;height: 100%;
+  top: 0;left: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+}
 .flied_tc {
   background: #fff;
   width: 526px;
@@ -397,7 +402,7 @@ export default {
 .flied_td .flied_te input {
   border: none;
   background-color: transparent;
-  background-image: url(/../../assets/ion_yzma.png);
+  background-image: url(../../assets/ion_yzma.png);
   background-repeat: no-repeat;
   text-indent: 2em;
   color: #999;
@@ -412,7 +417,8 @@ export default {
   border: 1px solid #bbbbbb;
 }
 .flied_td .flied_te input[type="password"] {
-  background-image: url(/../../assets/login_form_password.png);
+  background-image: url(../../assets/login_form_password.png);
+  background-size: 21px 25px;
 }
 .flied_td .flied_te .partinput {
   width: 55%;

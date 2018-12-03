@@ -425,6 +425,10 @@ export default {
         alert("抖音号最多16位,只允许字母、下划线、点和数字");
         return false;
       }
+      if(!/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/.test(companyId)){
+        alert('请您填写正确的营业执照注册号,注册号为15位或18位')
+        return false
+      }
       if (companyIdUrl == false) {
         alert("营业执照还未上传!");
         return false;
@@ -440,7 +444,12 @@ export default {
       if (operateName == "" || operatePhone == "" || phoneCheckCode == "") {
         alert("输入框均为必填选项,请您填写完整!");
         return false;
-      } else {
+      }
+      if(!/^[\u4E00-\u9FA5]{2,4}$/.test(operateName)){
+        alert('请您填写正确的姓名格式')
+        return false
+      } 
+       else {
         return true;
       }
     },
