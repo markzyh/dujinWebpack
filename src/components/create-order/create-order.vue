@@ -1,14 +1,14 @@
 <template>
   <div class="create-order">
-    <h3 class="create_title">生成订单</h3>
+    <h3 class="create_title">新建计划</h3>
     <form action class="create_order_form">
       <div class="order_link">
         <label for="order_link">投放内容
           <div class="create_order_tips">
-            <img src="images/create_order_tips.png" alt class="order_tips_icon">
+            <img src="../../assets/create_order_tips.png" alt class="order_tips_icon">
             <div class="order_tips_description">
               <img
-                src="images/order_tips_description_tri.jpg"
+                src="../../assets/order_tips_description_tri.jpg"
                 alt
                 class="order_tips_description_tri"
               >
@@ -36,10 +36,10 @@
       <div class="order_link order_type">
         <label for="order_typename">把视频推荐给潜在兴趣用户
           <div class="create_order_tips">
-            <img src="images/create_order_tips.png" alt class="order_tips_icon">
+            <img src="../../assets/create_order_tips.png" alt class="order_tips_icon">
             <div class="order_tips_description">
               <img
-                src="images/order_tips_description_tri.jpg"
+                src="../../assets/order_tips_description_tri.jpg"
                 alt
                 class="order_tips_description_tri"
               >
@@ -58,7 +58,7 @@
           <span>
             {{item.name}}
             <img
-              src="images/order_tips_description_tri.jpg"
+              src="../../assets/order_tips_description_tri.jpg"
               alt
               class="order_tips_description_tri"
               v-if="nowIndex === index && nowIndex != 0"
@@ -103,7 +103,7 @@
                     :class="{nearby:userRegionIndex === 4}"
                   >
                     <img
-                      src="images/order_tips_description_tri.jpg"
+                      src="../../assets/order_tips_description_tri.jpg"
                       alt
                       class="order_tips_description_tri"
                     >
@@ -296,20 +296,22 @@
           </transition>
         </div>
       </div>
-      <div class="order_choosed_params" v-if="isShowDefaultValue">已选择
-        <!-- <span>性别 : {{choosedSex}}</span><span>年龄 : {{choosedAge.toString()}}</span> -->
+      <div class="order_choosed_params" v-if="isShowDefaultValue">
+        已选择
+        <span>性别 : {{choosedSex}}</span>
+        <span>年龄 : {{choosedAge.toString()}}</span>
         <span>
-          <!-- 地域 : -->
+          地域 :
           {{choosedValue}}
         </span>
       </div>
       <div class="order_link order_increment">
         <label for="order_increment">预计播放量提升
           <div class="create_order_tips">
-            <img src="images/create_order_tips.png" alt class="order_tips_icon">
+            <img src="../../assets/create_order_tips.png" alt class="order_tips_icon">
             <div class="order_tips_description">
               <img
-                src="images/order_tips_description_tri.jpg"
+                src="../../assets/order_tips_description_tri.jpg"
                 alt
                 class="order_tips_description_tri"
               >
@@ -325,12 +327,12 @@
         </label>
       </div>
       <div class="order_link order_price">
-        <label for="order_increment">投放金额
+        <label for="order_increment">系统定义金额
           <div class="create_order_tips">
-            <img src="images/create_order_tips.png" alt class="order_tips_icon">
+            <img src="../../assets/create_order_tips.png" alt class="order_tips_icon">
             <div class="order_tips_description">
               <img
-                src="images/order_tips_description_tri.jpg"
+                src="../../assets/order_tips_description_tri.jpg"
                 alt
                 class="order_tips_description_tri"
               >
@@ -348,7 +350,7 @@
           <span>
             {{item.name}}
             <img
-              src="images/order_tips_description_tri.jpg"
+              src="../../assets/order_tips_description_tri.jpg"
               alt
               class="order_tips_description_tri show"
               v-if="nowPayIndex === 1 &&index === 1"
@@ -377,15 +379,19 @@
       <div class="confirm_order" @click="confirmOrder">确认投放</div>
     </form>
     <div class="dymain_cover" v-if="isPaySuccess"></div>
-        <div class="pay_success" v-if="isPaySuccess" :class="{show:isPaySuccess}">
-            <h3><img src="images/pay_success_03.jpg" alt="">投放成功</h3>
-            <h4><span>{{computedCountDownNumber}}秒</span>后将跳转到订单中心</h4>
-            <div class="pay_success_tips">
-                <h5>温馨提示</h5>
-                <p>1.请在安全网络环境下进行金钱支付，以防账号被盗</p>
-                <p>2.本次交易解释权归上海度进信息科技有限公司所有</p>
-            </div>
-        </div>
+    <div class="pay_success" v-if="isPaySuccess" :class="{show:isPaySuccess}">
+      <h3>
+        <img src="../../assets/pay_success_03.jpg" alt>投放成功
+      </h3>
+      <h4>
+        <span>{{computedCountDownNumber}}秒</span>后将跳转到订单中心
+      </h4>
+      <div class="pay_success_tips">
+        <h5>温馨提示</h5>
+        <p>1.请在安全网络环境下进行金钱支付，以防账号被盗</p>
+        <p>2.本次交易解释权归上海度进信息科技有限公司所有</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -528,6 +534,7 @@ export default {
       choosedRangeIndex: 0, //已经选择的辐射范围的数组下标
       addNearbyKm: "+添加", //添加辐射km按钮的值
       choosedRangeValue: 4000, //单选按钮,选择的辐射范围的具体值
+      isFirstChooseAll: false,
       choosedNearbyLists: [], //已经选择完附近,添加了的记录的数组
       customRangeLists: [
         //自定义商圈的辐射范围数组
@@ -583,27 +590,28 @@ export default {
             Serving: _this.increNumber, //播放量暂时没做
             Money: payNumber, //投放金额
             Token: token //token值
-          },{
-          headers:{
-            'content-type': 'application/x-www-form-urlencoded'
+          },
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
           }
-        }
         )
-        .then((res) =>{
+        .then(res => {
           if (res.data.Code == 11) {
             //alert('登录状态已过期,请重新登录')
-            userLoginOut(); //退出登录
+            //userLoginOut(); //退出登录
           } else {
             console.log(res);
             console.log("put in is done");
             _this.isPaySuccess = true;
-            var interval = setInterval(()=> {
+            var interval = setInterval(() => {
               //倒计时
               _this.successCountDownNumber--;
               if (_this.successCountDownNumber == 0) {
                 clearInterval(interval);
-                console.log(this)
-                this.$router.push({path: "/order-center"})
+                console.log(this);
+                this.$router.push({ path: "/order-center" });
                 //window.location.href = "/order_center.html";
                 //alert('订单完成!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
               }
@@ -691,55 +699,41 @@ export default {
     },
     chooseAll: function(index, attr) {
       //全选
-      //this.getChoosedValue()
       var _this = this.proviceLists[this.chooseProviceIndex];
-      //console.log(_this[attr].length)
-      //this.chooseCountiesArray = []
       this.clearchooseAll(); //全选前先全部清空数组
-      /* if(this.ischooseCitiesRadio == false){
-                 for(var i = 0 ;i < _this.cities.length;i++){
-                     this.choosecitiesArray.push(i)
-                 }   
-            }else{
-                 //console.log(_this.cities[this.chooseCitiesIndex].counties.length+'--------------counties')
-                 for(var i = 0 ;i < _this.cities[this.chooseCitiesIndex].counties.length;i++){
-                     this.chooseCountiesArray.push(i)
-                 }
-                 if(this.ischooseCountiesRadio == true){//县区单选时
-                     for(var i = 0 ;i < _this.cities[this.chooseCitiesIndex].counties[this.chooseCountiesIndex].circles.length;i++){
-                         this.chooseCirclesArray.push(i)
-                     }
-                 }
-            }  */
-      if (this.userRegionIndex === 1) {
-        //省市选择
-        //alert(0)
-        for (var i = 0; i < _this.cities.length; i++) {
-          this.choosecitiesArray.push(i);
+
+      this.isFirstChooseAll = !this.isFirstChooseAll;
+      if (this.isFirstChooseAll == true) {
+        if (this.userRegionIndex === 1) {
+          //省市选择
+          //alert(0)
+          for (var i = 0; i < _this.cities.length; i++) {
+            this.choosecitiesArray.push(i);
+          }
+        } else if (this.userRegionIndex === 2) {
+          //区选择
+          for (
+            var i = 0;
+            i < _this.cities[this.chooseCitiesIndex].counties.length;
+            i++
+          ) {
+            this.chooseCountiesArray.push(i);
+          }
+        } else if (this.userRegionIndex === 3) {
+          //商圈选择
+          for (
+            var i = 0;
+            i <
+            _this.cities[this.chooseCitiesIndex].counties[
+              this.chooseCountiesIndex
+            ].circles.length;
+            i++
+          ) {
+            this.chooseCirclesArray.push(i);
+          }
         }
-      } else if (this.userRegionIndex === 2) {
-        //区选择
-        for (
-          var i = 0;
-          i < _this.cities[this.chooseCitiesIndex].counties.length;
-          i++
-        ) {
-          this.chooseCountiesArray.push(i);
-        }
-      } else if (this.userRegionIndex === 3) {
-        //商圈选择
-        for (
-          var i = 0;
-          i <
-          _this.cities[this.chooseCitiesIndex].counties[
-            this.chooseCountiesIndex
-          ].circles.length;
-          i++
-        ) {
-          this.chooseCirclesArray.push(i);
-        }
+        this.getChoosedValue();
       }
-      this.getChoosedValue();
       //console.log(this.choosecitiesArray)
     },
     //删除一天附近投放记录
@@ -1030,7 +1024,7 @@ export default {
       if (this.checkCustomPayNumber(this.customPayNumber) != false) {
         this.payNumberValue = this.customPayNumber; //输入的金额等于显示的金额
         //alert(this.customPayNumber)
-        this.nowPayIndex = 0; //金额的方式
+        this.nowPayIndex = 2; //金额的方式
         //return false
       } else {
         return false;
@@ -1155,7 +1149,7 @@ export default {
     computedCountDownNumber: function() {
       //提交成功后的倒计时
       if (this.isPaySuccess == true) {
-        var number
+        var number;
         number = this.successCountDownNumber;
         return number;
       }
@@ -1246,6 +1240,9 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+.create-order {
+  padding: 50px;
+}
 .dybox {
   width: 1300px;
   margin: 40px auto;

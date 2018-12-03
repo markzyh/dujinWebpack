@@ -153,6 +153,7 @@ export default {
               return false;
             } else {
               alert("注册成功");
+              this.$router.push({path:'/personal-data'})
             }
           });
       }
@@ -283,6 +284,7 @@ export default {
             this.setCookie("userPhone", userPhone, 1);
             this.setCookie("token", token, 1);
             this.setCookie("douyinId", douyinId, 1);
+            this.$dispatch('loginAction',true)
             //this.getUserName()
             this.hideLoginForm(); //父组件事件,隐藏窗口
             this.emitGetUsername(); //触发父组件获取用户名
@@ -321,7 +323,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 .flied_tc {
-  background: #efefef;
+  background: #fff;
   width: 526px;
   padding-top: 1px;
   position: fixed;
@@ -331,6 +333,7 @@ export default {
   margin-left: -180px;
   z-index: 9999;
   display: none;
+  border:1px solid #efefef;
 }
 .flied_tc.show {
   display: block;
@@ -375,7 +378,7 @@ export default {
 .flied_td .flied_te input {
   border: none;
   background-color: transparent;
-  background-image: url(/images/ion_yzma.png);
+  background-image: url(/../../assets/ion_yzma.png);
   background-repeat: no-repeat;
   text-indent: 2em;
   color: #999;
@@ -390,7 +393,7 @@ export default {
   border: 1px solid #bbbbbb;
 }
 .flied_td .flied_te input[type="password"] {
-  background-image: url(/images/login_form_password.png);
+  background-image: url(/../../assets/login_form_password.png);
 }
 .flied_td .flied_te .partinput {
   width: 55%;

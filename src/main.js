@@ -19,9 +19,9 @@ Vue.prototype.setCookie = function (cname, cvalue, exdays) {
   /*   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000) //设置过期时间,现在的时间加上期望的过期时间 */
   d.setTime(d.getTime() + exdays * 60 * 60 * 1000) //设置过期时间,现在的时间加上期望的过期时间,现在是小时
   var expires = "expires=" + d.toUTCString() //
-  document.cookie = cname + "=" + cvalue + "; " + expires // 这个很重要代表在那个层级下可以访问cookie
-
-  //console.log(document.cookie)
+  var path = "path=/"
+  document.cookie = cname + "=" + cvalue + "; " + expires + ";" + path // 这个很重要代表在那个层级下可以访问cookie
+  console.log(document.cookie)
 }
 //获取cookie
 Vue.prototype.getCookie = function (cname) {
@@ -95,7 +95,7 @@ Vue.prototype.btnSeconds = function () {
 }
 //限制浏览
 Vue.prototype.limit = function () {
-  if (this.checkCookie() == false) {
+  if (this.checkCookie('userName') == false) {
     alert("登录状态已过期,请您重新登录");
     this.$router.push({
       path: "/"
@@ -104,10 +104,12 @@ Vue.prototype.limit = function () {
 }
 //退出登录,,删除用户信息 
 Vue.prototype.globalLoginOut = function () {
-  this.deleteCookie("userName", "", -1);
-  this.deleteCookie("userPhone", "", -1);
-  this.deleteCookie("token", "", -1);
-  this.deleteCookie("douyinId", "", -1);
+  console.log('9999')
+  this.deleteCookie("userName");
+  this.deleteCookie("userPhone");
+  this.deleteCookie("token");
+  this.deleteCookie("douyinId");
+  console.log(this.getCookie('userName'))
 }
 //把时间戳转换为中文时间
 Vue.prototype.transformDateStamp = function (param) {

@@ -58,7 +58,7 @@
               <td>{{item.PayMoney}}</td>
               <td>{{item.Refund}}</td>
               <td>{{item.Balance}}</td>
-              <td style="width: 180px">{{transformDateStamp(item.CreateDateTime)}}</td>
+              <td style="width: 180px">{{transformDateStamp(parseInt(item.CreateDateTime.substr(6, 19)))}}</td>
             </tr>
           </table>
         </div>
@@ -119,6 +119,8 @@ export default {
         alert("开始时间必须在结束时间之前");
         return false;
       } else {
+        Start = this.transformDateStamp(this.startDateVal)
+        End = this.transformDateStamp(this.endDateVal)
         //this.getOrderList(Status, Start, End, DataType);
         this.getPaymentList(Status, Start, End, Type);
         console.log(this.startDateVal);
@@ -169,20 +171,20 @@ export default {
           console.log(res);
           if (res.data.Code == 11) {
             //alert('"登录状态失效，请重新登录"')
-            userLoginOut();
+            //userLoginOut();
           }
           _this.orderList = res.data.Data;
         });
     },
     //把时间戳转译成普通格式
     transformDateStamp: function(param) {
-      var date = new Date(parseInt(param.substr(6, 19)));
-      var timeYear = new Date(date).getFullYear();
-      var timeMouth = new Date(date).getMonth() + 1;
-      var timeDate = new Date(date).getDate();
-      var timeHours = new Date(date).getHours();
-      var timeMinutes = new Date(date).getMinutes();
-      var timeSeconds = new Date(date).getSeconds();
+      //var date = new Date(parseInt(param.substr(6, 19)));
+      var timeYear = new Date(param).getFullYear();
+      var timeMouth = new Date(param).getMonth() + 1;
+      var timeDate = new Date(param).getDate();
+      var timeHours = new Date(param).getHours();
+      var timeMinutes = new Date(param).getMinutes();
+      var timeSeconds = new Date(param).getSeconds();
       var time =
         this.checkTen(timeYear) +
         "-" +
@@ -197,34 +199,6 @@ export default {
         this.checkTen(timeSeconds);
       return time;
     },
-    /* timeString: function(string) {
-      var aa = new Date(parseInt(string.substr(6, 19)));
-      var timeYear = new Date(parseInt(string.substr(6, 19))).getFullYear();
-      var timeMouth = new Date(parseInt(string.substr(6, 19))).getMonth() + 1;
-      var timeDate = new Date(parseInt(string.substr(6, 19))).getDate();
-      var timeHours = new Date(parseInt(string.substr(6, 19))).getHours();
-      var timeMinutes = new Date(parseInt(string.substr(6, 19))).getMinutes();
-      var timeSeconds = new Date(parseInt(string.substr(6, 19))).getSeconds();
-      var time =
-        this.checkTen(timeYear) +
-        "-" +
-        this.checkTen(timeMouth) +
-        "-" +
-        this.checkTen(timeDate) +
-        "   " +
-        this.checkTen(timeHours) +
-        ":" +
-        this.checkTen(timeMinutes) +
-        ":" +
-        this.checkTen(timeSeconds);
-      return time;
-    }, */
-    /* checkTen: function(num) {
-      if (num < 10) {
-        num = "0" + num;
-      }
-      return num;
-    } */
   },
   mounted: function() {
     this.getPaymentList("");
@@ -232,6 +206,7 @@ export default {
 };
 </script>
 <style lang="scss">
+.consumption{padding: 50px;}
 .mx-panel-date td.today {
   background: #2a90e9;
   color: #fff;

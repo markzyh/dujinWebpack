@@ -15,7 +15,8 @@ import CommonProblem from '@/components/common-problem/common-problem'
 Vue.use(Router)
 
 export default new Router({
-  mode:'history',
+  //mode:'history',
+  //base:'/dist',
   routes: [
     {
       path: '',

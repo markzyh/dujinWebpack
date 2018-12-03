@@ -123,6 +123,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+.personal-center{padding: 50px;}
 .htlist_ul {
   width: 1035px;
   height: 755px;

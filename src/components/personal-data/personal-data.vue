@@ -26,7 +26,7 @@
           <input
             class="htlist_dlb"
             name="mobile"
-            type="number"
+            type="text"
             v-model="douyinNumberVal"
             placeholder="请输入您要投放的抖音号"
             @focus="dyIdFocus"
@@ -54,9 +54,13 @@
     <div class="personal_center_rz">
       <label for="order_typename">资料认证
         <div class="create_order_tips">
-          <img src="images/create_order_tips.png" alt class="order_tips_icon">
+          <img src="../../assets/create_order_tips.png" alt class="order_tips_icon">
           <div class="order_tips_description">
-            <img src="images/order_tips_description_tri.jpg" alt class="order_tips_description_tri">
+            <img
+              src="../../assets/order_tips_description_tri.jpg"
+              alt
+              class="order_tips_description_tri"
+            >
             <b>资料认证</b>个人
             身份证、企业营业执照和行业许可证只作为网站核实个人及公司真实性的材料，不在网站页面显示。
           </div>
@@ -367,6 +371,10 @@ export default {
         alert("请填写您的抖音昵称和抖音号!");
         return false;
       }
+      if (!/^[a-zA-Z0-9_]{0,15}$/.test(DouyinId)) {
+        alert("抖音号最多16位,只允许字母、下划线、点和数字");
+        return false;
+      }
       if (this.choosedAuthIndex == 0) {
         //个人认证的时候
         if (this.checkPersonalAuth() == false) {
@@ -385,28 +393,43 @@ export default {
       }
       //alert('成功')
       axios
-        .post("/account/Update", {
-          Token: token,
-          Name: Name,
-          DouyinId: DouyinId,
-          AuthType: AuthType,
-          CorpId: CorpId,
-          CorpName: CorpName,
-          Face: Face,
-          FaceBack: FaceBack,
-          RealName: RealName
-        },{
-          headers:{
-            'content-type': 'application/x-www-form-urlencoded'
+        .post(
+          "/account/Update",
+          {
+            Token: token,
+            Name: Name,
+            DouyinId: DouyinId,
+            AuthType: AuthType,
+            CorpId: CorpId,
+            CorpName: CorpName,
+            Face: Face,
+            FaceBack: FaceBack,
+            RealName: RealName
+          },
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
           }
-        })
-        .then((res) =>{
+        )
+        .then(res => {
           if (res.data.Code == 11) {
             //userLoginOut();
           }
           //console.log(res)
-          alert("资料提交完成,请您重新登录");
-          this.globalLoginOut()
+          alert("资料提交完成");
+          let userName = res.data.Data.Name;
+          let userPhone = res.data.Data.Phone;
+          let token = res.data.Token;
+          let douyinId = res.data.Data.DouyinId;
+          this.setCookie("userName", userName, 1);
+          this.setCookie("userPhone", userPhone, 1);
+          this.setCookie("token", token, 1);
+          this.setCookie("douyinId", douyinId, 1);
+          this.$router.push({
+            path: "/create-order"
+          });
+          //this.globalLoginOut()
           //userLoginOut();
         });
     },
@@ -433,15 +456,17 @@ export default {
   },
   mounted() {
     this.userCellphoneNumber = this.getCookie("userPhone");
-    this.douyinNumberVal = this.getCookie("douyinId");
-    this.douyinNameVal = this.getCookie("username");
+    //this.douyinNumberVal = this.getCookie("douyinId");
+    //this.douyinNameVal = this.getCookie("username");
   }
 };
 </script>
 <style lang="scss">
-
-.over-hidden{
-    overflow: hidden;
+.personal-data {
+  padding: 50px;
+}
+.over-hidden {
+  overflow: hidden;
 }
 dl.htlist_dla {
   width: 445px;
@@ -574,10 +599,11 @@ input[type="radio"].radio_checked {
   margin: 0px 9px -4px 0 !important;
 }
 .personal_auth_tips {
-  text-align: center;
+  /*   text-align: center; */
   margin: 14px 0 24px;
-  font-size: 1px;
+  font-size: 14px;
   color: #ccc;
+  padding-left: 150px;
 }
 .personal_auth em {
   color: #eb5169;

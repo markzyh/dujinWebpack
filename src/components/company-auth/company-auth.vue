@@ -26,9 +26,9 @@
         <div class="dis-inline compony_auth_group">
           <div class="compony_auth_label">
             <b>*</b> 企业营业执照
-            <!-- <div class="create_order_tips"><img src="images/create_order_tips.png"
+            <!-- <div class="create_order_tips"><img src="../../assets/create_order_tips.png"
                                         alt="" class="order_tips_icon">
-                                    <div class="order_tips_description"><img src="images/order_tips_description_tri.jpg"
+                                    <div class="order_tips_description"><img src="../../assets/order_tips_description_tri.jpg"
                                             alt="" class="order_tips_description_tri"><b>企业营业执照</b>只支持中国大陆工商局或市场监督管理局登记的企业，请上传最新的营业执照，正面照，资质无残缺信息。</div>
             </div>-->
             ：
@@ -53,9 +53,9 @@
         <div class="dis-inline compony_auth_group">
           <div class="compony_auth_label">
             <b>*</b> 行业许可证
-            <!-- <div class="create_order_tips"><img src="images/create_order_tips.png"
+            <!-- <div class="create_order_tips"><img src="../../assets/create_order_tips.png"
                                         alt="" class="order_tips_icon">
-                                    <div class="order_tips_description"><img src="images/order_tips_description_tri.jpg"
+                                    <div class="order_tips_description"><img src="../../assets/order_tips_description_tri.jpg"
                                             alt="" class="order_tips_description_tri"><b>企业营业执照</b>只支持中国大陆工商局或市场监督管理局登记的企业，请上传最新的营业执照，正面照，资质无残缺信息。</div>
             </div>-->
             ：
@@ -81,10 +81,10 @@
         <div class="compony_auth_label">
           <b>*</b> 认 证 公 函
           <div class="create_order_tips">
-            <img src="images/create_order_tips.png" alt class="order_tips_icon">
+            <img src="../../assets/create_order_tips.png" alt class="order_tips_icon">
             <div class="order_tips_description">
               <img
-                src="images/order_tips_description_tri.jpg"
+                src="../../assets/order_tips_description_tri.jpg"
                 alt
                 class="order_tips_description_tri"
               >
@@ -113,10 +113,10 @@
           <div class="compony_auth_label">
             <b>*</b> 运营人姓名
             <div class="create_order_tips">
-              <img src="images/create_order_tips.png" alt class="order_tips_icon">
+              <img src="../../assets/create_order_tips.png" alt class="order_tips_icon">
               <div class="order_tips_description">
                 <img
-                  src="images/order_tips_description_tri.jpg"
+                  src="../../assets/order_tips_description_tri.jpg"
                   alt
                   class="order_tips_description_tri"
                 >
@@ -130,10 +130,10 @@
           <div class="compony_auth_label">
             <b>*</b> 运营人联系电话
             <div class="create_order_tips">
-              <img src="images/create_order_tips.png" alt class="order_tips_icon">
+              <img src="../../assets/create_order_tips.png" alt class="order_tips_icon">
               <div class="order_tips_description">
                 <img
-                  src="images/order_tips_description_tri.jpg"
+                  src="../../assets/order_tips_description_tri.jpg"
                   alt
                   class="order_tips_description_tri"
                 >
@@ -187,7 +187,7 @@
     <div class="dymain_cover" v-if="isConfirm">
       <div class="pay_success confirm_success" v-if="isConfirm" :class="{show:isConfirm}">
         <h3 style="margin-top: 80px;">
-          <img src="images/pay_success_03.jpg" alt>企业认证
+          <img src="../../assets/pay_success_03.jpg" alt>企业认证
         </h3>
         <!-- <h4><span>秒</span>后将跳转到订单中心</h4> -->
         <div class="pay_success_tips confirm_success_tips">
@@ -240,7 +240,7 @@ export default {
     //确认提交
     confirmCompanyAuth: function() {
       this.isConfirm = true;
-      alert(0);
+      //alert(0);
       if (this.checkCompanyAuthPage() == true) {
         var token = this.getCookie("token");
         var AuthType = "企业认证";
@@ -278,7 +278,6 @@ export default {
           )
           .then(res => {
             this.isConfirm = true;
-
             //_this.$refs.auth_form.reset()
             return false;
             console.log(res);
@@ -422,6 +421,10 @@ export default {
         alert("输入框均为必填选项,请您填写完整!");
         return false;
       }
+      if (!/^[a-zA-Z0-9_]{0,15}$/.test(douyinName)) {
+        alert("抖音号最多16位,只允许字母、下划线、点和数字");
+        return false;
+      }
       if (companyIdUrl == false) {
         alert("营业执照还未上传!");
         return false;
@@ -518,6 +521,7 @@ export default {
 };
 </script>
 <style lang="scss">
+.company-auth{padding: 50px;}
 /* 企业认证页面 */
 .zzSub {
   width: 550px;

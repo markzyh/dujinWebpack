@@ -9,11 +9,11 @@
     <div class="htHeader">
       <div class="htHeader_con">
         <div class="ht_logo fl">
-          <img src="./assets/ht_logo.png" alt>
+          <img src="/static/images/ht_logo.png" alt>
         </div>
         <div class="ht_nav fl">
           <li>
-            <a href="personal_center.html">首页</a>
+            <a href="/">首页</a>
           </li>
           <li>
             <a href="http://www.dujin021.com/douyin">抖音运营</a>
@@ -41,8 +41,11 @@
     </div>
     <div class="dybox" id="dybox">
       <nav-bar v-if="$route.path != '/order-details'"></nav-bar>
-      <div class=" create_box" :class="{dy_content:$route.path != '/order-details'}">
+      <div class="create_box" :class="{dy_content:$route.path != '/order-details'}">
+        <!-- <div class="dy_content create_box"> -->
+        <!--  <keep-alive> -->
         <router-view></router-view>
+        <!--  </keep-alive> -->
       </div>
     </div>
   </div>
@@ -70,19 +73,20 @@ export default {
   methods: {
     //用户手动退出登录
     loginOut() {
-      this.globalLoginOut()
+      this.globalLoginOut();
       this.isLogin = false;
       alert("您已经退出登录");
       //this.deleteCookie();
     },
     //获取用户名
     getUsername() {
-      if (this.checkCookie('userName') == true ) {
+      if (this.checkCookie("userName") == true) {
         this.userName = this.getCookie("userName");
         this.isLogin = true;
       } else {
         this.isLogin = false;
-        alert('登录信息已过期,请您重新登录')
+        alert("登录信息已过期,请您重新登录");
+        //window.location.href = '/'
       }
     },
     //打开登录窗口,控制子组件显示隐藏
@@ -92,18 +96,28 @@ export default {
 
     hideLoginForm() {
       this.isShowLoginForm = false;
+    },
+    chekIsLogin() {
+      if (this.checkCookie("userName") != fasle) {
+        //cookie中存在
+        return true
+      } else {
+        return fasle;
+      }
     }
   },
   computed: {
     watchUserName() {
       return this.userName;
     },
-    watchLoginStatus(){
-        return this.$store.getters.getLoginStatus//监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
+    watchLoginStatus() {
+      return this.$store.getters.getLoginStatus; //监听vuex中的登录状态,为了让表单页面提交完,更新登录状态
     }
   },
   mounted() {
     this.getUsername();
+    //this.$store.dispatch('decre',this.num)
+    chekIsLogin()
   }
 };
 </script>
@@ -456,7 +470,7 @@ input[type="radio"] {
   -moz-box-sizing: border-box;
   margin: 0 auto;
   background: #fff; /*border-top: 1px solid transparent; */
-  padding: 50px;
+  /*   padding: 50px; */
   margin-left: 50px;
 }
 
@@ -468,15 +482,71 @@ input[type="radio"] {
   height: 100%;
   opacity: 0.5;
 }
-.create_title { font-size: 20px; font-weight: normal; text-align: left; margin: 0 auto; border-bottom: 1px solid #868686; padding-bottom: 20px; }
-.create_order_tips { position: relative; display: inline-block; width: 19px; text-indent: 0; }
+.create_title {
+  font-size: 20px;
+  font-weight: normal;
+  text-align: left;
+  margin: 0 auto;
+  border-bottom: 1px solid #868686;
+  padding-bottom: 20px;
+}
+.create_order_tips {
+  position: relative;
+  display: inline-block;
+  width: 19px;
+  text-indent: 0;
+}
 
-.order_tips_description { position: absolute; width: 270px; height: auto; border: 1px solid #ccc; padding: 20px; background: #fff; left: 50%; margin-left: -135px; top: 36px; line-height: 1.65em; color: #999; box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; display: none; z-index: 2222;text-align: left;}
-.order_tips_description b { text-indent: 0; display: block; text-align: center; width: 100%; font-weight: normal; color: #666; margin-bottom: 10px; font-size: 16px}
-.order_tips_description strong{font-size: 16px;color: #333;font-weight: normal;}
-.order_tips_description_tri { width: 21px; height: 11px; position: absolute; top: -11px; left: 50%; margin-left: -10px; z-index: 3; }
+.order_tips_description {
+  position: absolute;
+  width: 270px;
+  height: auto;
+  border: 1px solid #ccc;
+  padding: 20px;
+  background: #fff;
+  left: 50%;
+  margin-left: -135px;
+  top: 36px;
+  line-height: 1.65em;
+  color: #999;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  display: none;
+  z-index: 2222;
+  text-align: left;
+}
+.order_tips_description b {
+  text-indent: 0;
+  display: block;
+  text-align: center;
+  width: 100%;
+  font-weight: normal;
+  color: #666;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+.order_tips_description strong {
+  font-size: 16px;
+  color: #333;
+  font-weight: normal;
+}
+.order_tips_description_tri {
+  width: 21px;
+  height: 11px;
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  margin-left: -10px;
+  z-index: 3;
+}
 
-.order_tips_icon { cursor: pointer; margin-bottom: -3px; }
+.order_tips_icon {
+  cursor: pointer;
+  margin-bottom: -3px;
+}
 
-.create_order_tips:hover .order_tips_description { display: block; }
+.create_order_tips:hover .order_tips_description {
+  display: block;
+}
 </style>

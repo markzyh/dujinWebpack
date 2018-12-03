@@ -57,9 +57,14 @@
             <tr v-for="(item,index) in orderList" :key="index">
               <!-- <td @click="searchOrderNumber(item.OrderNumber)" class="order_detais_link">
                 <a href="order_details.html">{{item.OrderNumber}}</a>
-              </td> -->
-              <router-link :to="{path:'/order-details',query:{orderNumber:item.OrderNumber}}" tag="td"><a>{{item.OrderNumber}}</a></router-link>
-              <td>{{transformDateStamp(item.CreateDateTime)}}</td>
+              </td>-->
+              <router-link
+                :to="{path:'/order-details',query:{orderNumber:item.OrderNumber}}"
+                tag="td"
+              >
+                <a>{{item.OrderNumber}}</a>
+              </router-link>
+              <td>{{transformDateStamp(parseInt(item.CreateDateTime.substr(6, 19)))}}</td>
               <!-- <td>{{test(item.CreateDateTime)}}</td> -->
               <td>{{item.Money}}</td>
               <td>{{item.Serving}}</td>
@@ -144,14 +149,16 @@ export default {
     screenDate() {
       let Start = new Date(this.startDateVal).getTime();
       let End = new Date(this.endDateVal).getTime();
-      let Status = ""; //暂时为空
+      let Status = this.choosedOrderStatus; //暂时为空
       let DataType = this.choosedOrderTime;
       if (this.chekDate(Start, End) == false) {
         alert("开始时间必须在结束时间之前");
         return false;
       } else {
+        Start = this.transformDateStamp(this.startDateVal)
+        End = this.transformDateStamp(this.endDateVal)
         //this.getOrderList(Status, Start, End, DataType);
-        this.getOrderList(Status, '2018年11月25日', '2018年11月25日', DataType);
+        this.getOrderList(Status, Start, End, DataType);
         console.log(this.startDateVal);
         console.log(this.endDateVal);
       }
@@ -173,55 +180,6 @@ export default {
       console.log(Date.parse(parseDateString));
       return Date.parse(parseDateString); //返回时间戳
     },
-    /*     startDatePicker: function() {
-      var _this = this;
-      $(".start_date")
-        .datepicker({
-          //bootstrap-datepicker
-          language: "zh-CN", //中文
-          orientation: "bottom auto", //位置
-          todayHighlight: true //今天高亮
-        })
-        .on("hide", function(e) {
-          //回调函数,hide是固定api,意味在窗口隐藏后的回调
-          var val = $(".start_date").val(); //获取dom的value,测试用vue无法获取,不知道是不写法问题
-          _this.startDateVal = val;
-          console.log(_this.startDateVal);
-        });
-    }, */
-   /*  endDatePicker: function() {
-      //-_-!!!!!万不得已,用基于dom的插件了
-      var _this = this;
-      $(".end_date")
-        .datepicker({
-          //bootstrap-datepicker
-          language: "zh-CN", //中文
-          orientation: "bottom auto", //位置
-          todayHighlight: true //今天高亮
-        })
-        .on("hide", function(e) {
-          //回调函数,hide是固定api,意味在窗口隐藏后的回调
-          var val = $(".end_date").val(); //获取dom的value,测试用vue无法获取,不知道是不写法问题
-          _this.endDateVal = val;
-          console.log(_this.endDateVal);
-          //验证开始时间必须比结束时间小
-          console.log(_this.choosedOrderStatus);
-          var endDateString = _this.transformDate(_this.endDateVal); //时间戳
-          var stratDateString = _this.transformDate(_this.startDateVal); //时间戳
-          //_this.chekDate(stratDateString,endDateString)
-          if (_this.chekDate(stratDateString, endDateString)) {
-            //console.log("时间筛选成功")
-            var status = _this.choosedOrderStatus;
-            var start = _this.startDateVal;
-            var end = _this.endDateVal;
-            var dateType = _this.choosedOrderTime;
-            _this.getOrderList(status, start, end, dateType);
-          } else {
-            alert("结束时间必须在开始时间之后,请您重新选择");
-            return false;
-          }
-        });
-    }, */
     closeProblems: function() {
       this.isShowProblems = false;
     },
@@ -237,7 +195,11 @@ export default {
       var status;
       for (var i = 0; i < this.orderStatusLists.length; i++) {
         if (this.orderStatusLists[i].name == this.choosedOrderStatus) {
-          status = i - 1;
+          if (i == 0) {
+            status = '';
+          } else {
+            status = i - 1;
+          }
         }
       }
       //var status = this.choosedOrderStatus
@@ -252,7 +214,7 @@ export default {
     searchOrderNumber: function(orderNumber) {
       //把orderNumber写入localStorage
       //this.setCookie('orderNumber',orderNumber,1)
-      console.log(this.getCookie('orderNumber'))
+      console.log(this.getCookie("orderNumber"));
       //localStorage.orderNumber = orderNumber;
       //alert(localStorage.orderNumber)
     },
@@ -263,20 +225,24 @@ export default {
       //console.log(token)
       var _this = this;
       axios
-        .post("/order/GetOrderList", {
-          Token: token,
-          Status: status,
-          Start: start,
-          End: end,
-          DateType: dateType
-        },{
-          headers:{
-            'content-type': 'application/x-www-form-urlencoded'
+        .post(
+          "/order/GetOrderList",
+          {
+            Token: token,
+            Status: status,
+            Start: start,
+            End: end,
+            DateType: dateType
+          },
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
           }
-        })
+        )
         .then(res => {
           if (res.data.Code == 11) {
-            alert('登录状态已过期,请重新登录')
+            alert("登录状态已过期,请重新登录");
             this.limit(); //退出登录
           }
           console.log(res);
@@ -285,13 +251,13 @@ export default {
     },
     //把时间戳转译成普通格式
     transformDateStamp: function(param) {
-      var date = new Date(parseInt(param.substr(6, 19)));
-      var timeYear = new Date(date).getFullYear();
-      var timeMouth = new Date(date).getMonth() + 1;
-      var timeDate = new Date(date).getDate();
-      var timeHours = new Date(date).getHours();
-      var timeMinutes = new Date(date).getMinutes();
-      var timeSeconds = new Date(date).getSeconds();
+      //var date = new Date(parseInt(param.substr(6, 19)));
+      var timeYear = new Date(param).getFullYear();
+      var timeMouth = new Date(param).getMonth() + 1;
+      var timeDate = new Date(param).getDate();
+      var timeHours = new Date(param).getHours();
+      var timeMinutes = new Date(param).getMinutes();
+      var timeSeconds = new Date(param).getSeconds();
       var time =
         this.checkTen(timeYear) +
         "-" +
@@ -328,6 +294,7 @@ export default {
 };
 </script>
 <style lang="scss">
+.order-center{padding: 50px;}
 .mx-panel-date td.today {
   background: #2a90e9;
   color: #fff;
@@ -336,16 +303,16 @@ export default {
   background: #2a90e9;
 }
 .mx-input {
-  border: none;
-  height: 40px;
-  line-height: 40px;
-  background: none;
-  font-size: 14px;
-  padding-left: 40px;
+  border: none !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  background: none !important;
+  font-size: 14px !important;
+  padding-left: 40px !important;
 }
 .mx-datepicker {
   margin-left: 20px;
-  width: 43%;
+  width: 43% !important;
 }
 .mx-input-append {
   left: 0;

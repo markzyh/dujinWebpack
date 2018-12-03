@@ -111,6 +111,8 @@ export default {
               return false
             }
             alert('修改密码成功,请您重新登录')
+            this.globalLoginOut();//清除cookie
+            this.$dispatch('loginAction',false)
           });
       }
     },
@@ -137,6 +139,7 @@ export default {
 };
 </script>
 <style lang="scss">
+.change-password{padding: 50px;}
 dl.htlist_dla {
   width: 445px;
   margin: 84px auto auto auto;

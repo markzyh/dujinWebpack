@@ -2,29 +2,6 @@
   <div class="order-details">
     <div class="order_main">
       <h4 class="order_maina">订单状态</h4>
-      <!-- <dl class="order_mainb  cl">
-                    <dt class="order_maind">提交订单<span class="order_mainc"></span></dt>
-                    <dt class="order_maind">审核中<span class="order_mainc"></span></dt>
-                    <dt class="order_maind">投放中<span class="order_mainc"></span></dt>
-                    <dt>已完成</dt>
-                </dl>
-                <div class="order_maine cl">
-                    <div class="order_mainf fl order_tips">
-                        <span class="order_mainh">下单时间：
-                            {{orderDate}}</span>
-                        <span>下单金额：<em>¥{{orderMoney}}</em></span>
-                    </div>
-                    <div class="order_maing fl order_tips notpay">
-                        <b>正在审核</b>
-                        <span>审核通过：2018-11-15 19：55：23</span>
-                    </div>
-                    <div class="order_maing fl ordered order_tips">
-                        <b>已下单2小时</b>
-                    </div>
-                    <div class="order_maing fl success order_tips">
-                        <b>投放成功</b>
-                    </div>
-      </div>-->
       <div class="order_status">
         <div class="status_panel done">
           <div class="status_name">
@@ -43,6 +20,7 @@
           <div class="status_date" v-if="orderStatus >= 2">{{payTime}}</div>
           <div class="status_not" v-if="orderStatus == 0">正在审核</div>
           <div class="status_not" v-if="orderStatus == 1">审核不通过</div>
+          <div class="money_back" v-if="orderStatus == 1">资金已返账户余额</div>
         </div>
         <div class="status_panel" :class="{done:orderStatus >= 2}">
           <div class="status_name">
@@ -163,14 +141,14 @@
       </div>
       <div class="dialog_c">
         <h4 class="dialog_d">
-          <img src="../../assets/ht_hovere.png" alt>
+          <img src="/static/images/ht_hovere.png" alt>
           <span>
             <p>DOU+加速是什么？</p>
           </span>
         </h4>
         <p class="dialog_e">DOU+加速是一款视频加热工具，购买并使用后，可实现将视频推荐给更多兴趣用户，提升视频的播放量与互动量。</p>
         <h4 class="dialog_d">
-          <img src="../../assets/ht_hovere.png" alt>
+          <img src="/static/images/ht_hovere.png" alt>
           <span>
             <p>DOU+加速是什么？</p>
           </span>
@@ -181,7 +159,7 @@
         </div>
         <div class="dialog_g">
           <p class="dialog_g">
-            扫描下方二维码，进入度进营销官方网站：
+            点击进入度进营销官方网站：
             <a href="http://douyin.dujin021.com/">douyin.dujin021.com/</a>
           </p>
         </div>
@@ -191,47 +169,47 @@
           <a href="/">登录/注册</a>
         </div>
         <p class="dialog_g">点击网站对话按钮，登录/注册，完成验证</p>
-        <img class="dialog_h" src="../../assets/ht_hoverf.png" alt>
+        <img class="dialog_h" src="/static/images/ht_hoverf.png" alt>
         <div class="dialog_f">
           <i>STEP3</i>
           <a href="/">登录/注册</a>
         </div>
         <p class="dialog_g">1、投放内容输入：点击“新建计划”，输入投放视频链接，</p>
-        <img class="dialog_h" src="../../assets/ht_hoverg.jpg" alt>
+        <img class="dialog_h" src="/static/images/ht_hoverg.jpg" alt>
         <p class="dialog_g">投放视频链接具体输入步骤如下：</p>
         <p class="dialog_g">(1)打开您想要投放的视频</p>
-        <img class="dialog_h" src="../../assets/ddzx_a.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_a.jpg" alt>
         <p class="dialog_g">(2)选择“分享到&gt;复制链接”</p>
-        <img class="dialog_h" src="../../assets/ddzx_b.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_b.jpg" alt>
         <p class="dialog_g">(3)删除链接中的文字，并将链接粘贴到输入框”</p>
-        <img class="dialog_h" src="../../assets/ddzx_c.jpg" alt>
-        <img class="dialog_h" src="../../assets/ddzx_d.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_c.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_d.jpg" alt>
         <p class="dialog_g">2、把视频推荐给潜在兴趣客户：您可以选择“系统智能投放”或者“自定义定向投放”，如下图：</p>
-        <img class="dialog_h" src="../../assets/ddzx_e.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_e.jpg" alt>
         <p class="dialog_g">(1)您可以选择“系统智能投放”，如下图：</p>
-        <img class="dialog_h" src="../../assets/ddzx_e.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_e.jpg" alt>
 
         <p class="dialog_g">(2)您也可以选择“自定义定向投放”，自定义选择投放用户的性别、年龄和地域，如下图：</p>
-        <img class="dialog_h" src="../../assets/ddzx_f.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_f.jpg" alt>
 
         <p class="dialog_g">3、预计播放量提升：系统根据您的投放设置实时估算预计播放量，如下图：</p>
-        <img class="dialog_h" src="../../assets/ddzx_p.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_p.jpg" alt>
         <p class="dialog_g">4、投放金额：您可以根据需求选择“系统定义金额”或“自定义金额”，如下图：</p>
-        <img class="dialog_h" src="../../assets/ddzx_g.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_g.jpg" alt>
         <p class="dialog_g">(1) 您可以选择“系统定义金额”，如下图：</p>
-        <img class="dialog_h" src="../../assets/ddzx_h.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_h.jpg" alt>
         <p class="dialog_g">5、点击确定，完成支付</p>
-        <img class="dialog_h" src="../../assets/ddzx_j.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_j.jpg" alt>
         <div class="dialog_f">
           <i>STEP4</i>
           <a href="/">订单中心</a>
         </div>
         <p class="dialog_g">1、点击订单中心，随时查看订单情况</p>
-        <img class="dialog_h" src="../../assets/ddzx_k.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_k.jpg" alt>
         <p class="dialog_g">2、点击“订单编号”查看“订单状态”</p>
-        <img class="dialog_h" src="../../assets/ddzx_l.jpg" alt>
+        <img class="dialog_h" src="/static/images/ddzx_l.jpg" alt>
         <h4 class="dialog_d">
-          <img src="../../assets/ht_hovere.png" alt>
+          <img src="/static/images/ht_hovere.png" alt>
           <span>
             <p>使用DOU+加速常见问题Q&A：</p>
           </span>
@@ -256,20 +234,22 @@
         <p class="dialog_g dialog_k">可以！请联系您的客户经理。 请提供以下开票资料： 抖音 ID、昵称，开票金额（累计开票金额≤充值金额）</p>
 
         <h4 class="dialog_d">
-          <img src="../../assets/ht_hovere.png" alt>
+          <img src="/static/images/ht_hovere.png" alt>
           <span>
             <p>联系方式</p>
           </span>
         </h4>
         <ul class="dialog_j">
           <li>
-            <img src="../../assets/ddzx_m.jpg" alt>QQ：2082379729
+            <img src="../../assets/ddzx_m.jpg" alt>
+            <a href="http://sighttp.qq.com/msgrd?v=1&uin=2082379729" target="_blank">QQ：2082379729</a>
           </li>
           <li>
             <img src="../../assets/ddzx_n.jpg" alt>电话: 400-040-2120
           </li>
           <li>
-            <img src="../../assets/ddzx_o.jpg" alt>邮箱: service@dujin021.com
+            <img src="../../assets/ddzx_o.jpg" alt>
+            <a href="mailto:service@dujin021.com" target="_blank">邮箱: service@dujin021.com</a>
           </li>
         </ul>
       </div>
@@ -298,7 +278,7 @@ export default {
       createTime: "", //下单时间
       payTime: "", //审核通过时间
       completeTime: "", //完成时间
-      costMoney: 24, //消耗金额
+      costMoney: "", //消耗金额
       orderStatusLists: [
         {
           name: "全部",
@@ -363,29 +343,43 @@ export default {
       this.userName = this.getCookie("userName");
       this.douyinId = this.getCookie("douyinId");
       this.orderLink = this.orderInfo.Url;
-      this.playCount = this.orderInfo.PlayCount;
-      this.interactionCount = this.orderInfo.InteractionCount;
-      this.shareCount = this.orderInfo.ShareCount;
-      this.commentCount = this.orderInfo.CommentCount;
-      this.likeCount = this.orderInfo.LikeCount;
-      this.orderMoney = this.orderInfo.Money;
+      this.playCount = this.chenckIsNull(this.orderInfo.PlayCount);
+      this.interactionCount = this.chenckIsNull(
+        this.orderInfo.InteractionCount
+      );
+      this.shareCount = this.chenckIsNull(this.orderInfo.ShareCount);
+      this.commentCount = this.chenckIsNull(this.orderInfo.CommentCount);
+      this.likeCount = this.chenckIsNull(this.orderInfo.LikeCount);
+      this.orderMoney = this.chenckIsNull(this.orderInfo.Money);
+      this.costMoney = this.chenckIsNull(this.orderInfo.Consume);
       this.orderDate = this.transformDateStamp(this.orderInfo.CreateDateTime);
       //this.chenckOrderStatus()//检查订单的状态,显示页面上
     },
-
+    //检测是否为空,空就返回0
+    chenckIsNull(params) {
+      if (params == null) {
+        return 0;
+      } else {
+        return params;
+      }
+    },
     getOrderInfo(orderNumber) {
       let token = this.getCookie("token");
       //var OrderNumber = this.orderNumber;
       //var _this = this;
       axios
-        .post("http://dou.fudayiliao.com/order/GetOrderDetail", {
-          Token: token,
-          OrderNumber: orderNumber
-        },{
-          headers:{
-            'content-type': 'application/x-www-form-urlencoded'
+        .post(
+          "http://dou.fudayiliao.com/order/GetOrderDetail",
+          {
+            Token: token,
+            OrderNumber: orderNumber
+          },
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
           }
-        })
+        )
         .then(res => {
           console.log(res.data.Data);
           this.orderInfo = res.data.Data;
@@ -400,10 +394,11 @@ export default {
     this.orderNumber = this.$route.query.orderNumber;
     this.getOrderInfo(this.orderNumber);
     console.log(this.$route.query.orderNumber);
-  }
+  },
+  beforeCreate() {}
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 /* .dy-content{
     margin:0;
     background: none;
@@ -415,6 +410,12 @@ export default {
   width: 1166px;
   padding-left: 116px;
   margin: 20px 0 0;
+}
+.order-details {
+  .order_link {
+    margin-right: 200px;
+    color: #999;
+  }
 }
 .status_not {
   margin-top: 14px;
@@ -461,7 +462,13 @@ export default {
 .status_panel .order_money {
   margin: 14px 0 0 -16px;
 }
+.status_panel.done .money_back {
+  position: absolute;
+  width: 160px;
+  margin: 45px 0 0 -38px !important;
+}
 .status_panel.done .status_date,
+.status_panel.done .money_back,
 .status_panel.done .order_money {
   font-size: 16px;
   color: #ccc;
@@ -739,12 +746,12 @@ ul.order_mainr.order_mains li:last-child i {
   display: block;
 }
 .dialog_b {
-  background: url(../../assets/ht_hoverc.jpg) no-repeat;
+  background: url(/static/images/ht_hoverc.jpg) no-repeat;
   width: 100%;
   height: 180px;
 }
 .dialog_b.details {
-  background: url(../../assets/details_problem_header.jpg) no-repeat;
+  background: url(/static/images/details_problem_header.jpg) no-repeat;
   width: 100%;
   height: 180px;
 }
@@ -823,6 +830,9 @@ ul.order_mainr.order_mains li:last-child i {
   color: #666;
   line-height: 28px;
   margin-top: 5px;
+  a {
+    color: #666;
+  }
 }
 .dialog_c img.dialog_h {
   margin: 20px auto 10px 31px;
@@ -839,6 +849,9 @@ ul.dialog_j {
 ul.dialog_j li {
   line-height: 38px;
   color: #666;
+  a {
+    color: #666;
+  }
 }
 ul.dialog_j li img {
   vertical-align: middle;

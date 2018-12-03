@@ -197,6 +197,7 @@ export default {
 };
 </script>
 <style lang="scss">
+.personal-cellphone{padding: 50px;}
 dl.htlist_dla { width: 445px; margin: 84px auto auto auto; }
 
 dl.htlist_dla em { color: #eb5169; margin-right: 5px; }
@@ -208,7 +209,7 @@ dl.htlist_dla input { border: 1px solid #bbbbbb; border-radius: 4px; line-height
 dl.htlist_dla input.htlist_dlb { width: 295px; }
 dl.htlist_dla input.htlist_dlb.disabled{cursor: not-allowed}
 
-dl.htlist_dla input.htlist_dlc { width: 160px; }
+.personal-cellphone dl.htlist_dla input.htlist_dlc { width: 160px; }
 
 dl.htlist_dla dd:first-child { margin-top: 0px; }
 
