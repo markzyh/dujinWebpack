@@ -1,11 +1,11 @@
 <template>
   <div class="login-register">
-    <div class="login-register-cover" v-if="watchShowLoginForm"></div> 
+    <div class="login-register-cover" v-if="watchShowLoginForm"></div>
     <!-- 登录注册模块 -->
     <transition name="show">
       <div class="flied_tc" :class="{show:watchShowLoginForm}" v-if="watchShowLoginForm">
         <div class="close_login_form" @click="hideLoginForm">x</div>
-        <div class="flied_td">
+        <div class="flied_td" v-if="!isforgetPassword">
           <h4 class="login_title">
             <span
               :class="{choosed:nowIndex === index}"
@@ -28,6 +28,7 @@
               >
             </div>
             <input class="flied_tj" type="button" value="立即登录" @click="userLogin">
+            <p class="forget_password_btn" @click="showForgetPassword">忘记密码</p>
           </form>
           <!-- </transition> -->
           <!-- <transition name="show"> -->
@@ -84,6 +85,7 @@
           </form>
           <!-- </transition> -->
         </div>
+        <forget-password v-if="isforgetPassword"/>
       </div>
     </transition>
     <!-- 登录注册模块 end-->
@@ -92,12 +94,14 @@
 
 <script>
 import axios from "axios";
+import ForgetPassword from '@/components/login-register/forget-password'
 export default {
-  components: {},
+  components: {ForgetPassword},
   props: ["isShowLoginForm"],
   name: "login-register",
   data() {
     return {
+      isforgetPassword:false,//是否忘记密码
       registerPhone: "", //注册手机号
       registerPassword: "", //注册密码
       confirmRegisterPassword: "", //确认注册密码
@@ -116,6 +120,9 @@ export default {
     };
   },
   methods: {
+    showForgetPassword(){
+      this.isforgetPassword = true//显示忘记密码版块
+    },
     switchLoginRegister(index) {
       this.nowIndex = index;
       if (index == 0) {
@@ -154,7 +161,7 @@ export default {
               return false;
             } else {
               alert("注册成功");
-              this.$router.push({path:'/personal-data'})
+              this.$router.push({ path: "/personal-data" });
             }
           });
       }
@@ -285,10 +292,9 @@ export default {
             this.setCookie("userPhone", userPhone, 1);
             this.setCookie("token", token, 1);
             this.setCookie("douyinId", douyinId, 1);
-            //this.$dispatch('loginAction',true)
-            //this.getUserName()
             this.hideLoginForm(); //父组件事件,隐藏窗口
             this.emitGetUsername(); //触发父组件获取用户名
+            window.location.reload()
           });
       }
     },
@@ -310,7 +316,7 @@ export default {
       //this.$emit("hideLoginForm");
       this.$store.dispatch("showLoginFormAction", false);
     },
-    chekIsLogin() {
+    /* chekIsLogin() {
       if (this.checkCookie("userName") != false) {
         //cookie中存在
         this.$store.dispatch("showLoginFormAction", false);
@@ -318,9 +324,8 @@ export default {
       } else {
         this.$store.dispatch("loginAction", false);
         this.$store.dispatch("showLoginFormAction", true);
-
       }
-    }
+    } */
   },
   computed: {
     watchUserName() {
@@ -332,18 +337,27 @@ export default {
   },
   mounted() {
     this.getImgCode();
-    this.chekIsLogin();
+    //this.chekIsLogin();
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-.login-register-cover{
+.login_form .forget_password_btn {
+  text-align: right;
+  margin-top: 20px;
+  display: block;
+  cursor: pointer;
+  color: #999;
+}
+.login-register-cover {
   position: fixed;
-  width: 100%;height: 100%;
-  top: 0;left: 0;
-  background: rgba(0,0,0,0.5);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
 .flied_tc {
@@ -357,7 +371,7 @@ export default {
   margin-left: -180px;
   z-index: 9999;
   display: none;
-  border:1px solid #efefef;
+  border: 1px solid #efefef;
 }
 .flied_tc.show {
   display: block;

@@ -13,7 +13,8 @@
         </div>
         <div class="ht_nav fl">
           <li>
-            <a href="/">首页</a>
+            <router-link to="/create-order">首页</router-link>
+<!--             <router-link to="/create-order" tag="a"></router-link> -->
           </li>
           <li>
             <a href="http://www.dujin021.com/douyin">抖音运营</a>
@@ -102,18 +103,7 @@ export default {
     hideLoginForm() {
       this.isShowLoginForm = false;
     },
-    chekIsLogin() {
-      if (this.checkCookie("userName") != false) {
-        //cookie中存在
-        this.userName = this.getCookie("userName");
-        this.$store.dispatch("loginAction", true);
-        //this.$store.dispatch("showLoginFormAction", true);
-        this.$store.dispatch("showLoginFormAction", false);
-      } else {
-        this.$store.dispatch("loginAction", false);
-        this.$store.dispatch("showLoginFormAction", true);
-      }
-    }
+    
   },
   computed: {
     watchUserName() {

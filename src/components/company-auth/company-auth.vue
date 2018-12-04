@@ -5,9 +5,9 @@
       <form action ref="auth_form">
         <div class="zzSub_box">
           <div class="compony_auth_label">
-            <b>*</b> 抖 音 号：
+            <b>*</b>抖音号：
           </div>
-          <input type="text" placeholder="请输入您要投放的抖音账号" class="zzSub_input" v-model="douyinName">
+          <input type="text"  class="zzSub_input" v-model="douyinName" placeholder="请输入要投放的抖音号">
         </div>
         <div class="zzSub_box">
           <div class="compony_auth_label">
@@ -79,7 +79,7 @@
 
       <div class="zzSub_box">
         <div class="compony_auth_label">
-          <b>*</b> 认 证 公 函
+          <b>*</b>认证公函
           <div class="create_order_tips">
             <img src="../../assets/create_order_tips.png" alt class="order_tips_icon">
             <div class="order_tips_description">
@@ -145,7 +145,7 @@
         </div>
         <div class="zzSub_box">
           <div class="compony_auth_label">
-            <b>*</b> 图 形 验 证 码：
+            <b>*</b>图形验证码：
           </div>
           <input type="text" class="dxyz_input" placeholder="请输入验证码" v-model="imgCheckCode">
           <img :src="imgCheckCodeUrl" alt class="imgCode" @click="getImgCheckCode">
@@ -153,7 +153,7 @@
         </div>
         <div class="zzSub_box">
           <div class="compony_auth_label">
-            <b>*</b> 短 信 验 证 码：
+            <b>*</b>短信验证码：
           </div>
           <input type="text" class="dxyz_input" placeholder="请输入验证码" v-model="phoneCheckCode">
           <input
@@ -228,8 +228,8 @@ export default {
       phoneCodeBtn: "获取验证码",
       isLetPhoneCode: true, //是否允许获取验证
       isConfirm: false, //是否确认了
-
-      isAgree: false //是否同意协议
+      isAgree: false, //是否同意协议
+      userInfo: "" //用户信息
     };
   },
   methods: {
@@ -345,7 +345,7 @@ export default {
     },
     //图片上传是验证图片
     beforeUpload(file) {
-      var fileSize = 5 * 1024; //500k
+      var fileSize = 500 * 1024; //500k
       var fileType1 = "JPG";
       var fileType2 = "JPEG";
       var uploadFileType = file.type.split("/")[1];
@@ -425,9 +425,13 @@ export default {
         alert("抖音号最多16位,只允许字母、下划线、点和数字");
         return false;
       }
-      if(!/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/.test(companyId)){
-        alert('请您填写正确的营业执照注册号,注册号为15位或18位')
-        return false
+      if (
+        !/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/.test(
+          companyId
+        )
+      ) {
+        alert("请您填写正确的营业执照注册号,注册号为15位或18位");
+        return false;
       }
       if (companyIdUrl == false) {
         alert("营业执照还未上传!");
@@ -445,11 +449,10 @@ export default {
         alert("输入框均为必填选项,请您填写完整!");
         return false;
       }
-      if(!/^[\u4E00-\u9FA5]{2,4}$/.test(operateName)){
-        alert('请您填写正确的姓名格式')
-        return false
-      } 
-       else {
+      if (!/^[\u4E00-\u9FA5]{2,4}$/.test(operateName)) {
+        alert("请您填写正确的姓名格式");
+        return false;
+      } else {
         return true;
       }
     },
@@ -488,9 +491,10 @@ export default {
               }
             }
           )
-          .then(function(res) {
+          .then(res => {
             if (res.data.Code == 11) {
-              userLoginOut();
+              alert("登录状态已过期,请重新登录");
+              this.globalLoginOut();
             }
             //console.log(res)
             alert("资料提交完成,请您重新登录");
@@ -517,6 +521,42 @@ export default {
       if (this.douyinNameVal == "") {
         this.douyinNameVal = this.getCookie("douyinId");
       }
+    },
+    setUserInfo(){
+      this.douyinName = this.userInfo.DouyinId
+      this.companyName = this.userInfo.CorpName
+      this.companyId = this.userInfo.CorpId
+      this.companyIdUrl = this.userInfo.Face
+      this.permitUrl = this.userInfo.FaceBack
+    },
+    getCompanyAuth() {
+      let Token = this.getCookie("token");
+      axios
+        .post(
+          "/account/GetUserInfo",
+          {
+            Token: Token
+          },
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
+          }
+        )
+        .then(res => {
+          console.log(res)
+          if (res.data.Code == 11) {
+            alert("登录状态已过期,请重新登录");
+            this.globalLoginOut();
+          }
+          console.log(res.data.Data.user.AuthType)
+          if (res.data.Data.user.AuthType == "企业认证") {
+            debugger
+            this.userInfo = res.data.Data.user;
+            this.setUserInfo();
+            console.log(this.userInfo);
+          }
+        });
     }
   },
   computed: {
@@ -526,11 +566,14 @@ export default {
   },
   mounted: function() {
     this.getImgCheckCode();
+    //this.getCompanyAuth();
   }
 };
 </script>
 <style lang="scss">
-.company-auth{padding: 50px;}
+.company-auth {
+  padding: 50px;
+}
 /* 企业认证页面 */
 .zzSub {
   width: 550px;
@@ -548,7 +591,7 @@ export default {
   margin: 0 0 0 8px;
 }
 .zzSub_box .compony_auth_label {
-  width: 170px;
+  width: 174px;
   text-align: right;
   line-height: 38px;
   font-size: 16px;
@@ -602,6 +645,19 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  form {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+  img {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+  }
 }
 .zzSub_box .sc_k input[type="file"] {
   display: none;

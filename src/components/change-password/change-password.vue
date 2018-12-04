@@ -29,7 +29,7 @@
               placeholder="请输入新密码"
               v-model="userNewPassword"
             >
-<!--             <img :src="checkCode" alt srcset> -->
+            <!--             <img :src="checkCode" alt srcset> -->
           </dd>
           <dd>
             <span class="htlist_dld">
@@ -54,11 +54,11 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   data() {
     return {
-      props:['testparam'],
+      props: ["testparam"],
       userCellphoneNumber: "",
       checkCode: "", //图形验证码
       oldPassword: "",
@@ -72,11 +72,11 @@ export default {
       var oldPassword = this.oldPassword;
       var userNewPassword = this.userNewPassword;
       var confirmNewPassword = this.confirmNewPassword;
-      var Token = this.getCookie('token')
+      var Token = this.getCookie("token");
       console.log(Token);
-      if(oldPassword == '' || userNewPassword == ''){
-          alert('密码不能为空!')
-          return false
+      if (oldPassword == "" || userNewPassword == "") {
+        alert("密码不能为空!");
+        return false;
       }
       if (oldPassword == userNewPassword) {
         alert("新密码与旧密码一致,请您输入新的密码");
@@ -100,20 +100,21 @@ export default {
               }
             }
           )
-          .then((res) =>{
+          .then(res => {
             console.log(res);
             if (res.data.Code == 14) {
               alert("您的原密码输入有误,请您重新输入");
-              return false
+              return false;
             }
-            if(res.data.Code == 11){
-              alert('登录状态失效,请您重新登录')
-              return false
+            if (res.data.Code == 11) {
+              alert("登录状态已过期,请重新登录");
+              this.globalLoginOut();
+              window.location.reload()
             }
-            alert('修改密码成功,请您重新登录')
-            this.globalLoginOut();//清除cookie
-            this.$store.dispatch('loginAction',false)
-            this.$store.dispatch('showLoginFormAction',true)
+            alert("修改密码成功,请您重新登录");
+            this.globalLoginOut(); //清除cookie
+            this.$store.dispatch("loginAction", false);
+            this.$store.dispatch("showLoginFormAction", true);
             //console.log(this.$store.getters.getshowLoginForm)
           });
       }
@@ -135,13 +136,15 @@ export default {
       }
     }
   },
-  mounted(){
+  mounted() {
     //console.log(this.testparam)
   }
 };
 </script>
 <style lang="scss">
-.change-password{padding: 50px;}
+.change-password {
+  padding: 50px;
+}
 dl.htlist_dla {
   width: 445px;
   margin: 84px auto auto auto;
@@ -152,9 +155,9 @@ dl.htlist_dla em {
   margin-right: 5px;
 }
 
-dl.htlist_dla dd:first-child label {
+/* dl.htlist_dla dd:first-child label {
   letter-spacing: 4px;
-}
+} */
 
 dl.htlist_dla input {
   border: 1px solid #bbbbbb;
@@ -180,9 +183,9 @@ dl.htlist_dla dd:first-child {
   margin-top: 0px;
 }
 
-dl.htlist_dla dd:last-child {
+/* dl.htlist_dla dd:last-child {
   margin-top: 44px;
-}
+} */
 
 dl.htlist_dla dd {
   margin-top: 28px;
@@ -192,6 +195,7 @@ dl.htlist_dla dd span.htlist_dld {
   width: 126px;
   display: inline-block;
   font-size: 16px;
+  text-align: right;
 }
 
 dl.htlist_dla dd img {

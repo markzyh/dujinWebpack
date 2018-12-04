@@ -58,7 +58,9 @@
               <td>{{item.PayMoney}}</td>
               <td>{{item.Refund}}</td>
               <td>{{item.Balance}}</td>
-              <td style="width: 180px">{{transformDateStamp(parseInt(item.CreateDateTime.substr(6, 19)))}}</td>
+              <td
+                style="width: 180px"
+              >{{transformDateStamp(parseInt(item.CreateDateTime.substr(6, 19)))}}</td>
             </tr>
           </table>
         </div>
@@ -70,7 +72,7 @@
 import axios from "axios";
 import DatePicker from "vue2-datepicker";
 export default {
-    components:{DatePicker},
+  components: { DatePicker },
   data() {
     return {
       shortcuts: [
@@ -119,8 +121,8 @@ export default {
         alert("开始时间必须在结束时间之前");
         return false;
       } else {
-        Start = this.transformDateStamp(this.startDateVal)
-        End = this.transformDateStamp(this.endDateVal)
+        Start = this.transformDateStamp(this.startDateVal);
+        End = this.transformDateStamp(this.endDateVal);
         //this.getOrderList(Status, Start, End, DataType);
         this.getPaymentList(Status, Start, End, Type);
         console.log(this.startDateVal);
@@ -167,11 +169,11 @@ export default {
             }
           }
         )
-        .then(function(res) {
+        .then((res) =>{
           console.log(res);
           if (res.data.Code == 11) {
-            //alert('"登录状态失效，请重新登录"')
-            //userLoginOut();
+            alert("登录状态已过期,请重新登录");
+            this.globalLoginOut();
           }
           _this.orderList = res.data.Data;
         });
@@ -198,7 +200,7 @@ export default {
         ":" +
         this.checkTen(timeSeconds);
       return time;
-    },
+    }
   },
   mounted: function() {
     this.getPaymentList("");
@@ -206,7 +208,9 @@ export default {
 };
 </script>
 <style lang="scss">
-.consumption{padding: 50px;}
+.consumption {
+  padding: 50px;
+}
 .mx-panel-date td.today {
   background: #2a90e9;
   color: #fff;

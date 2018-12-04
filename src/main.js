@@ -21,7 +21,7 @@ Vue.prototype.setCookie = function (cname, cvalue, exdays) {
   var expires = "expires=" + d.toUTCString() //
   var path = "path=/"
   document.cookie = cname + "=" + cvalue + "; " + expires + ";" + path // 这个很重要代表在那个层级下可以访问cookie
-  console.log(document.cookie)
+  //console.log(document.cookie)
 }
 //获取cookie
 Vue.prototype.getCookie = function (cname) {
@@ -94,22 +94,24 @@ Vue.prototype.btnSeconds = function () {
   }, 1000)
 }
 //限制浏览
-Vue.prototype.limit = function () {
+/* Vue.prototype.limit = function () {
   if (this.checkCookie('userName') == false) {
     alert("登录状态已过期,请您重新登录");
     this.$router.push({
       path: "/"
     });
   }
-}
-//退出登录,,删除用户信息 
+} */
+//全局退出登录,,删除用户信息,更改store
 Vue.prototype.globalLoginOut = function () {
-  console.log('9999')
   this.deleteCookie("userName");
   this.deleteCookie("userPhone");
   this.deleteCookie("token");
   this.deleteCookie("douyinId");
-  console.log(this.getCookie('userName'))
+  //this.$store.dispatch("showLoginFormAction", true);//显示登录框
+  //this.$store.dispatch("loginAction", false);//退出登录状态
+  //window.location.reload()
+  //console.log(this.getCookie('userName'))
 }
 //把时间戳转换为中文时间
 Vue.prototype.transformDateStamp = function (param) {
@@ -128,6 +130,19 @@ Vue.prototype.checkTen = function (num) {
     num = "0" + num
   }
   return num
+}
+//检测cookie中的值,用于app.vue,mounted后检测
+Vue.prototype.chekIsLogin = function(){
+  if (this.checkCookie("userName") != false) {
+    //cookie中存在
+    this.userName = this.getCookie("userName");
+    this.$store.dispatch("loginAction", true);
+    //this.$store.dispatch("showLoginFormAction", true);
+    this.$store.dispatch("showLoginFormAction", false);
+  } else {
+    this.$store.dispatch("loginAction", false);
+    this.$store.dispatch("showLoginFormAction", true);
+  }
 }
 //router-link改title
 router.beforeEach((to, from, next) => {

@@ -77,18 +77,26 @@ export default {
       console.log(token);
       var _this = this;
       axios
-        .post("/account/GetUserInfo", {
-          Token: token
-        },{
-          headers:{
-            'content-type': 'application/x-www-form-urlencoded'
+        .post(
+          "/account/GetUserInfo",
+          {
+            Token: token
+          },
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
           }
-        })
-        .then(function(res) {
+        )
+        .then((res) =>{
           /* if (res.data.Code == 11) {
             //userLoginOut();
             return false;
           } */
+          if (res.data.Code == 11) {
+            alert("登录状态已过期,请重新登录");
+            this.globalLoginOut();
+          }
           _this.userInfo = res.data.Data;
           _this.setUserInfo();
           _this.setOrderInfo();
@@ -123,7 +131,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-.personal-center{padding: 50px;}
+.personal-center {
+  padding: 50px;
+}
 .htlist_ul {
   width: 1035px;
   height: 755px;

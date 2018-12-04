@@ -241,7 +241,6 @@
                             type="radio"
                             name="RadioGroup1"
                             :value="choosedRangeValue"
-                            id="RadioGroup1_0"
                             @click="chooseNearbyKm(index)"
                             @change="showRange"
                             :checked="choosedRangeIndex === index"
@@ -327,7 +326,7 @@
         </label>
       </div>
       <div class="order_link order_price">
-        <label for="order_increment">系统定义金额
+        <label for="order_increment">投放金额
           <div class="create_order_tips">
             <img src="../../assets/create_order_tips.png" alt class="order_tips_icon">
             <div class="order_tips_description">
@@ -353,10 +352,10 @@
               src="../../assets/order_tips_description_tri.jpg"
               alt
               class="order_tips_description_tri show"
-              v-if="nowPayIndex === 1 &&index === 1"
+              v-if="nowPayIndex === 1 &&index === 1 && showUserInputMoney"
             >
           </span>
-          <div class="customtype_form show" v-if="nowPayIndex === 1 && index === 1">
+          <div class="customtype_form show" v-if="nowPayIndex === 1 && index === 1 && showUserInputMoney">
             <h3>自定义金额</h3>
             <input v-model="customPayNumber" @focus="inputFocus" @blur="inputBlur">
             <h6>金额在{{limitMoney}}~500000之间，且为100的倍数</h6>
@@ -415,6 +414,7 @@ export default {
       payNumberValue: 800, //充值金额
       customPayNumber: "¥ 请输入金额", //自定义充值金额
       isShowDefaultValue: false,
+      showUserInputMoney:true,//是否显示用户自定义金额
       userAgeIndex: [1],
       userSexIndex: 0,
       userRegionIndex: 0,
@@ -475,7 +475,7 @@ export default {
       ],
       PayLists: [
         {
-          name: "投放金额"
+          name: "系统定义金额"
         },
         {
           name: "自定义投放"
@@ -599,8 +599,8 @@ export default {
         )
         .then(res => {
           if (res.data.Code == 11) {
-            //alert('登录状态已过期,请重新登录')
-            //userLoginOut(); //退出登录
+            alert('登录状态已过期,请重新登录')
+            this.globalLoginOut()
           } else {
             console.log(res);
             console.log("put in is done");
@@ -808,7 +808,7 @@ export default {
           },
           "myFun"
         );
-      }, 200);
+      }, 500);
     },
     openMap() {
       //var allmap = this.$refs.allmap
@@ -1024,7 +1024,8 @@ export default {
       if (this.checkCustomPayNumber(this.customPayNumber) != false) {
         this.payNumberValue = this.customPayNumber; //输入的金额等于显示的金额
         //alert(this.customPayNumber)
-        this.nowPayIndex = 2; //金额的方式
+        this.nowPayIndex = 1; //金额的方式
+        this.showUserInputMoney = false
         //return false
       } else {
         return false;
@@ -1032,6 +1033,9 @@ export default {
     },
     choosePayNumber: function(index) {
       this.nowPayIndex = index;
+      if(index == 1){
+        this.showUserInputMoney = true
+      }
     },
     //选择投放方式
     chooseOrderType: function(index) {
@@ -1492,6 +1496,7 @@ input[type="radio"] {
   font-size: 16px;
   margin: 26px 0 10px;
   text-indent: 0.5em;
+  color: #333;
 }
 
 .create_order_tips {

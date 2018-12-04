@@ -12,10 +12,9 @@
             class="htlist_dlb"
             name="mobile"
             type="text"
-            v-model="douyinNameVal"
+           
+            :value="douyinNameVal"
             placeholder="请输入您要投放的抖音昵称"
-            @focus="dyNameFocus"
-            @blur="dyNameBlur"
           >
         </dd>
         <dd>
@@ -27,10 +26,9 @@
             class="htlist_dlb"
             name="mobile"
             type="text"
-            v-model="douyinNumberVal"
+
+            :value="douyinNumberVal"
             placeholder="请输入您要投放的抖音号"
-            @focus="dyIdFocus"
-            @blur="dyNameFocus"
           >
         </dd>
         <dd>
@@ -82,7 +80,7 @@
           <div class="personal_auth" v-if="choosedAuthIndex === 0">
             <p class="personal_auth_name">
               <span>
-                <em>*</em>真实姓名：
+                <em>*</em>真实姓名
               </span>
               <input type="text" v-model="userRealName" placeholder="请输入您的真实姓名">
             </p>
@@ -247,7 +245,7 @@ export default {
     },
     //图片上传是验证图片
     beforeUpload(file) {
-      var fileSize = 5 * 1024; //500k
+      var fileSize = 500 * 1024; //500k
       var fileType1 = "JPG";
       var fileType2 = "JPEG";
       var uploadFileType = file.type.split("/")[1];
@@ -325,10 +323,10 @@ export default {
         alert("真实姓名为必填选项");
         return false;
       }
-       if(!/^[\u4E00-\u9FA5]{2,4}$/.test(realName)){
-        alert('请您填写正确的姓名')
-        return false
-      } 
+      if (!/^[\u4E00-\u9FA5]{2,4}$/.test(realName)) {
+        alert("请您填写正确的姓名");
+        return false;
+      }
       if (isUploadFace == false) {
         alert("个人身份证正面还未上传哦!");
         return false;
@@ -353,9 +351,13 @@ export default {
         alert('请您填写正确的公司名称')
         return false
       }  */
-      if(!/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/.test(companyNumber)){
-        alert('请您填写正确的营业执照注册号,注册号为15位或18位')
-        return false
+      if (
+        !/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/.test(
+          companyNumber
+        )
+      ) {
+        alert("请您填写正确的营业执照注册号,注册号为15位或18位");
+        return false;
       }
       if (isUploadCompany == false) {
         alert("营业执照还未上传!");
@@ -425,22 +427,26 @@ export default {
           }
         )
         .then(res => {
+          console.log(res)
           if (res.data.Code == 11) {
-            //userLoginOut();
+            alert("登录状态已过期,请重新登录");
+            this.globalLoginOut();
+            window.location.reload()
           }
           //console.log(res)
           alert("资料提交完成");
           let userName = res.data.Data.Name;
           let userPhone = res.data.Data.Phone;
-          let token = res.data.Token;
+          //let token = res.data.Token;
           let douyinId = res.data.Data.DouyinId;
           this.setCookie("userName", userName, 1);
           this.setCookie("userPhone", userPhone, 1);
-          this.setCookie("token", token, 1);
+          //this.setCookie("token", token, 1);
           this.setCookie("douyinId", douyinId, 1);
-          this.$router.push({
+          /* this.$router.push({
             path: "/create-order"
-          });
+          }); */
+          window.location.href = "/dist/#/create-order";
           //this.globalLoginOut()
           //userLoginOut();
         });
@@ -464,12 +470,19 @@ export default {
       if (this.douyinNameVal == "") {
         this.douyinNameVal = this.getCookie("douyinId");
       }
-    }
+    },
+    getUserInfo(params,value){
+      if(this.getCookie(params) != ''){
+        this[value] = this.getCookie(params)
+      }else{
+        this[value] = ''
+      }
+    },
   },
   mounted() {
-    this.userCellphoneNumber = this.getCookie("userPhone");
-    //this.douyinNumberVal = this.getCookie("douyinId");
-    //this.douyinNameVal = this.getCookie("username");
+    this.getUserInfo('userName','douyinNameVal')
+    this.getUserInfo('douyinId','douyinNumberVal')
+    this.getUserInfo('userPhone','userCellphoneNumber')
   }
 };
 </script>
@@ -490,11 +503,11 @@ dl.htlist_dla em {
   margin-right: 5px;
 }
 
-dl.htlist_dla dd:first-child label {
+/* dl.htlist_dla dd:first-child label {
   letter-spacing: 4px;
-}
-.personal-data{
-  dl.htlist_dla input{
+} */
+.personal-data {
+  dl.htlist_dla input {
     width: 295px;
   }
 }
@@ -534,6 +547,7 @@ dl.htlist_dla dd span.htlist_dld {
   width: 126px;
   display: inline-block;
   font-size: 16px;
+  text-align: right;
 }
 
 dl.htlist_dla dd img {
@@ -663,6 +677,19 @@ input[type="radio"].radio_checked {
   align-items: center;
   justify-content: center;
   border-radius: 5px;
+  form {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+  img {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+  }
 }
 .auth_idcard input {
   display: none;

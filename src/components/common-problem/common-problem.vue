@@ -209,7 +209,7 @@ export default {
   color: #333;
 }
 .dialog_c .dialog_f i {
-  color: #666666;
+  color: #333;
   font-size: 16px;
   font-style: italic;
 }
@@ -221,7 +221,7 @@ export default {
 .dialog_c p.dialog_g {
   margin-left: 31px;
   font-size: 16px;
-  color: #666;
+  color: #333;
   line-height: 28px;
   margin-top: 5px;
   a{
@@ -232,7 +232,7 @@ export default {
   margin: 20px auto 10px 31px;
 }
 p.dialog_i {
-  color: #666666;
+  color: #333;
   font-size: 16px;
   margin-left: 31px;
   line-height: 36px;

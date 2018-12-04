@@ -381,6 +381,10 @@ export default {
           }
         )
         .then(res => {
+          if (res.data.Code == 11) {
+            alert('登录状态已过期,请重新登录')
+            this.globalLoginOut()
+          }
           console.log(res.data.Data);
           this.orderInfo = res.data.Data;
           this.orderStatus = res.data.Data.Status;
@@ -415,6 +419,7 @@ export default {
   .order_link {
     margin-right: 200px;
     color: #999;
+    margin-top: 24px;
   }
 }
 .status_not {
@@ -815,7 +820,7 @@ ul.order_mainr.order_mains li:last-child i {
   color: #333;
 }
 .dialog_c .dialog_f i {
-  color: #666666;
+  color: #333;
   font-size: 16px;
   font-style: italic;
 }
@@ -827,7 +832,7 @@ ul.order_mainr.order_mains li:last-child i {
 .dialog_c p.dialog_g {
   margin-left: 31px;
   font-size: 16px;
-  color: #666;
+  color: #333;
   line-height: 28px;
   margin-top: 5px;
   a {
