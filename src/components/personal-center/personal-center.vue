@@ -96,6 +96,8 @@ export default {
           if (res.data.Code == 11) {
             alert("登录状态已过期,请重新登录");
             this.globalLoginOut();
+            this.$store.dispatch("loginAction", false);
+            this.$store.dispatch("showLoginFormAction", true);
           }
           _this.userInfo = res.data.Data;
           _this.setUserInfo();

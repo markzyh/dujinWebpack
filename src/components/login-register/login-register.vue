@@ -315,6 +315,7 @@ export default {
     hideLoginForm() {
       //this.$emit("hideLoginForm");
       this.$store.dispatch("showLoginFormAction", false);
+      this.isforgetPassword = false
     },
     /* chekIsLogin() {
       if (this.checkCookie("userName") != false) {
