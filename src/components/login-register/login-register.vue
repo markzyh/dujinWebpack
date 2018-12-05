@@ -81,7 +81,7 @@
                 :class="{disabled:!letGetPhoneCode}"
               >
             </div>
-            <p class="register_privacy">注册即表示同意 <a href="/privacy.html" target="_blank">度进营销用户服务协议及隐私条款</a></p>
+            <p class="register_privacy">注册即表示同意 <a href="/service.html" target="_blank">度进营销用户服务协议及隐私条款</a>及<a href="/privacy.html" target="_blank">隐私条款</a></p>
             <input class="flied_tj" type="button" value="立即注册" @click="userRegister">
           </form>
           <!-- </transition> -->

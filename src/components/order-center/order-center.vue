@@ -220,6 +220,11 @@ export default {
     },
 
     getOrderList: function(status, start, end, dateType) {
+      //console.log(this.$route.params.orderStatus)
+      if(this.$route.params.orderStatus){
+        //console.log(this.$route.params.orderStatus)
+        status = this.$route.params.orderStatus
+      }
       //this.getToken()
       var token = this.getCookie("token");
       //console.log(token)

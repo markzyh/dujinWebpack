@@ -37,15 +37,18 @@
     <div class="person_ding">
       <div class="ding">
         <img src="../../assets/grxx_icon01.png" alt>未支付订单
-        <span>{{unpaidOrder}}</span>
+        <!-- <span>{{unpaidOrder}}</span> -->
+        <router-link :to="{path:'OrderCenter',params:{orderStatus:1}}" tag="span">{{unpaidOrder}}</router-link>
       </div>
       <div class="ding ywc">
         <img src="../../assets/grxx_icon02.png" alt>已完成订单
-        <span>{{completeOrder}}</span>
+        <!-- <span>{{completeOrder}}</span> -->
+        <router-link :to="{name:'OrderCenter',params:{orderStatus:3}}" tag="span">{{completeOrder}}</router-link>
       </div>
       <div class="ding">
         <img src="../../assets/grxx_icon03.png" alt>执行中订单
-        <span>{{executingOrder}}</span>
+        <!-- <span>{{executingOrder}}</span> -->
+        <router-link :to="{name:'OrderCenter',params:{orderStatus:2}}" tag="span">{{executingOrder}}</router-link>
       </div>
     </div>
   </div>
@@ -224,6 +227,7 @@ export default {
   color: #eb5169;
   font-size: 34px;
   margin-left: 12px;
+  cursor: pointer;
 }
 </style>
 

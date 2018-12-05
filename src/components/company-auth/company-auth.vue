@@ -89,7 +89,7 @@
                 class="order_tips_description_tri"
               >
               <b>认证公函</b>下载填写
-              <a href>《企业认证申请公函》</a>，填写完成后加盖红色公章，上传清晰的公函扫描件。
+              <a href="/auth.docx">《企业认证申请公函》</a>，填写完成后加盖红色公章，上传清晰的公函扫描件。
             </div>
           </div>：
         </div>
