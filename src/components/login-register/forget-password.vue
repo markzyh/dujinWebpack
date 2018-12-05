@@ -2,7 +2,7 @@
   <div class="forget-password-com flied_td">
     <h4 class="login_title">{{forgetName}}</h4>
     <!--忘记密码-->
-    <form class="login_form show login_form_forget" v-if="!nextStep">
+    <form class="login_form show login_form_forget" v-if="!nextStep" @keyup.enter="forgetNext">
       <div class="flied_te">
         <input type="tel" id="forget_userphone" placeholder="输入手机号" v-model="forgetPhone">
       </div>
@@ -42,10 +42,9 @@
         >
       </div>
       <input class="flied_tj" type="button" value="下一步" @click="forgetNext">
-      <!--<p class="forget_password" onclick="showForgetPassword">忘记密码</p>-->
     </form>
     <!--重置密码-->
-    <form class="login_form reset_password" v-if="nextStep">
+    <form class="login_form reset_password" v-if="nextStep" @keyup.enter="resetPassword">
       <div class="flied_te">
         <input
           type="password"

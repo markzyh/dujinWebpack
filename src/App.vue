@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!--  <slider-verification :isShowLoginForm="isShowLoginForm" @hideLoginForm="hideLoginForm"></slider-verification> -->
     <login-register
       :isShowLoginForm="isShowLoginForm"
       @hideLoginForm="hideLoginForm"
@@ -14,7 +13,6 @@
         <div class="ht_nav fl">
           <li>
             <router-link to="/create-order">首页</router-link>
-<!--             <router-link to="/create-order" tag="a"></router-link> -->
           </li>
           <li>
             <a href="http://www.dujin021.com/douyin">抖音运营</a>
@@ -123,7 +121,9 @@ export default {
 </script>
 
 <style lang="scss">
-
+#app{
+  width: 100%;
+}
 /* 清除内外边距*/
 * {
   margin: 0px;
@@ -277,7 +277,7 @@ input:-ms-input-placeholder {
   top: 150px;
   left: 50%;
   padding-bottom: 126px;
-  margin-left: -180px;
+  margin-left: -263px;
   z-index: 9999;
   display: none;
 }
@@ -400,7 +400,7 @@ input.flied_tj {
   margin-top: 38px;
 }
 .htHeader {
-  /* width:1600px; */
+  width:100%;
   height: 90px;
   background: #fefefe;
   margin: 0 auto;
@@ -573,4 +573,5 @@ input[type="radio"] {
 .create_order_tips:hover .order_tips_description {
   display: block;
 }
+
 </style>

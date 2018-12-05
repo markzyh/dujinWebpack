@@ -11,9 +11,8 @@
           <input
             class="htlist_dlb"
             name="mobile"
-            type="text"
-           
-            :value="douyinNameVal"
+            type="text"    
+            v-model="douyinNameVal"
             placeholder="请输入您要投放的抖音昵称"
           >
         </dd>
@@ -26,8 +25,7 @@
             class="htlist_dlb"
             name="mobile"
             type="text"
-
-            :value="douyinNumberVal"
+            v-model="douyinNumberVal"
             placeholder="请输入您要投放的抖音号"
           >
         </dd>
@@ -99,7 +97,7 @@
                       id="upload_idcard_face"
                       name="path"
                       @change="uploadCardFace($event,'upload_idcard_face','idcardFaceURL')"
-                    >
+                    ><span v-if="idcardFaceURL != false" class="cancle_upload" @click="cancelUpload('idcardFaceURL')">x</span>
                     <img :src="idcardFaceURL" alt v-if="idcardFaceURL != false">
                   </form>
                 </div>
@@ -115,7 +113,7 @@
                       name="path"
                       id="upload_idcard_back"
                       @change="uploadCardFace($event,'upload_idcard_back','idcardBackURL')"
-                    >
+                    ><span v-if="idcardBackURL != false" class="cancle_upload" @click="cancelUpload('idcardBackURL')">x</span>
                     <img :src="idcardBackURL" alt v-if="idcardBackURL != false">
                   </form>
                 </div>
@@ -158,6 +156,7 @@
                       name="path"
                       @change="uploadCardFace($event,'compamy_idcard','companyIdUrl')"
                     >
+                    <span v-if="companyIdUrl != false" class="cancle_upload" @click="cancelUpload('companyIdUrl')">x</span>
                     <img :src="companyIdUrl" alt v-if="companyIdUrl != false">
                   </form>
                 </div>
@@ -180,6 +179,7 @@
                       name="path"
                       @change="uploadCardFace($event,'industryCard','industryCardURL')"
                     >
+                    <span v-if="industryCardURL != false" class="cancle_upload" @click="cancelUpload('industryCardURL')">x</span>
                     <img :src="industryCardURL" alt v-if="industryCardURL != false">
                   </form>
                 </div>
@@ -198,7 +198,7 @@
             value
             @click="changeAgree"
           >同意
-          <a href>《上海度进信息科技有限公司服务使用协议》</a>
+          <a href='/service.html' target="_blank">《上海度进信息科技有限公司服务使用协议》</a>
         </p>
         <input
           type="button"
@@ -276,7 +276,11 @@ export default {
 			var formData = new FormData()
 			formData.append('file',file)
 
-		}, */
+    }, */
+    //取消上传图片
+    cancelUpload(attr){
+      this[attr] = false
+    },
     uploadCardFace: function(event, ref, attr) {
       var file = this.$refs[ref].files[0];
       console.log(file);
@@ -380,7 +384,8 @@ export default {
       var AuthType = this.authenticationLists[this.choosedAuthIndex]; //认证类型
       var CorpId = this.companyNumber; //公司id
       var CorpName = this.companyName; //公司名称
-      var Face, FaceBack; //身份或者营业执照,行业许可证
+      var Face, FaceBack,CorpLicense,CorpPermit; //身份或者营业执照,行业许可证
+      
       if (!Name || !DouyinId) {
         alert("请填写您的抖音昵称和抖音号!");
         return false;
@@ -402,8 +407,8 @@ export default {
         if (this.checkCompanyAuth() == false) {
           return false;
         }
-        Face = this.companyIdUrl; //营业执照
-        FaceBack = this.industryCardURL; //行业许可证
+        CorpLicense = this.companyIdUrl; //营业执照
+        CorpPermit = this.industryCardURL; //行业许可证
       }
       //alert('成功')
       axios
@@ -418,6 +423,8 @@ export default {
             CorpName: CorpName,
             Face: Face,
             FaceBack: FaceBack,
+            CorpLicense:CorpLicense,
+            CorpPermit:CorpPermit,
             RealName: RealName
           },
           {
@@ -755,5 +762,15 @@ input[type="radio"].radio_checked {
   background: #ebebeb;
   cursor: not-allowed;
 }
+.auth_idcard{
+  position: relative;
+  span.cancle_upload{
+  position: absolute;top:0;right: 0;
+  width: 20px;height: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+}
+
 </style>
 

@@ -33,7 +33,7 @@
           <!-- </transition> -->
           <!-- <transition name="show"> -->
           <!-- 注册模块 -->
-          <form class="login_form register_form" v-if="!wantToLogin">
+          <form class="login_form register_form" v-if="!wantToLogin" @keyup.enter="userRegister">
             <div class="flied_te">
               <input type="tel" id="registerPhone" placeholder="输入手机号" v-model="registerPhone">
             </div>
@@ -81,6 +81,7 @@
                 :class="{disabled:!letGetPhoneCode}"
               >
             </div>
+            <p class="register_privacy">注册即表示同意 <a href="/privacy.html" target="_blank">度进营销用户服务协议及隐私条款</a></p>
             <input class="flied_tj" type="button" value="立即注册" @click="userRegister">
           </form>
           <!-- </transition> -->
@@ -525,5 +526,6 @@ input.flied_tj {
 .show-leave-to {
   opacity: 0;
 }
+.register_privacy{margin:16px 0 0;color: #999;}
 </style>
 

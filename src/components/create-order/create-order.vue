@@ -355,7 +355,10 @@
               v-if="nowPayIndex === 1 &&index === 1 && showUserInputMoney"
             >
           </span>
-          <div class="customtype_form show" v-if="nowPayIndex === 1 && index === 1 && showUserInputMoney">
+          <div
+            class="customtype_form show"
+            v-if="nowPayIndex === 1 && index === 1 && showUserInputMoney"
+          >
             <h3>自定义金额</h3>
             <input v-model="customPayNumber" @focus="inputFocus" @blur="inputBlur">
             <h6>金额在{{limitMoney}}~500000之间，且为100的倍数</h6>
@@ -414,7 +417,7 @@ export default {
       payNumberValue: 800, //充值金额
       customPayNumber: "¥ 请输入金额", //自定义充值金额
       isShowDefaultValue: false,
-      showUserInputMoney:true,//是否显示用户自定义金额
+      showUserInputMoney: true, //是否显示用户自定义金额
       userAgeIndex: [1],
       userSexIndex: 0,
       userRegionIndex: 0,
@@ -599,8 +602,8 @@ export default {
         )
         .then(res => {
           if (res.data.Code == 11) {
-            alert('登录状态已过期,请重新登录')
-            this.globalLoginOut()
+            alert("登录状态已过期,请重新登录");
+            this.globalLoginOut();
           } else {
             console.log(res);
             console.log("put in is done");
@@ -777,12 +780,23 @@ export default {
     },
     //输入地址的地图
     localMap() {
-      var _thisMap = this.openMap();
-      setTimeout(() => {
+      let promise = new Promise((resolve, reject) => {
+        var map = new BMap.Map("allmap");
+        var point = new BMap.Point(116.331398, 39.897445);
+        map.centerAndZoom(point, 12);
+        function myFun(result) {
+          var cityName = result.name;
+          map.setCenter(cityName);
+        }
+        var myCity = new BMap.LocalCity();
+        myCity.get(myFun);
+        resolve(map);
+      });
+      promise.then(map => {
+        var _thisMap = map;
         //异步是因为实例化地图对象需要重做一遍,需要时间
         _thisMap.clearOverlays(); //先清除地图标注
         console.log(_thisMap);
-        //values = $(".input_address").val();
         var values = this.userInputAddressName;
         var myGeo = new BMap.Geocoder();
         myGeo.getPoint(
@@ -795,7 +809,6 @@ export default {
               _thisMap.centerAndZoom(mPoint, 12);
               var marker = new BMap.Marker(mPoint); // 创建标注
               _thisMap.addOverlay(marker);
-              //var range = $("#dist-sel input:checked").val();
               var range = this.choosedRangeValue;
               var circle = new BMap.Circle(mPoint, range, {
                 fillColor: "blue",
@@ -808,24 +821,12 @@ export default {
           },
           "myFun"
         );
-      }, 500);
+      });
     },
     openMap() {
-      //var allmap = this.$refs.allmap
-      //console.log(allmap)
-      //setTimeout(function() {
-      var map = new BMap.Map("allmap");
-      var point = new BMap.Point(116.331398, 39.897445);
-      map.centerAndZoom(point, 12);
-      function myFun(result) {
-        var cityName = result.name;
-        map.setCenter(cityName);
-      }
-      var myCity = new BMap.LocalCity();
-      myCity.get(myFun);
-      console.log(map);
-      return map;
-      //}, 2000);
+      //let flag = false;
+      this.localMap()
+      //console.log(map);
     },
     //用户输入框输入地址,change事件
     userInputAddress: function() {
@@ -1025,7 +1026,7 @@ export default {
         this.payNumberValue = this.customPayNumber; //输入的金额等于显示的金额
         //alert(this.customPayNumber)
         this.nowPayIndex = 1; //金额的方式
-        this.showUserInputMoney = false
+        this.showUserInputMoney = false;
         //return false
       } else {
         return false;
@@ -1033,8 +1034,8 @@ export default {
     },
     choosePayNumber: function(index) {
       this.nowPayIndex = index;
-      if(index == 1){
-        this.showUserInputMoney = true
+      if (index == 1) {
+        this.showUserInputMoney = true;
       }
     },
     //选择投放方式

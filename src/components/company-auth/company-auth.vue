@@ -172,7 +172,7 @@
           <label for>
             <input type="checkbox" class="syxy_input">
             <em>同意</em>
-            <a href>《度进公司服务使用协议》</a>
+            <a href="/service.html" target="_blank">《度进公司服务使用协议》</a>
           </label>
         </div>
       </div>
@@ -526,8 +526,8 @@ export default {
       this.douyinName = this.userInfo.DouyinId
       this.companyName = this.userInfo.CorpName
       this.companyId = this.userInfo.CorpId
-      this.companyIdUrl = this.userInfo.Face
-      this.permitUrl = this.userInfo.FaceBack
+      this.companyIdUrl = this.userInfo.CorpLicense
+      this.permitUrl = this.userInfo.CorpPermit
     },
     getCompanyAuth() {
       let Token = this.getCookie("token");
@@ -566,7 +566,7 @@ export default {
   },
   mounted: function() {
     this.getImgCheckCode();
-    //this.getCompanyAuth();
+    this.getCompanyAuth();
   }
 };
 </script>
