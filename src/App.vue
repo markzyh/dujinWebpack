@@ -53,13 +53,12 @@
 </template>
 
 <script>
-import SliderVerification from "@/base/slider-verification/slider-verification";
+
 import LoginRegister from "@/components/login-register/login-register";
 import NavBar from "@/components/navbar/navbar";
 //import Index from "@/components/index/index.html";
 export default {
   components: {
-    SliderVerification,
     LoginRegister,
     NavBar
   },
@@ -414,6 +413,7 @@ input.flied_tj {
 .ht_logo img {
   margin-top: 30px;
   margin-left: 40px;
+  width: 233px;height: 28px;
 }
 
 .ht_nav {
@@ -449,6 +449,7 @@ input.flied_tj {
 .ht_person img {
   margin-bottom: -12px;
   margin-right: 13px;
+  width: 37px;height: 37px;
 }
 body {
   background: #d3d3d3;

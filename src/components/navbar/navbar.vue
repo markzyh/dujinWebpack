@@ -135,45 +135,56 @@ export default {
   height: 22px;
   margin-bottom: -5px;
   margin-right: 14px;
+
 }
 
 .ht_content_ul > li:nth-child(1) i {
   background: url(../../assets/ht_list01.png) no-repeat;
+  background-size: 24px 22px;
 }
 
 .ht_content_ul > li:nth-child(2) i {
   background: url(../../assets/dy-putin-icon.png) no-repeat;
+  background-size: 20px 21px;
 }
 
 .ht_content_ul > li:nth-child(3) i {
   background: url(../../assets/ht_list02.png) no-repeat;
+  background-size: 24px 22px;
 }
 
 .ht_content_ul > li:nth-child(4) i {
   background: url(../../assets/ht_list03.png) no-repeat;
+  background-size: 24px 21px;
 }
 
 .ht_content_ul > li:nth-child(5) i {
   background: url(../../assets/ht_list04.png) no-repeat;
+  background-size: 24px 20px;
 }
 
 .ht_content_ul > li.selected:nth-child(1) i {
   background: url(../../assets/ht_hover01.png) no-repeat;
+  background-size: 24px 22px;
 }
 
 .ht_content_ul > li.selected:nth-child(2) i {
   background: url(../../assets/dy-putin-icon-hover.png) no-repeat;
+  background-size: 20px 21px;
 }
 
 .ht_content_ul > li.selected:nth-child(3) i {
   background: url(../../assets/ht_hover02.png) no-repeat;
+  background-size: 24px 22px;
 }
 
 .ht_content_ul > li.selected:nth-child(4) i {
   background: url(../../assets/ht_hover03.png) no-repeat;
+  background-size: 24px 21px;
 }
 
 .ht_content_ul > li.selected:nth-child(5) i {
+  background-size: 24px 20px;
  /*  background: url(../../assets/ht_hover04.png) no-repeat; */
 }
 .ht_content_ul > li.selected:nth-child(5){
@@ -193,11 +204,15 @@ color: #333333 !important;
 }
 .ht_content_ul > li:nth-child(9) i {
   background: url(../../assets/djback_consumption.png) no-repeat;
+  background-size: 18px 22px;
 }
 .ht_content_ul > li:last-child i {
   background: url(../../assets/djback_problems.png) no-repeat;
+  background-size: 21px 21px;
 }
 .ht_content_ul > li:nth-child(9).selected i {
+  background-size: 18px 22px;
+
   /* background: url(../../assets/djback_consumption_hover.png) no-repeat; */
 }
 .ht_content_ul > li:nth-child(9).selected{

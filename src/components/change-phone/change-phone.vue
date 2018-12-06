@@ -289,6 +289,7 @@ dl.htlist_dla dd img {
   vertical-align: top;
   margin-left: 7px;
   cursor: pointer;
+  width: 124px;height: 38px;
 }
 
 dl.htlist_dla dd input[type="button"] {

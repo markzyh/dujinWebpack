@@ -414,6 +414,7 @@ export default {
   vertical-align: middle; /*margin-left: 18px;margin-right: 18px;*/
   margin-top: -4px;
   cursor: pointer;
+  width: 124px;height: 38px;
 }
 .flied_td .flied_te input {
   border: none;

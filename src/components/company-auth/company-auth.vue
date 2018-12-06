@@ -604,6 +604,7 @@ export default {
 }
 .zzSub_box .imgCode {
   margin-left: 8px;
+  width: 124px;height: 28px;
 }
 .zzSub_box input[type="text"],
 .zzSub_box input[type="number"],
@@ -727,6 +728,7 @@ input.syxy_input {
   margin-bottom: -4px;
   margin-right: 13px;
   background: url(../../assets/radio_checked_bg.png) no-repeat;
+  background-size: 19px 19px;
 }
 .sub_tj {
   margin-top: 20px;

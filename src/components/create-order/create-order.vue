@@ -1555,6 +1555,7 @@ input[type="radio"] {
 .order_tips_icon {
   cursor: pointer;
   margin-bottom: -3px;
+  width: 19px;height: 19px;
 }
 
 .create_order_tips:hover .order_tips_description {
@@ -1641,6 +1642,7 @@ input[type="radio"].radio_checked {
   height: 19px;
   border: none;
   background: url(../../assets/radio_checked_bg.png) no-repeat;
+  background-size: 19px 19px;
 }
 .order_typename_group .order_tips_description_tri {
   left: 30px;

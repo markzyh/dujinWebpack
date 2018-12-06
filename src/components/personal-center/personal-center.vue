@@ -217,6 +217,7 @@ export default {
 
 .person_ding > .ding > img {
   margin: 38px 15px -23px 30px;
+  width: 62px;height: 62px;
 }
 
 .person_ding .ywc {

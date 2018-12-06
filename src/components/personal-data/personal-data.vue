@@ -561,6 +561,7 @@ dl.htlist_dla dd img {
   vertical-align: top;
   margin-left: 7px;
   cursor: pointer;
+  width: 124px;height: 38px;
 }
 
 dl.htlist_dla dd input[type="button"] {
@@ -619,6 +620,7 @@ input[type="radio"].radio_checked {
   height: 19px;
   border: none;
   background: url(../../assets/radio_checked_bg.png) no-repeat;
+  background-size: 19px 19px;
 }
 .order_typename_group .order_tips_description_tri {
   left: 30px;

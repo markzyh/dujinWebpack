@@ -230,6 +230,7 @@ export default {
 }
 .dialog_c img.dialog_h {
   margin: 20px auto 10px 31px;
+  width: 460px;height: 65px;
 }
 p.dialog_i {
   color: #333;
