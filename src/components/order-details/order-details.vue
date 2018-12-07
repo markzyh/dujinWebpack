@@ -665,6 +665,7 @@ ul.order_mainr li i {
   width: 52px;
   height: 52px;
   vertical-align: middle;
+  background-size: 183px 150px;
 }
 ul.order_mainr li:nth-child(2) i {
   background-position: -64px 0px;

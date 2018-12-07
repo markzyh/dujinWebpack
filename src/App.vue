@@ -569,6 +569,7 @@ input[type="radio"] {
 .order_tips_icon {
   cursor: pointer;
   margin-bottom: -3px;
+  width: 19px;height: 19px;
 }
 
 .create_order_tips:hover .order_tips_description {
