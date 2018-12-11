@@ -1491,11 +1491,11 @@ z-index: 2; */
     background-size: 19px 19px;
   }
 
-  .order_typename_group .order_tips_description_tri {
+/*   .order_typename_group .order_tips_description_tri {
     left: 30px;
     margin-left: 0;
     top: 26px;
-  }
+  } */
 
   .order_increment_number {
     margin-left: 20px;
