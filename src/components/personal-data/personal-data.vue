@@ -286,16 +286,9 @@ export default {
       console.log(file);
       if (this.beforeUpload(file) == true) {
         var formData = new FormData();
-        //var file = this.$refs.upload_idcard_face.files[0]
         formData.append("path", file);
         var _this = this;
         console.log(formData.get("path"));
-        /* var instance = axios.create({
-          headers: {
-            "content-type": "multipart/form-data"
-          }
-        }); */
-        //console.log(instance);
         axios({
           url: "/account/ImageUpload",
           method: "post",

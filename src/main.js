@@ -3,15 +3,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import axios from 'axios'
+import axios from '@/api/http'
 import store from './store'
 
 Vue.prototype.axios = axios
 
-axios.defaults.baseURL = 'http://dou.fudayiliao.com'
-/* axios.defaults.headers = {
-  'content-type': 'application/x-www-form-urlencoded'
-} */
+
+
+
+
 //设置cookie
 Vue.prototype.setCookie = function (cname, cvalue, exdays) {
   var d = new Date()
@@ -93,25 +93,12 @@ Vue.prototype.btnSeconds = function () {
     }
   }, 1000)
 }
-//限制浏览
-/* Vue.prototype.limit = function () {
-  if (this.checkCookie('userName') == false) {
-    alert("登录状态已过期,请您重新登录");
-    this.$router.push({
-      path: "/"
-    });
-  }
-} */
 //全局退出登录,,删除用户信息,更改store
 Vue.prototype.globalLoginOut = function () {
   this.deleteCookie("userName");
   this.deleteCookie("userPhone");
   this.deleteCookie("token");
   this.deleteCookie("douyinId");
-  //this.$store.dispatch("showLoginFormAction", true);//显示登录框
-  //this.$store.dispatch("loginAction", false);//退出登录状态
-  //window.location.reload()
-  //console.log(this.getCookie('userName'))
 }
 //把时间戳转换为中文时间
 Vue.prototype.transformDateStamp = function (param) {
@@ -138,16 +125,23 @@ Vue.prototype.chekIsLogin = function(){
     this.userName = this.getCookie("userName");
     this.$store.dispatch("loginAction", true);
     //this.$store.dispatch("showLoginFormAction", true);
-    this.$store.dispatch("showLoginFormAction", false);
+    this.$store.dispatch("showAction", false);
   } else {
     this.$store.dispatch("loginAction", false);
-    this.$store.dispatch("showLoginFormAction", true);
+    this.$store.dispatch("showAction", true);
   }
 }
 //router-link改title
 router.beforeEach((to, from, next) => {
   window.document.title = to.meta.title + "-上海度进信息科技有限公司";
-  next()
+  if(store.getters.getLoginStatus == false && to.path !== '/create-order'){
+    alert('您还没有登录,请您先登录')
+    next('/create-order')
+    return false
+  }
+  else{
+    next()
+  } 
 })
 Vue.config.productionTip = false
 

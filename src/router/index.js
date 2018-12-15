@@ -17,11 +17,10 @@ Vue.use(Router)
 export default new Router({
   //mode:'history',
   //base:'/dist',
-  routes: [
-    {
+  routes: [{
       path: '',
-      meta:{
-        title:'首页'
+      meta: {
+        title: '首页'
       },
       name: 'CreateOrder',
       redirect: '/create-order',
@@ -29,87 +28,83 @@ export default new Router({
     },
     {
       path: '/create-order',
-      meta:{
-        title:'新建计划'
+      meta: {
+        title: '新建计划'
       },
       name: 'CreateOrder',
       component: CreateOrder
     },
     {
-      path:'/personal-center',
-      meta:{
-        title:'用户中心'
+      path: '/personal-center',
+      meta: {
+        title: '用户中心'
       },
-      name:'PersonalCenter',
-      component:PersonalCenter
-    }
-    ,
-    {
-      path:'/order-center',
-      meta:{
-        title:'订单中心'
-      },
-      name:'OrderCenter',
-      component:OrderCenter
-    }
-    ,
-    {
-      path:'/order-details',
-      meta:{
-        title:'订单详情'
-      },
-      name:'OrderDetails',
-      component:OrderDetails
-    }
-    ,
-    {
-      path:'/consumption',
-      meta:{
-        title:'订单详情'
-      },
-      name:'Consumption',
-      component:Consumption
-    }
-    ,
-    {
-      path:'/personal-data',
-      meta:{
-        title:'编辑资料'
-      },
-      name:'PersonalData',
-      component:PersonalData
+      name: 'PersonalCenter',
+      component: PersonalCenter
     },
     {
-      path:'/change-phone',
-      meta:{
-        title:'修改手机号'
+      path: '/order-center',
+      meta: {
+        title: '订单中心'
       },
-      name:'ChangePhone',
-      component:ChangePhone
+      name: 'OrderCenter',
+      component: OrderCenter
     },
     {
-      path:'/change-password',
-      meta:{
-        title:'修改密码'
+      path: '/order-details',
+      meta: {
+        title: '订单详情'
       },
-      name:'ChangePassword',
-      component:ChangePassword
+      name: 'OrderDetails',
+      component: OrderDetails
     },
     {
-      path:'/company-auth',
-      meta:{
-        title:'企业认证'
+      path: '/consumption',
+      meta: {
+        title: '订单详情'
       },
-      name:'CompanyAuth',
-      component:CompanyAuth
+      name: 'Consumption',
+      component: Consumption
     },
     {
-      path:'/common-problem',
-      meta:{
-        title:'常见问题'
+      path: '/personal-data',
+      meta: {
+        title: '编辑资料'
       },
-      name:'CommonProblem',
-      component:CommonProblem
+      name: 'PersonalData',
+      component: PersonalData
+    },
+    {
+      path: '/change-phone',
+      meta: {
+        title: '修改手机号'
+      },
+      name: 'ChangePhone',
+      component: ChangePhone
+    },
+    {
+      path: '/change-password',
+      meta: {
+        title: '修改密码'
+      },
+      name: 'ChangePassword',
+      component: ChangePassword
+    },
+    {
+      path: '/company-auth',
+      meta: {
+        title: '企业认证'
+      },
+      name: 'CompanyAuth',
+      component: CompanyAuth
+    },
+    {
+      path: '/common-problem',
+      meta: {
+        title: '常见问题'
+      },
+      name: 'CommonProblem',
+      component: CommonProblem
     }
   ]
 })
