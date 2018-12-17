@@ -69,7 +69,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+
 import DatePicker from "vue2-datepicker";
 export default {
   components: { DatePicker },
@@ -154,7 +154,7 @@ export default {
     getPaymentList: function(type, start, end) {
       var token = this.getCookie("token");
       var _this = this;
-      axios
+      this.$axios
         .post(
           "/Payment/GetPaymentList",
           {
@@ -162,11 +162,6 @@ export default {
             Type: type,
             End: end,
             Start: start
-          },
-          {
-            headers: {
-              "content-type": "application/x-www-form-urlencoded"
-            }
           }
         )
         .then((res) =>{

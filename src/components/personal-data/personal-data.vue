@@ -213,7 +213,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import uploadaxios from "axios";
 export default {
   data() {
     return {
@@ -250,8 +250,6 @@ export default {
       var fileType2 = "JPEG";
       var uploadFileType = file.type.split("/")[1];
       var uploadFileSize = file.size;
-      console.log(uploadFileType);
-      console.log(fileType2.toLowerCase());
       if (
         uploadFileType != fileType1 &&
         uploadFileType != fileType2 &&
@@ -271,47 +269,25 @@ export default {
     choosedAuth: function(index) {
       this.choosedAuthIndex = index;
     },
-    /* uploadCardFace:function(){
-			var file = this.$refs.upload_idcard_face.files[0]
-			var formData = new FormData()
-			formData.append('file',file)
-
-    }, */
     //取消上传图片
     cancelUpload(attr){
       this[attr] = false
     },
     uploadCardFace: function(event, ref, attr) {
       var file = this.$refs[ref].files[0];
-      console.log(file);
       if (this.beforeUpload(file) == true) {
         var formData = new FormData();
         formData.append("path", file);
         var _this = this;
-        console.log(formData.get("path"));
-        axios({
+        this.$axios({
           url: "/account/ImageUpload",
           method: "post",
-          transformRequest: [
-            function(data) {
-              // 对 data 进行任意转换处理
-              console.log(data);
-              return data;
-            }
-          ],
           data: formData
         }).then(function(res) {
-          console.log(res);
-          //console.log(_this)
-          console.log(attr);
           _this[attr] = "http://dou.fudayiliao.com" + res.data.Data;
-          console.log(_this[attr]);
         });
       }
     },
-    /* 		openFile: function (index) {
-					this.$refs.upload_idcard_face.click() //模拟点击
-				}, */
     checkPersonalAuth: function() {
       var realName = this.userRealName;
       var isUploadFace = this.idcardFaceURL; //不为false
@@ -404,7 +380,7 @@ export default {
         CorpPermit = this.industryCardURL; //行业许可证
       }
       //alert('成功')
-      axios
+      this.$axios
         .post(
           "/account/Update",
           {
@@ -419,20 +395,15 @@ export default {
             CorpLicense:CorpLicense,
             CorpPermit:CorpPermit,
             RealName: RealName
-          },
-          {
-            headers: {
-              "content-type": "application/x-www-form-urlencoded"
-            }
           }
         )
         .then(res => {
           console.log(res)
-          if (res.data.Code == 11) {
+          /* if (res.data.Code == 11) {
             alert("登录状态已过期,请重新登录");
             this.globalLoginOut();
             window.location.reload()
-          }
+          } */
           alert("资料提交完成");
           let userName = res.data.Data.Name;
           let userPhone = res.data.Data.Phone;

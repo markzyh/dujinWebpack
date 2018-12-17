@@ -143,34 +143,22 @@ export default {
         let Code = this.phoneCheckCode;
 
         let CancelToken = axios.CancelToken; //取消请求
-        axios
+        this.$axios
           .post(
             "account/register",
             {
               Phone: Phone,
               Password: Password,
               Code: Code
-            },
-            {
-              headers: {
-                "content-type": "application/x-www-form-urlencoded"
-              }
             }
           )
           .then(res => {
-            /*               console.res;
-              if (res.data.Code == 13) {
-                alert("该手机号已经注册");
-                return false;
-              } else { */
             if (res) {
               alert("注册成功");
               this.$router.push({
                 path: "/personal-data"
               });
             }
-
-            //}
           });
       }
     },
@@ -198,17 +186,12 @@ export default {
         let Data = this.imgCheckCode; //输入的图形验证码
         let registerPhone = this.registerPhone; //注册的手机号
         let url = "/account/GetSmsCode/" + registerPhone;
-        axios
+        this.$axios
           .post(
             url,
             {
               Key: Key,
               Data: Data
-            },
-            {
-              headers: {
-                "content-type": "application/x-www-form-urlencoded"
-              }
             }
           )
           .then(res => {
@@ -271,29 +254,17 @@ export default {
       if (this.checkUserLogin() == true) {
         let Phone = this.userLoginPhone;
         let Password = this.userLoginPassword;
-        axios
+        this.$axios
           .post(
             "/account/login",
             {
               Phone: Phone,
               Password: Password
             },
-            {
-              headers: {
-                "content-type": "application/x-www-form-urlencoded"
-              }
-            }
           )
           .then(res => {
-            /* if (res.data.Code == 1) {
-                alert("账号或者密码错误,请您重新输入");
-                return false;
-              } */
             if(res){
               this.$store.dispatch("loginAction", true); //vuex存储登录的状态
-              //console.log(this.$store.getters.getLoginStatus);
-              console.log(res.data);
-              //this.userName = res.data.Data.Name;
               let userName = res.data.Data.Name;
               let userPhone = res.data.Data.Phone;
               let token = res.data.Token;
@@ -328,16 +299,6 @@ export default {
       this.$store.dispatch("showAction", false);
       this.isforgetPassword = false;
     }
-    /* chekIsLogin() {
-        if (this.checkCookie("userName") != false) {
-          //cookie中存在
-          this.$store.dispatch("showLoginFormAction", false);
-          this.$store.dispatch("loginAction", true);
-        } else {
-          this.$store.dispatch("loginAction", false);
-          this.$store.dispatch("showLoginFormAction", true);
-        }
-      } */
   },
   computed: {
     watchUserName() {

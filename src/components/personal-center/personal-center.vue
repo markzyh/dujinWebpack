@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import axios from "axios";
+
 export default {
   name: "",
   data() {
@@ -77,36 +77,31 @@ export default {
   methods: {
     getUserInfo() {
       var token = this.getCookie("token");
-      console.log(token);
+ 
       var _this = this;
-      axios
-        .post(
-          "/account/GetUserInfo",
-          {
-            Token: token
-          },
-          {
-            headers: {
-              "content-type": "application/x-www-form-urlencoded"
-            }
-          }
-        )
+      this.$axios({
+        method:'post',
+        url:'/account/GetUserInfo',
+        data:{
+          Token:token
+        }
+      })
         .then((res) =>{
-          /* if (res.data.Code == 11) {
-            //userLoginOut();
-            return false;
-          } */
-          if (res.data.Code == 11) {
+          console.log(res)
+/*           if (res.data.Code == 11) {
             alert("登录状态已过期,请重新登录");
             this.globalLoginOut();
             this.$store.dispatch("loginAction", false);
             this.$store.dispatch("showLoginFormAction", true);
-          }
+          } */
+          console.log(this.getCookie('userName'))
           _this.userInfo = res.data.Data;
           _this.setUserInfo();
           _this.setOrderInfo();
           console.log(_this.userInfo);
-        });
+        }).catch(err =>{
+          console.log(err)
+        })
     },
     setUserInfo() {
       var _this = this.userInfo.user;

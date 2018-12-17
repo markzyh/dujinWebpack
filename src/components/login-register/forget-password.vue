@@ -67,8 +67,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   props: ["isShowLoginForm"],
   name: "login-register",
@@ -105,7 +103,7 @@ export default {
       let Password = this.confirmForgetPassword;
       let Code = this.forgetPhoneCode;
       let ForgetPassword = true;
-      axios
+      this.$axios
         .post(
           "account/register",
           {
@@ -113,24 +111,14 @@ export default {
             Password: Password,
             Code: Code,
             ForgetPassword: ForgetPassword
-          },
-          {
-            headers: {
-              "content-type": "application/x-www-form-urlencoded"
-            }
           }
         )
         .then(res => {
           console.res;
-          if (res.data.Code == 13) {
-            alert("该手机号已经注册");
-            return false;
-          } else {
-            alert("成功找回密码,请您重新登录");
-            this.globalLoginOut()
-            window.location.reload()
-            //this.$router.push({ path: "/personal-data" });
-          }
+          alert("成功找回密码,请您重新登录");
+          this.globalLoginOut();
+          window.location.reload();
+          //this.$router.push({ path: "/personal-data" });
         });
     },
     //点击下一步
@@ -191,11 +179,6 @@ export default {
             {
               Key: Key,
               Data: Data
-            },
-            {
-              headers: {
-                "content-type": "application/x-www-form-urlencoded"
-              }
             }
           )
           .then(res => {

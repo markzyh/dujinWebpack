@@ -4,11 +4,18 @@ import Vue from 'vue'
 import {MessageBox,Message} from 'element-ui';
 import App from './App'
 import router from './router'
-import axios from '@/api/http'
+import originaxios from '@/api/http'
+
+
 import store from './store'
 
 Vue.prototype.$MessageBox = MessageBox;
 Vue.prototype.$Message = Message;
+
+Vue.prototype.$axios = originaxios
+
+
+
 
 import {
   setCookie,
@@ -21,7 +28,7 @@ import {
   createToken,
   getImgCheckCode
 } from '@/api/fn'
-Vue.prototype.axios = axios
+
 
 //全局的api------------------------------------------------------
 

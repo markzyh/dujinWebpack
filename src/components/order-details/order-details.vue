@@ -258,7 +258,6 @@
   </div>
 </template> 
 <script>
-import axios from "axios";
 export default {
   data() {
     return {
@@ -367,26 +366,21 @@ export default {
       let token = this.getCookie("token");
       //var OrderNumber = this.orderNumber;
       //var _this = this;
-      axios
+      this.$axios
         .post(
-          "http://dou.fudayiliao.com/order/GetOrderDetail",
+          "/order/GetOrderDetail",
           {
             Token: token,
             OrderNumber: orderNumber
-          },
-          {
-            headers: {
-              "content-type": "application/x-www-form-urlencoded"
-            }
           }
         )
         .then(res => {
-          if (res.data.Code == 11) {
+          /* if (res.data.Code == 11) {
             alert('登录状态已过期,请重新登录')
             this.globalLoginOut()
             this.$store.dispatch("loginAction", false);
             this.$store.dispatch("showLoginFormAction", true);
-          }
+          } */
           console.log(res.data.Data);
           this.orderInfo = res.data.Data;
           this.orderStatus = res.data.Data.Status;

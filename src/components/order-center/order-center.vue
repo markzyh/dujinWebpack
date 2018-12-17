@@ -238,20 +238,15 @@ export default {
             Start: start,
             End: end,
             DateType: dateType
-          },
-          {
-            headers: {
-              "content-type": "application/x-www-form-urlencoded"
-            }
           }
         )
         .then(res => {
-          if (res.data.Code == 11) {
+          /* if (res.data.Code == 11) {
             alert('登录状态已过期,请重新登录')
             this.globalLoginOut()
             this.$store.dispatch("loginAction", false);
             this.$store.dispatch("showLoginFormAction", true);
-          }
+          } */
           console.log(res);
           this.orderList = res.data.Data;
         });
