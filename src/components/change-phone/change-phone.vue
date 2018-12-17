@@ -132,18 +132,19 @@ export default {
         alert("手机号必填,请您重新输入");
         return false;
       }
+      if (this.checkPhone(this.userNewPhone) == false) {
+        alert("请您填写正确的手机号");
+        return false;
+      }
       if (this.imgCheckCode == "") {
         alert("请您先填写图形验证码");
         return false;
       }
-      if (this.checkPhone(this.userNewPhone) == false) {
-        alert("请您填写正确的手机号");
-        return false;
-      } else {
+       else {
         return true;
       }
     },
-    checkPhone: function(phone) {
+/*     checkPhone: function(phone) {
       //var phone = document.getElementById('userphone').value;
       if (
         !/^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/.test(
@@ -157,7 +158,7 @@ export default {
         //getCheckNumberDisable()
         return true;
       }
-    },
+    }, */
     //获取手机验证码
     getPhoneCode: function() {
       if (this.checkPersonalCellphone() == true) {
@@ -206,28 +207,15 @@ export default {
     },
     //获取图形验证码
     getCheckCode: function() {
-      //var token = getUsermessage().token
       var phone = this.userNewPhone;
-      this.createdToken = this.createToken();
-      console.log(this.createdToken);
-      var checkCode =
-        "http://dou.fudayiliao.com/account/getcode/" + this.createdToken;
-      this.checkCodeUrl = checkCode.toString();
-      console.log(this.checkCodeUrl);
+      //getImgCheckCode()在全局main.js里面
+      this.createdToken = this.getImgCheckCode().createdToken
+      this.checkCodeUrl = this.getImgCheckCode().imgCheckCodeUrl.toString();
+      console.log(this.checkCodeUrl)
     },
-    //自定义token
-    createToken: function() {
-      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
-        c
-      ) {
-        var r = (Math.random() * 16) | 0,
-          v = c == "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-    }
+
   },
   mounted: function() {
-    //this.userCellphoneNumber = localStorage.cellphoneNumber
     this.getCheckCode();
   }
 };

@@ -433,7 +433,6 @@ export default {
             this.globalLoginOut();
             window.location.reload()
           }
-          //console.log(res)
           alert("资料提交完成");
           let userName = res.data.Data.Name;
           let userPhone = res.data.Data.Phone;
@@ -443,9 +442,6 @@ export default {
           this.setCookie("userPhone", userPhone, 1);
           //this.setCookie("token", token, 1);
           this.setCookie("douyinId", douyinId, 1);
-          /* this.$router.push({
-            path: "/create-order"
-          }); */
           window.location.href = "/dist/#/create-order";
           //this.globalLoginOut()
           //userLoginOut();
