@@ -18,24 +18,18 @@
             <option v-for="(item,index) in orderTimeLists" :key="index">{{item.name}}</option>
           </select>
           <div class="orderDate date_picker_group">
-            <!-- <date-picker
-              v-model="startDateVal"
-              :first-day-of-week="1"
-              class="dis-inline"
-              @change="screenDate"
-            ></date-picker> -->
-            <date-picker></date-picker>
-            <span>至</span>
+            <date-picker @screenDate="screenDate($event)"></date-picker>
+            <!-- <date-picker></date-picker> -->
+            <!-- <span>至</span> -->
             <!-- <input type="text" name="dtEnd" class="date-picker end_date" placeholder="结束日期"> -->
             <!-- <date-picker
               v-model="endDateVal"
-              :first-day-of-week="2"
               class="dis-inline"
               @change="screenDate"
-            ></date-picker> -->
+            ></date-picker>-->
           </div>
         </div>
-        <div class="order_table">
+        <div class="order_table" v-loading="loading">
           <table cellspacing="0" class="tableOrder">
             <tr>
               <th>订单编号</th>
@@ -46,10 +40,7 @@
               <th>订单状态</th>
               <th>备注</th>
             </tr>
-            <tr v-for="(item,index) in orderList" :key="index">
-              <!-- <td @click="searchOrderNumber(item.OrderNumber)" class="order_detais_link">
-                <a href="order_details.html">{{item.OrderNumber}}</a>
-              </td>-->
+            <tr v-for="(item,index) in orderList" :key="index" >
               <router-link
                 :to="{path:'/order-details',query:{orderNumber:item.OrderNumber}}"
                 tag="td"
@@ -57,13 +48,11 @@
                 <a>{{item.OrderNumber}}</a>
               </router-link>
               <td>{{transformDateStamp(parseInt(item.CreateDateTime.substr(6, 19)))}}</td>
-              <!-- <td>{{test(item.CreateDateTime)}}</td> -->
               <td>{{item.Money}}</td>
               <td>{{item.Serving}}</td>
               <td>{{item.OrderType}}</td>
               <td>{{orderStatusLists[item.Status+1].name}}</td>
               <td>正常</td>
-              <!--<td><a href="">详情</a></td>-->
             </tr>
           </table>
         </div>
@@ -74,27 +63,13 @@
 <script>
 import axios from "axios";
 //import DatePicker from "vue2-datepicker";
-import DatePicker from '@/base/date-picker'
+import DatePicker from "@/base/date-picker";
 export default {
   components: { DatePicker },
   data() {
     return {
-      shortcuts: [
-        {
-          text: "今天",
-          onClick: () => {
-            this.time3 = [new Date(), new Date()];
-          }
-        }
-      ],
-      timePickerOptions: {
-        start: "00:00",
-        step: "00:30",
-        end: "23:30"
-      },
-      endDateVal: "", //日期选择结束时间
-      startDateVal: "", //日期选择开始时间
       token: "",
+      loading:false,
       isLogin: false,
       isShowOrderDetails: false, //是否显示订单详情
       orderList: [],
@@ -139,25 +114,23 @@ export default {
     };
   },
   methods: {
-    screenDate() {
-      if(this.startDateVal == '' || this.endDateVal == ''){
-        return false
-      }
-      let Start = new Date(this.startDateVal).getTime();
-      let End = new Date(this.endDateVal).getTime();
+    loadingAction(){
+      this.loading = true
+      setTimeout(() =>{
+        this.loading = false
+      },500)
+    },
+    screenDate(dateArray) {
+      let Start = dateArray[0]
+      let End = dateArray[1]
       let Status = this.choosedOrderStatus; //暂时为空
       let DataType = this.choosedOrderTime;
-      if (this.chekDate(Start, End) == true) {
-        Start = this.transformDateStamp(this.startDateVal)
-        End = this.transformDateStamp(this.endDateVal)
-        //this.getOrderList(Status, Start, End, DataType);
-        this.getOrderList(Status, Start, End, DataType);
-        console.log(this.startDateVal);
-        console.log(this.endDateVal);
-      }
+      this.getOrderList(Status, Start, End, DataType);
+
     },
+    /*
     //验证时间
-    chekDate(startDate,endDate) {
+    chekDate(startDate, endDate) {
       if (parseInt(startDate) > parseInt(endDate)) {
         this.$Notification({
           title: "警告",
@@ -165,13 +138,12 @@ export default {
           type: "warning"
         });
         return false;
-      }
-      else {
+      } else {
         return true;
       }
     },
     //转换时间格式,转换为时间戳格式
-    /* transformDate(dateString) {
+     transformDate(dateString) {
       var dateYear = dateString.substring(0, 4); //取年份
       var dateMounth = dateString.substring(5, 7); //取月份
       var dateDay = dateString.substring(8, 10); //取天数
@@ -185,7 +157,7 @@ export default {
       for (var i = 0; i < this.orderStatusLists.length; i++) {
         if (this.orderStatusLists[i].name == this.choosedOrderStatus) {
           if (i == 0) {
-            status = '';
+            status = "";
           } else {
             status = i - 1;
           }
@@ -193,46 +165,36 @@ export default {
       }
       this.getOrderList(status);
     },
-    //点击查询订单,把订单号写入cookie
-    searchOrderNumber: function(orderNumber) {
-      console.log(this.getCookie("orderNumber"));
-    },
 
-    getOrderList: function(status, start, end, dateType) {
-      //console.log(this.$route.params.orderStatus)
-      if(this.$route.params.orderStatus){
-        status = this.$route.params.orderStatus
+    getOrderList(status, start, end, dateType) {
+      this.loadingAction()
+      //這裡是其他路由點進來時
+      if (this.$route.params.orderStatus) {
+        status = this.$route.params.orderStatus;
       }
       var token = this.getCookie("token");
-
       this.$axios
-        .post(
-          "/order/GetOrderList",
-          {
-            Token: token,
-            Status: status,
-            Start: start,
-            End: end,
-            DateType: dateType
-          }
-        )
+        .post("/order/GetOrderList", {
+          Token: token,
+          Status: status,
+          Start: start,
+          End: end,
+          DateType: dateType
+        })
         .then(res => {
           this.orderList = res.data.Data;
         });
-    },
+    }
   },
   mounted: function() {
     this.getOrderList();
-  },
-  computed: {
-    watchEndDateVal: function() {
-      return this.endDateVal;
-    }
   }
 };
 </script>
 <style lang="scss">
-.order-center{padding: 50px;}
+.order-center {
+  padding: 50px;
+}
 .mx-panel-date td.today {
   background: #2a90e9;
   color: #fff;
@@ -246,7 +208,7 @@ export default {
   line-height: 40px !important;
   background: none !important;
   font-size: 14px !important;
-  padding:0 0 0 40px !important;
+  padding: 0 0 0 40px !important;
 }
 .mx-datepicker {
   margin-left: 20px;
@@ -282,13 +244,13 @@ export default {
 }
 
 .orderDate {
-  width: 360px;
+  /* width: 360px;
   height: 38px;
   border: 1px solid #bbbbbb;
-  border-radius: 5px;
+  border-radius: 5px; */
   margin-left: 10px;
-  font-size: 16px;
-  position: relative;
+  /* font-size: 16px;
+  position: relative; */
 }
 
 .orderDate img {

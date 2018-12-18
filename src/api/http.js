@@ -40,8 +40,8 @@ originaxios.interceptors.response.use(res => {
   // 对响应数据做点什么
    if (res.data.Code == 1) {
     Notification({
-      message: '账号或者密码错误,请您重新输入',
-      title: '登陆出错',
+      message: '请求参数有误,请您重新输入',
+      title: '请求错误',
       type: 'error'
     });
     return false

@@ -281,7 +281,7 @@ export default {
     checkPhoneCode() {
       if (this.operatePhone == "") {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "请您先输入电话号码!",
           type: "warning"
         });
@@ -289,7 +289,7 @@ export default {
       }
       if (this.checkPhone(this.operatePhone) == false) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "请您输入正确的手机号!",
           type: "warning"
         });
@@ -297,7 +297,7 @@ export default {
       }
       if (this.imgCheckCode == "") {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "请您输入验证码!",
           type: "warning"
         });
@@ -366,7 +366,7 @@ export default {
       var phoneCheckCode = this.phoneCheckCode; //手机验证码
       if (douyinName == "" || companyName == "" || companyId == "") {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "输入框均为必填选项,请您填写完整!",
           type: "warning"
         });
@@ -374,7 +374,7 @@ export default {
       }
       if (!/^[a-zA-Z0-9_]{0,15}$/.test(douyinName)) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "抖音号最多16位,只允许字母、下划线、点和数字!",
           type: "warning"
         });
@@ -386,7 +386,7 @@ export default {
         )
       ) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "请您填写正确的营业执照注册号,注册号为15位或18位!",
           type: "warning"
         });
@@ -394,7 +394,7 @@ export default {
       }
       if (companyIdUrl == false) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "营业执照还未上传!",
           type: "warning"
         });
@@ -402,7 +402,7 @@ export default {
       }
       if (permitUrl == false) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "行业许可证还未上传!",
           type: "warning"
         });
@@ -410,7 +410,7 @@ export default {
       }
       if (authUrl == false) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "认证公函还未上传!",
           type: "warning"
         });
@@ -418,7 +418,7 @@ export default {
       }
       if (operateName == "" || operatePhone == "" || phoneCheckCode == "") {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "输入框均为必填选项,请您填写完整!",
           type: "warning"
         });
@@ -426,7 +426,7 @@ export default {
       }
       if (!/^[\u4E00-\u9FA5]{2,4}$/.test(operateName)) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "请您填写正确的姓名格式!",
           type: "warning"
         });

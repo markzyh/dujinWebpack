@@ -2,21 +2,27 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import {
-  MessageBox,
+  Popover,
   Message,
   Notification,
-  DatePicker
+  DatePicker,
+  Loading,
+  MessageBox,
 } from 'element-ui';
 import App from './App'
 import router from './router'
 import originaxios from '@/api/http'
 import store from './store'
 
+
+Vue.use(Popover);
 Vue.use(DatePicker);
 Vue.prototype.$MessageBox = MessageBox;
 Vue.prototype.$Message = Message;
 Vue.prototype.$Notification = Notification;
 Vue.prototype.$axios = originaxios
+Vue.use(Loading.directive);
+Vue.prototype.$loading = Loading.service;
 
 import {
   setCookie,

@@ -332,13 +332,12 @@ export default {
       }
     },
     getOrderMessage: function() {
-      this.createTime = this.transformDateStamp(this.orderInfo.CreateDateTime);
-      this.payTime = this.transformDateStamp(this.orderInfo.PayTime);
-      this.completeTime = this.transformDateStamp(this.orderInfo.CompleteTime);
+      this.createTime = this.transformDateStamp(parseInt(this.orderInfo.CreateDateTime.substr(6, 19)));
+      this.payTime = this.transformDateStamp(parseInt(this.orderInfo.PayTime.substr(6, 19)));
+      this.completeTime = this.transformDateStamp(parseInt(this.orderInfo.CompleteTime.substr(6, 19)));
     },
     //根据订单信息渲染页面
     getUserMessage: function() {
-      //console.log(this.orderInfo)
       this.userName = this.getCookie("userName");
       this.douyinId = this.getCookie("douyinId");
       this.orderLink = this.orderInfo.Url;
@@ -355,7 +354,7 @@ export default {
       //this.chenckOrderStatus()//检查订单的状态,显示页面上
     },
     //检测是否为空,空就返回0
-    chenckIsNull(params) {
+    chenckIsNull(params) { 
       if (params == null) {
         return 0;
       } else {
@@ -367,26 +366,18 @@ export default {
       //var OrderNumber = this.orderNumber;
       //var _this = this;
       this.$axios
-        .post(
-          "/order/GetOrderDetail",
-          {
-            Token: token,
-            OrderNumber: orderNumber
-          }
-        )
+        .post("/order/GetOrderDetail", {
+          Token: token,
+          OrderNumber: orderNumber
+        })
         .then(res => {
-          /* if (res.data.Code == 11) {
-            alert('登录状态已过期,请重新登录')
-            this.globalLoginOut()
-            this.$store.dispatch("loginAction", false);
-            this.$store.dispatch("showLoginFormAction", true);
-          } */
-          console.log(res.data.Data);
-          this.orderInfo = res.data.Data;
-          this.orderStatus = res.data.Data.Status;
-          this.getOrderMessage();
-          this.getUserMessage();
-          //console.log(this.orderInfo);
+          if (res) {
+            this.orderInfo = res.data.Data;
+            console.log(this.orderInfo)
+            this.orderStatus = res.data.Data.Status;
+            this.getOrderMessage();
+            this.getUserMessage();
+          }
         });
     }
   },

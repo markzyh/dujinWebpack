@@ -436,6 +436,15 @@ input[type="radio"] {
   display: inline-block;
   width: 19px;
   text-indent: 0;
+  .order_tips_description_tri {
+    width: 21px;
+    height: 11px;
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    margin-left: -10px;
+    z-index: 3;
+  }
 }
 
 .order_tips_description {
@@ -479,7 +488,7 @@ input[type="radio"] {
   width: 21px;
   height: 11px;
   position: absolute;
-  top: 28px;
+  top: 26px;
   left: 50%;
   margin-left: -110px;
   z-index: 3;

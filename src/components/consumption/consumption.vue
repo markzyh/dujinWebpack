@@ -19,7 +19,7 @@
             >{{item.name}}</option>
           </select>
           <div class="orderDate">
-            <date-picker
+            <!-- <date-picker
               v-model="startDateVal"
               :first-day-of-week="1"
               class="dis-inline"
@@ -31,28 +31,27 @@
               :first-day-of-week="2"
               class="dis-inline"
               @change="screenDate"
-            ></date-picker>
+            ></date-picker> -->
+            <date-picker @screenDate="screenDate($event)"></date-picker>
           </div>
         </div>
         <div class="order_table">
-          <table cellspacing="0" class="tableOrder">
+          <table cellspacing="0" class="tableOrder" v-loading="loading">
             <tr>
-              <th>订单编号</th>
+              <th class="consumption_number">订单编号</th>
               <th>交易类型</th>
               <th>交易金额</th>
               <th>退款金额</th>
               <th>交易前金额</th>
-              <th>交易时间</th>
+              <th class="consumption_time">交易时间</th>
             </tr>
             <tr v-for="(item,index) in orderList" :key="index">
-              <td style="width: 120px;">{{item.PayNumber}}</td>
+              <td>{{item.PayNumber}}</td>
               <td>{{item.Type}}</td>
               <td>{{item.PayMoney}}</td>
               <td>{{item.Refund}}</td>
               <td>{{item.Balance}}</td>
-              <td
-                style="width: 180px"
-              >{{transformDateStamp(parseInt(item.CreateDateTime.substr(6, 19)))}}</td>
+              <td>{{transformDateStamp(parseInt(item.CreateDateTime.substr(6, 19)))}}</td>
             </tr>
           </table>
         </div>
@@ -61,25 +60,12 @@
   </div>
 </template>
 <script>
-import DatePicker from "vue2-datepicker";
+import DatePicker from "@/base/date-picker";
 export default {
   components: { DatePicker },
   data() {
     return {
-      shortcuts: [
-        {
-          text: "今天",
-          onClick: () => {
-            this.time3 = [new Date(), new Date()];
-          }
-        }
-      ],
-      timePickerOptions: {
-        start: "00:00",
-        step: "00:30",
-        end: "23:30"
-      },
-      isShowProblems: false,
+      loading:false,
       orderNumber: "",
       choosedTransactionType: "消费类型",
       startDateVal: "",
@@ -103,53 +89,35 @@ export default {
     };
   },
   methods: {
-    screenDate() {
-      if(this.startDateVal == '' || this.endDateVal == ''){
-        return false
-      }
-      let Start = new Date(this.startDateVal).getTime();
-      let End = new Date(this.endDateVal).getTime();
+    loadingAction(){
+      this.loading = true
+      setTimeout(() =>{
+        this.loading = false
+      },500)
+    },
+    screenDate(dateArray) {
+      let Start = dateArray[0]
+      let End = dateArray[1]
       let Status = ""; //暂时为空
       let Type = this.choosedTransactionType;
-      if (this.chekDate(Start, End) == false) {
-        this.$Notification({
-          title: "警告",
-          message: "开始时间必须在结束时间之前!",
-          type: "warning"
-        });
-        return false;
-      } else {
-        Start = this.transformDateStamp(this.startDateVal);
-        End = this.transformDateStamp(this.endDateVal);
-        //this.getOrderList(Status, Start, End, DataType);
-        this.getPaymentList(Status, Start, End, Type);
-        console.log(this.startDateVal);
-        console.log(this.endDateVal);
-      }
+      this.getPaymentList(Status, Start, End, Type);
+
     },
-    //验证时间
+    /* //验证时间
     chekDate: function(startDate, endDate) {
       if (parseInt(startDate) > parseInt(endDate)) {
         return false;
       } else {
         return true;
       }
-    },
-    //转换时间格式,转换为时间戳格式
-    transformDate: function(dateString) {
-      var dateYear = dateString.substring(0, 4); //取年份
-      var dateMounth = dateString.substring(5, 7); //取月份
-      var dateDay = dateString.substring(8, 10); //取天数
-      var parseDateString = dateYear + "-" + dateMounth + "-" + dateDay; //转换为标准时间格式,可以被解析
-      console.log(Date.parse(parseDateString));
-      return Date.parse(parseDateString); //返回时间戳
-    },
+    }, */
     //点击查询订单
     chooseTransactionType: function() {
       this.getPaymentList(this.choosedTransactionType);
       console.log(this.choosedTransactionType);
     },
     getPaymentList(type, start, end) {
+      this.loadingAction()
       var token = this.getCookie("token");
       this.$axios
         .post("/Payment/GetPaymentList", {
@@ -164,36 +132,19 @@ export default {
           }
         });
     }
-    //把时间戳转译成普通格式
-    /* transformDateStamp: function(param) {
-      //var date = new Date(parseInt(param.substr(6, 19)));
-      var timeYear = new Date(param).getFullYear();
-      var timeMouth = new Date(param).getMonth() + 1;
-      var timeDate = new Date(param).getDate();
-      var timeHours = new Date(param).getHours();
-      var timeMinutes = new Date(param).getMinutes();
-      var timeSeconds = new Date(param).getSeconds();
-      var time =
-        this.checkTen(timeYear) +
-        "-" +
-        this.checkTen(timeMouth) +
-        "-" +
-        this.checkTen(timeDate) +
-        "   " +
-        this.checkTen(timeHours) +
-        ":" +
-        this.checkTen(timeMinutes) +
-        ":" +
-        this.checkTen(timeSeconds);
-      return time;
-    } */
   },
   mounted: function() {
-    this.getPaymentList("");
+    this.getPaymentList();
   }
 };
 </script>
 <style lang="scss">
+.consumption_time{
+  width: 180px !important;
+}
+.consumption_number{
+  width: 120px !important;
+}
 .consumption {
   padding: 50px;
 }
@@ -245,13 +196,13 @@ export default {
 }
 
 .orderDate {
-  width: 360px;
+ /*  width: 360px;
   height: 38px;
   border: 1px solid #bbbbbb;
-  border-radius: 5px;
+  border-radius: 5px; */
   margin-left: 10px;
-  font-size: 16px;
-  position: relative;
+  /* font-size: 16px;
+  position: relative; */
 }
 
 .orderDate img {

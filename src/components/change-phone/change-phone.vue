@@ -115,7 +115,7 @@ export default {
     checkPersonalCellphone: function() {
       if (this.userNewPhone == "") {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "手机号必填,请您重新输入!",
           type: "warning"
         });
@@ -123,7 +123,7 @@ export default {
       }
       if (this.checkPhone(this.userNewPhone) == false) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "请您填写正确的手机号!",
           type: "warning"
         });
@@ -131,7 +131,7 @@ export default {
       }
       if (this.imgCheckCode == "") {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "请您先填写图形验证码!",
           type: "warning"
         });
@@ -143,35 +143,37 @@ export default {
     //获取手机验证码
     getPhoneCode() {
       if (this.checkPersonalCellphone() == true) {
-        this.isDisabled = true;
-        var interval;
-        var _this = this;
-        var num = 60;
-        interval = setInterval(function() {
-          _this.cellphoneBtnVal = num + "s";
-          num--;
-          if (num == -1) {
-            clearInterval(interval);
-            _this.isDisabled = false;
-            _this.cellphoneBtnVal = "获取验证码";
-          }
-        }, 1000);
         var Key = this.createdToken;
         var Data = this.imgCheckCode;
         var url =
           "http://dou.fudayiliao.com/account/GetSmsCode/" + this.userNewPhone;
         this.$axios
-          .post(
-            url,
-            {
-              Key: Key,
-              Data: Data
+          .post(url, {
+            Key: Key,
+            Data: Data
+          })
+          .then(res => {
+            if (res) {
+              this.disabledBtn() 
             }
-          )
-          .then((res) =>{
-            //console.log(res);
           });
       }
+    },
+    //按钮读秒
+    disabledBtn() {
+      this.isDisabled = true;
+      var interval;
+      var _this = this;
+      var num = 60;
+      interval = setInterval(function() {
+        _this.cellphoneBtnVal = num + "s";
+        num--;
+        if (num == -1) {
+          clearInterval(interval);
+          _this.isDisabled = false;
+          _this.cellphoneBtnVal = "获取验证码";
+        }
+      }, 1000);
     },
     //点击验证码换图
     changeImgCheck: function() {
@@ -181,9 +183,9 @@ export default {
     getCheckCode: function() {
       var phone = this.userNewPhone;
       //getImgCheckCode()在全局main.js里面
-      this.createdToken = this.getImgCheckCode().createdToken;
-      this.checkCodeUrl = this.getImgCheckCode().imgCheckCodeUrl.toString();
-      //console.log(this.checkCodeUrl);
+      let obj = this.getImgCheckCode();
+      this.createdToken = obj.createdToken;
+      this.checkCodeUrl = obj.imgCheckCodeUrl.toString();
     }
   },
   mounted: function() {

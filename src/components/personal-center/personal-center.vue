@@ -37,17 +37,14 @@
     <div class="person_ding">
       <div class="ding">
         <img src="../../assets/grxx_icon01.png" alt>未支付订单
-        <!-- <span>{{unpaidOrder}}</span> -->
         <router-link :to="{path:'OrderCenter',params:{orderStatus:1}}" tag="span">{{unpaidOrder}}</router-link>
       </div>
       <div class="ding ywc">
         <img src="../../assets/grxx_icon02.png" alt>已完成订单
-        <!-- <span>{{completeOrder}}</span> -->
         <router-link :to="{name:'OrderCenter',params:{orderStatus:3}}" tag="span">{{completeOrder}}</router-link>
       </div>
       <div class="ding">
         <img src="../../assets/grxx_icon03.png" alt>执行中订单
-        <!-- <span>{{executingOrder}}</span> -->
         <router-link :to="{name:'OrderCenter',params:{orderStatus:2}}" tag="span">{{executingOrder}}</router-link>
       </div>
     </div>
@@ -55,175 +52,166 @@
 </template>
 
 <script>
-
-export default {
-  name: "",
-  data() {
-    return {
-      userName: "", //用户名
-      userManager: "张图图", //客户经理
-      userManagePhone: "", //客户经理手机号
-      userManageQQ: "", //客户经理QQ
-      douyinId: "", //抖音ID
-      userCellphoneNumber: "", //用户手机号
-      userBalance: "4500", //用户账户余额
-      unpaidOrder: 0, //未支付
-      completeOrder: 0, //已完成
-      executingOrder: 0, //执行中
-      token: "",
-      userInfo: [] //获取的用户信息
-    };
-  },
-  methods: {
-    getUserInfo() {
-      var token = this.getCookie("token");
- 
-      var _this = this;
-      this.$axios({
-        method:'post',
-        url:'/account/GetUserInfo',
-        data:{
-          Token:token
-        }
-      })
-        .then((res) =>{
-          console.log(res)
-/*           if (res.data.Code == 11) {
-            alert("登录状态已过期,请重新登录");
-            this.globalLoginOut();
-            this.$store.dispatch("loginAction", false);
-            this.$store.dispatch("showLoginFormAction", true);
-          } */
-          console.log(this.getCookie('userName'))
-          _this.userInfo = res.data.Data;
-          _this.setUserInfo();
-          _this.setOrderInfo();
-          console.log(_this.userInfo);
-        }).catch(err =>{
-          console.log(err)
-        })
+  export default {
+    name: "",
+    data() {
+      return {
+        userName: "", //用户名
+        userManager: "张图图", //客户经理
+        userManagePhone: "", //客户经理手机号
+        userManageQQ: "", //客户经理QQ
+        douyinId: "", //抖音ID
+        userCellphoneNumber: "", //用户手机号
+        userBalance: "4500", //用户账户余额
+        unpaidOrder: 0, //未支付
+        completeOrder: 0, //已完成
+        executingOrder: 0, //执行中
+        token: "",
+        userInfo: [] //获取的用户信息
+      };
     },
-    setUserInfo() {
-      var _this = this.userInfo.user;
-      this.userName = _this.Name;
-      this.userManager = _this.Customer;
-      this.douyinId = _this.DouyinId;
-      this.userCellphoneNumber = _this.Phone;
-      this.userBalance = this.userInfo.balance;
-      this.userManagePhone = _this.CustomerPhone;
-      this.userManageQQ = _this.CustomerQQ;
+    methods: {
+      getUserInfo() {
+        var token = this.getCookie("token");
+        this.$axios({
+            method: 'post',
+            url: '/account/GetUserInfo',
+            data: {
+              Token: token
+            }
+          })
+          .then((res) => {
+            this.userInfo = res.data.Data;
+            this.setUserInfo();
+            this.setOrderInfo();
+          }).catch(err => {
+            console.log(err)
+          })
+      },
+      setUserInfo() {
+        var _this = this.userInfo.user;
+        this.userName = _this.Name;
+        this.userManager = _this.Customer;
+        this.douyinId = _this.DouyinId;
+        this.userCellphoneNumber = _this.Phone;
+        this.userBalance = this.userInfo.balance;
+        this.userManagePhone = _this.CustomerPhone;
+        this.userManageQQ = _this.CustomerQQ;
+      },
+      setOrderInfo() {
+        var _this = this.userInfo.order;
+        this.unpaidOrder = _this.notpay;
+        this.completeOrder = _this.complete;
+        this.executingOrder = _this.runing;
+      }
     },
-    setOrderInfo() {
-      var _this = this.userInfo.order;
-      this.unpaidOrder = _this.notpay;
-      this.completeOrder = _this.complete;
-      this.executingOrder = _this.runing;
+    mounted() {
+      this.getUserInfo();
+    },
+    beforeCreate() {
+      //this.limit()//全局
     }
-  },
-  mounted() {
-    this.getUserInfo();
-  },
-  beforeCreate() {
-    //this.limit()//全局
-  }
-};
+  };
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-.personal-center {
-  padding: 50px;
-}
-.htlist_ul {
-  width: 1035px;
-  height: 755px;
-  float: left;
-  margin-left: 40px;
-  background: #fefefe;
-  color: #333333;
-}
+  .personal-center {
+    padding: 50px;
+  }
 
-.htlist_ul .htlist_ulC {
-  width: 950px;
-  margin: 0 auto;
-}
+  .htlist_ul {
+    width: 1035px;
+    height: 755px;
+    float: left;
+    margin-left: 40px;
+    background: #fefefe;
+    color: #333333;
+  }
 
-.htlist_ulC h3 {
-  font-size: 20px;
-  line-height: 50px;
-  font-weight: normal;
-  width: 100%;
-  border-bottom: 1px solid #999999;
-  padding-top: 30px;
-}
+  .htlist_ul .htlist_ulC {
+    width: 950px;
+    margin: 0 auto;
+  }
 
-.person_info {
-  width: 100%;
-  height: 195px;
-  border: 1px solid #bbbbbb;
-  margin-top: 18px;
-  display: flex;
-}
+  .htlist_ulC h3 {
+    font-size: 20px;
+    line-height: 50px;
+    font-weight: normal;
+    width: 100%;
+    border-bottom: 1px solid #999999;
+    padding-top: 30px;
+  }
 
-.person_info > img {
-  width: 121px;
-  height: 121px;
-  margin: 36px 30px 0 36px;
-}
+  .person_info {
+    width: 100%;
+    height: 195px;
+    border: 1px solid #bbbbbb;
+    margin-top: 18px;
+    display: flex;
+  }
 
-.person_info_ul {
-  margin-top: 35px;
-}
+  .person_info>img {
+    width: 121px;
+    height: 121px;
+    margin: 36px 30px 0 36px;
+  }
 
-.person_info_ul > li {
-  width: 290px;
-  float: left;
-  font-size: 16px;
-  line-height: 40px;
-  color: #666666;
-}
+  .person_info_ul {
+    margin-top: 35px;
+  }
 
-.person_info_ul > li > span {
-  margin-left: 15px;
-  color: #b8b8b8;
-}
+  .person_info_ul>li {
+    width: 290px;
+    float: left;
+    font-size: 16px;
+    line-height: 40px;
+    color: #666666;
+  }
 
-.person_info_ul > li:nth-child(1) > span {
-  color: #333333;
-}
+  .person_info_ul>li>span {
+    margin-left: 15px;
+    color: #b8b8b8;
+  }
 
-.person_info_ul > li:nth-child(5) > span {
-  color: #eb5169;
-}
+  .person_info_ul>li:nth-child(1)>span {
+    color: #333333;
+  }
 
-.person_ding {
-  display: flex;
-  margin-top: 50px;
-}
+  .person_info_ul>li:nth-child(5)>span {
+    color: #eb5169;
+  }
 
-.person_ding > .ding {
-  width: 284px;
-  height: 140px;
-  background: #fff6f7;
-  border-radius: 10px;
-  font-size: 20px;
-  color: #666666;
-}
+  .person_ding {
+    display: flex;
+    margin-top: 50px;
+  }
 
-.person_ding > .ding > img {
-  margin: 38px 15px -23px 30px;
-  width: 62px;height: 62px;
-}
+  .person_ding>.ding {
+    width: 284px;
+    height: 140px;
+    background: #fff6f7;
+    border-radius: 10px;
+    font-size: 20px;
+    color: #666666;
+  }
 
-.person_ding .ywc {
-  margin: 0 50px;
-}
+  .person_ding>.ding>img {
+    margin: 38px 15px -23px 30px;
+    width: 62px;
+    height: 62px;
+  }
 
-.person_ding > .ding > span {
-  color: #eb5169;
-  font-size: 34px;
-  margin-left: 12px;
-  cursor: pointer;
-}
+  .person_ding .ywc {
+    margin: 0 50px;
+  }
+
+  .person_ding>.ding>span {
+    color: #eb5169;
+    font-size: 34px;
+    margin-left: 12px;
+    cursor: pointer;
+  }
+
 </style>
-

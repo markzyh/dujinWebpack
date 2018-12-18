@@ -75,7 +75,7 @@ export default {
       var Token = this.getCookie("token");
       if (oldPassword == "" || userNewPassword == "") {
         this.$Notification({
-          title: '警告',
+          title: '温馨提示',
           message: '密码不能为空!',
           type: 'warning'
         })
@@ -83,7 +83,7 @@ export default {
       }
       if (oldPassword == userNewPassword) {
         this.$Notification({
-          title: '警告',
+          title: '温馨提示',
           message: '新密码与旧密码一致,请您输入新的密码!',
           type: 'warning'
         })
@@ -91,7 +91,7 @@ export default {
       }
       if (userNewPassword != confirmNewPassword) {
         this.$Notification({
-          title: '警告',
+          title: '温馨提示',
           message: '两次输入密码不一致,请您重新输入!',
           type: 'warning'
         })

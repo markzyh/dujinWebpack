@@ -283,7 +283,7 @@ export default {
       var idUploadBack = this.idcardBackURL;
       if (realName == "") {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "真实姓名为必填选项!",
           type: "warning"
         });
@@ -291,7 +291,7 @@ export default {
       }
       if (!/^[\u4E00-\u9FA5]{2,4}$/.test(realName)) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "请您填写正确的姓名!",
           type: "warning"
         });
@@ -299,7 +299,7 @@ export default {
       }
       if (isUploadFace == false) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "个人身份证正面还未上传哦!",
           type: "warning"
         });
@@ -307,7 +307,7 @@ export default {
       }
       if (idUploadBack == false) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "个人身份证国徽面还未上传哦!",
           type: "warning"
         });
@@ -323,7 +323,7 @@ export default {
       var isUploadIndustry = this.industryCardURL;
       if (companyName == "" || companyNumber == "") {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "企业名称和营业执照注册号为必填选项!",
           type: "warning"
         });
@@ -339,7 +339,7 @@ export default {
         )
       ) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "请您填写正确的营业执照注册号,注册号为15位或18位!",
           type: "warning"
         });
@@ -347,7 +347,7 @@ export default {
       }
       if (isUploadCompany == false) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "营业执照还未上传!",
           type: "warning"
         });
@@ -355,7 +355,7 @@ export default {
       }
       if (isUploadIndustry == false) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "行业许可证还未上传!",
           type: "warning"
         });
@@ -378,7 +378,7 @@ export default {
 
       if (!Name || !DouyinId) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "请填写您的抖音昵称和抖音号!",
           type: "warning"
         });
@@ -386,7 +386,7 @@ export default {
       }
       if (!/^[a-zA-Z0-9_]{0,15}$/.test(DouyinId)) {
         this.$Notification({
-          title: "警告",
+          title: "温馨提示",
           message: "抖音号最多16位,只允许字母、下划线、点和数字!",
           type: "warning"
         });

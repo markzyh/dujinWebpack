@@ -413,7 +413,7 @@ export default {
   background-position: center left;
   padding-left: 20px;
   width: 100%;
-  height: 100%;
+  height: 99.5%;
   box-sizing: border-box;
   vertical-align: top;
   border: 1px solid #bbbbbb;
