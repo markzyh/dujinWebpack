@@ -1,13 +1,21 @@
+import {
+  MessageBox,
+  Message,
+  Notification
+} from 'element-ui';
+import originaxios from '@/api/http'
 export function globalLoginOut() {
   deleteCookie("userName");
   deleteCookie("userPhone");
   deleteCookie("token");
   deleteCookie("douyinId");
 }
+
 //删除cookie
 export function deleteCookie(cname) {
   setCookie(cname, '', -1)
 }
+
 //设置cookie
 export function setCookie(cname, cvalue, exdays) {
   var d = new Date()
@@ -18,6 +26,7 @@ export function setCookie(cname, cvalue, exdays) {
   document.cookie = cname + "=" + cvalue + "; " + expires + ";" + path // 这个很重要代表在那个层级下可以访问cookie
   //console.log(document.cookie)
 }
+
 //获取cookie
 export function getCookie(cname) {
   var name = cname + "=";
@@ -31,6 +40,7 @@ export function getCookie(cname) {
   }
   return "";
 }
+
 //检测cookie
 export function checkCookie(cname) {
   var user = getCookie(cname);
@@ -40,6 +50,7 @@ export function checkCookie(cname) {
     return false
   }
 }
+
 //验证手机号
 export function checkPhone(phone) {
   if (
@@ -56,21 +67,22 @@ export function checkPhone(phone) {
 
 //把时间戳转换为中文时间
 export function transformDateStamp(param) {
-  var date = new Date(parseInt(param.substr(6, 19)))
-  var timeYear = new Date(date).getFullYear();
-  var timeMouth = new Date(date).getMonth() + 1;
-  var timeDate = new Date(date).getDate();
-  var timeHours = new Date(date).getHours();
-  var timeMinutes = new Date(date).getMinutes();
-  var timeSeconds = new Date(date).getSeconds();
+  //var date = new Date(parseInt(param.substr(6, 19)))
+  var timeYear = new Date(param).getFullYear();
+  var timeMouth = new Date(param).getMonth() + 1;
+  var timeDate = new Date(param).getDate();
+  var timeHours = new Date(param).getHours();
+  var timeMinutes = new Date(param).getMinutes();
+  var timeSeconds = new Date(param).getSeconds();
   var time = checkTen(timeYear) + "-" + checkTen(timeMouth) + "-" + checkTen(timeDate) + "   " + checkTen(timeHours) + ":" + checkTen(timeMinutes) + ":" + checkTen(timeSeconds)
   return time
 }
+
 function checkTen(num) {
-    if (num < 10) {
-      num = "0" + num
-    }
-    return num
+  if (num < 10) {
+    num = "0" + num
+  }
+  return num
 }
 
 //自定义token,用来获取图形验证码
@@ -82,12 +94,69 @@ export function createToken() {
     return v.toString(16);
   });
 }
+
 //获取图像验证码
 export function getImgCheckCode() {
+    console.log('9')
   let createdToken = createToken() //自定义token
   var imgCheckCodeUrl = 'http://dou.fudayiliao.com/account/getcode/' + createdToken //返回图片链接
   return {
     createdToken,
     imgCheckCodeUrl
+  }
+}
+
+//上传图片
+export function uploadImg(event, ref) {
+  let file = this.$refs[ref].files[0];
+  if (beforeUpload(file) == true) {
+    let formData = new FormData();
+    formData.append("path", file);
+    return originaxios({
+      url: "/account/ImageUpload",
+      method: "post",
+      data: formData
+    }).then((res) =>{
+      let imgUrl = "http://dou.fudayiliao.com" + res.data.Data;
+      return imgUrl
+    })
+  }
+  else{
+      return false
+  }
+}
+
+//图片上传前检测图片
+function beforeUpload(file) {
+  let fileSize = 500 * 1024; //500k
+  let fileType1 = "JPG";
+  let fileType2 = "JPEG";
+  let fileType3 = "PNG";
+  let uploadFileType = file.type.split("/")[1];
+  let uploadFileSize = file.size;
+  if (
+    uploadFileType != fileType1 &&
+    uploadFileType != fileType2 &&
+    uploadFileType != fileType1.toLowerCase() &&
+    uploadFileType != fileType2.toLowerCase() &&
+    uploadFileType != fileType3 &&
+    uploadFileType != fileType3.toLowerCase()
+  ) {
+    Notification({
+      title: '警告',
+      message: '图片只支持JPG,JPEG或者PNG格式!',
+      type: 'warning'
+    })
+    return false;
+  }
+  if (uploadFileSize > fileSize) {
+    Notification({
+      title: '警告',
+      message: '图片大小不能超过500k!',
+      type: 'warning'
+    })
+    return false;
+  } else {
+    return true;
   }
 }

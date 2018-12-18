@@ -11,7 +11,7 @@
           <input
             class="htlist_dlb"
             name="mobile"
-            type="text"    
+            type="text"
             v-model="douyinNameVal"
             placeholder="请输入您要投放的抖音昵称"
           >
@@ -97,7 +97,12 @@
                       id="upload_idcard_face"
                       name="path"
                       @change="uploadCardFace($event,'upload_idcard_face','idcardFaceURL')"
-                    ><span v-if="idcardFaceURL != false" class="cancle_upload" @click="cancelUpload('idcardFaceURL')">x</span>
+                    >
+                    <span
+                      v-if="idcardFaceURL != false"
+                      class="cancle_upload"
+                      @click="cancelUpload('idcardFaceURL')"
+                    >x</span>
                     <img :src="idcardFaceURL" alt v-if="idcardFaceURL != false">
                   </form>
                 </div>
@@ -113,7 +118,12 @@
                       name="path"
                       id="upload_idcard_back"
                       @change="uploadCardFace($event,'upload_idcard_back','idcardBackURL')"
-                    ><span v-if="idcardBackURL != false" class="cancle_upload" @click="cancelUpload('idcardBackURL')">x</span>
+                    >
+                    <span
+                      v-if="idcardBackURL != false"
+                      class="cancle_upload"
+                      @click="cancelUpload('idcardBackURL')"
+                    >x</span>
                     <img :src="idcardBackURL" alt v-if="idcardBackURL != false">
                   </form>
                 </div>
@@ -122,7 +132,7 @@
             <p
               class="personal_auth_tips"
               v-if="choosedAuthIndex === 0"
-            >请上传四角完整，亮度均匀，照片清晰的二代身份证，图片格式需为JPG,JPEG格式，大小不能超过500k。</p>
+            >请上传四角完整，亮度均匀，照片清晰的二代身份证，图片格式需为JPG,JPEG或者PNG格式，大小不能超过500k。</p>
           </div>
         </transition>
         <transition name="show1">
@@ -156,11 +166,15 @@
                       name="path"
                       @change="uploadCardFace($event,'compamy_idcard','companyIdUrl')"
                     >
-                    <span v-if="companyIdUrl != false" class="cancle_upload" @click="cancelUpload('companyIdUrl')">x</span>
+                    <span
+                      v-if="companyIdUrl != false"
+                      class="cancle_upload"
+                      @click="cancelUpload('companyIdUrl')"
+                    >x</span>
                     <img :src="companyIdUrl" alt v-if="companyIdUrl != false">
                   </form>
                 </div>
-                <p>请上传最新的营业执照彩色扫描件，各字段及印章完整清晰，资质无残缺信息，图片格式需为JPG,JPEG格式，大小不能超过500k。</p>
+                <p>请上传最新的营业执照彩色扫描件，各字段及印章完整清晰，资质无残缺信息，图片格式需为JPG,JPEG或者PNG格式，大小不能超过500k。</p>
               </div>
             </div>
             <div class="personal_auth_idcard dis-inline personal_auth_comlience">
@@ -179,11 +193,15 @@
                       name="path"
                       @change="uploadCardFace($event,'industryCard','industryCardURL')"
                     >
-                    <span v-if="industryCardURL != false" class="cancle_upload" @click="cancelUpload('industryCardURL')">x</span>
+                    <span
+                      v-if="industryCardURL != false"
+                      class="cancle_upload"
+                      @click="cancelUpload('industryCardURL')"
+                    >x</span>
                     <img :src="industryCardURL" alt v-if="industryCardURL != false">
                   </form>
                 </div>
-                <p>请上传最新的行业许可证彩色扫描件，各字段及印章完整清晰，资质无残缺信息，图片格式需为JPG,JPEG格式大小不能超过500k。</p>
+                <p>请上传最新的行业许可证彩色扫描件，各字段及印章完整清晰，资质无残缺信息，图片格式需为JPG,JPEG或者PNG格式大小不能超过500k。</p>
               </div>
             </div>
           </div>
@@ -198,7 +216,7 @@
             value
             @click="changeAgree"
           >同意
-          <a href='/service.html' target="_blank">《上海度进信息科技有限公司服务使用协议》</a>
+          <a href="/service.html" target="_blank">《上海度进信息科技有限公司服务使用协议》</a>
         </p>
         <input
           type="button"
@@ -240,51 +258,22 @@ export default {
   },
   methods: {
     //同意协议
-    changeAgree: function() {
+    changeAgree() {
       this.isAgree = !this.isAgree;
     },
-    //图片上传是验证图片
-    beforeUpload(file) {
-      var fileSize = 500 * 1024; //500k
-      var fileType1 = "JPG";
-      var fileType2 = "JPEG";
-      var uploadFileType = file.type.split("/")[1];
-      var uploadFileSize = file.size;
-      if (
-        uploadFileType != fileType1 &&
-        uploadFileType != fileType2 &&
-        uploadFileType != fileType1.toLowerCase() &&
-        uploadFileType != fileType2.toLowerCase()
-      ) {
-        alert("图片只支持JPG或者JPEG格式");
-        return false;
-      }
-      if (uploadFileSize > fileSize) {
-        alert("图片大小不能超过500k");
-        return false;
-      } else {
-        return true;
-      }
-    },
-    choosedAuth: function(index) {
+    choosedAuth(index) {
       this.choosedAuthIndex = index;
     },
     //取消上传图片
-    cancelUpload(attr){
-      this[attr] = false
+    cancelUpload(attr) {
+      this[attr] = false;
     },
-    uploadCardFace: function(event, ref, attr) {
-      var file = this.$refs[ref].files[0];
-      if (this.beforeUpload(file) == true) {
-        var formData = new FormData();
-        formData.append("path", file);
-        var _this = this;
-        this.$axios({
-          url: "/account/ImageUpload",
-          method: "post",
-          data: formData
-        }).then(function(res) {
-          _this[attr] = "http://dou.fudayiliao.com" + res.data.Data;
+    uploadCardFace(event, ref, attr) {
+      //上传图片,封装到全局main.js中,返回的是一个promise对象
+      let p = this.uploadImg(event, ref);
+      if (p) {
+        p.then(res => {
+          this[attr] = res;
         });
       }
     },
@@ -293,19 +282,35 @@ export default {
       var isUploadFace = this.idcardFaceURL; //不为false
       var idUploadBack = this.idcardBackURL;
       if (realName == "") {
-        alert("真实姓名为必填选项");
+        this.$Notification({
+          title: "警告",
+          message: "真实姓名为必填选项!",
+          type: "warning"
+        });
         return false;
       }
       if (!/^[\u4E00-\u9FA5]{2,4}$/.test(realName)) {
-        alert("请您填写正确的姓名");
+        this.$Notification({
+          title: "警告",
+          message: "请您填写正确的姓名!",
+          type: "warning"
+        });
         return false;
       }
       if (isUploadFace == false) {
-        alert("个人身份证正面还未上传哦!");
+        this.$Notification({
+          title: "警告",
+          message: "个人身份证正面还未上传哦!",
+          type: "warning"
+        });
         return false;
       }
       if (idUploadBack == false) {
-        alert("个人身份证国徽面还未上传哦!");
+        this.$Notification({
+          title: "警告",
+          message: "个人身份证国徽面还未上传哦!",
+          type: "warning"
+        });
         return false;
       } else {
         return true;
@@ -317,7 +322,11 @@ export default {
       var isUploadCompany = this.companyIdUrl;
       var isUploadIndustry = this.industryCardURL;
       if (companyName == "" || companyNumber == "") {
-        alert("企业名称和营业执照注册号为必填选项!");
+        this.$Notification({
+          title: "警告",
+          message: "企业名称和营业执照注册号为必填选项!",
+          type: "warning"
+        });
         return false;
       }
       /* if(!/^[\u4E00-\u9FA5]{2,20}$/.test(companyName)){
@@ -329,15 +338,27 @@ export default {
           companyNumber
         )
       ) {
-        alert("请您填写正确的营业执照注册号,注册号为15位或18位");
+        this.$Notification({
+          title: "警告",
+          message: "请您填写正确的营业执照注册号,注册号为15位或18位!",
+          type: "warning"
+        });
         return false;
       }
       if (isUploadCompany == false) {
-        alert("营业执照还未上传!");
+        this.$Notification({
+          title: "警告",
+          message: "营业执照还未上传!",
+          type: "warning"
+        });
         return false;
       }
       if (isUploadIndustry == false) {
-        alert("行业许可证还未上传!");
+        this.$Notification({
+          title: "警告",
+          message: "行业许可证还未上传!",
+          type: "warning"
+        });
         return false;
       } else {
         return true;
@@ -353,14 +374,22 @@ export default {
       var AuthType = this.authenticationLists[this.choosedAuthIndex]; //认证类型
       var CorpId = this.companyNumber; //公司id
       var CorpName = this.companyName; //公司名称
-      var Face, FaceBack,CorpLicense,CorpPermit; //身份或者营业执照,行业许可证
-      
+      var Face, FaceBack, CorpLicense, CorpPermit; //身份或者营业执照,行业许可证
+
       if (!Name || !DouyinId) {
-        alert("请填写您的抖音昵称和抖音号!");
+        this.$Notification({
+          title: "警告",
+          message: "请填写您的抖音昵称和抖音号!",
+          type: "warning"
+        });
         return false;
       }
       if (!/^[a-zA-Z0-9_]{0,15}$/.test(DouyinId)) {
-        alert("抖音号最多16位,只允许字母、下划线、点和数字");
+        this.$Notification({
+          title: "警告",
+          message: "抖音号最多16位,只允许字母、下划线、点和数字!",
+          type: "warning"
+        });
         return false;
       }
       if (this.choosedAuthIndex == 0) {
@@ -381,44 +410,39 @@ export default {
       }
       //alert('成功')
       this.$axios
-        .post(
-          "/account/Update",
-          {
-            Token: token,
-            Name: Name,
-            DouyinId: DouyinId,
-            AuthType: AuthType,
-            CorpId: CorpId,
-            CorpName: CorpName,
-            Face: Face,
-            FaceBack: FaceBack,
-            CorpLicense:CorpLicense,
-            CorpPermit:CorpPermit,
-            RealName: RealName
-          }
-        )
+        .post("/account/Update", {
+          Token: token,
+          Name: Name,
+          DouyinId: DouyinId,
+          AuthType: AuthType,
+          CorpId: CorpId,
+          CorpName: CorpName,
+          Face: Face,
+          FaceBack: FaceBack,
+          CorpLicense: CorpLicense,
+          CorpPermit: CorpPermit,
+          RealName: RealName
+        })
         .then(res => {
-          console.log(res)
-          /* if (res.data.Code == 11) {
-            alert("登录状态已过期,请重新登录");
-            this.globalLoginOut();
-            window.location.reload()
-          } */
-          alert("资料提交完成");
-          let userName = res.data.Data.Name;
-          let userPhone = res.data.Data.Phone;
-          //let token = res.data.Token;
-          let douyinId = res.data.Data.DouyinId;
-          this.setCookie("userName", userName, 1);
-          this.setCookie("userPhone", userPhone, 1);
-          //this.setCookie("token", token, 1);
-          this.setCookie("douyinId", douyinId, 1);
-          window.location.href = "/dist/#/create-order";
-          //this.globalLoginOut()
-          //userLoginOut();
+          if (res) {
+            let userName = res.data.Data.Name;
+            let userPhone = res.data.Data.Phone;
+            let douyinId = res.data.Data.DouyinId;
+            this.setCookie("userName", userName, 1);
+            this.setCookie("userPhone", userPhone, 1);
+            //this.setCookie("token", token, 1);
+            this.setCookie("douyinId", douyinId, 1);
+            this.$MessageBox.alert("资料提交完成", "修改资料", {
+              confirmButtonText: "确定",
+              type: "success",
+              callback: action => {
+                window.location.href = "/dist/#/create-order";
+              }
+            });
+          }
         });
     },
-    dyNameFocus: function() {
+    /*     dyNameFocus: function() {
       if (this.douyinNameVal == this.getCookie("userName")) {
         this.douyinNameVal = "";
       }
@@ -437,19 +461,19 @@ export default {
       if (this.douyinNameVal == "") {
         this.douyinNameVal = this.getCookie("douyinId");
       }
-    },
-    getUserInfo(params,value){
-      if(this.getCookie(params) != ''){
-        this[value] = this.getCookie(params)
-      }else{
-        this[value] = ''
+    }, */
+    getUserInfo(params, value) {
+      if (this.getCookie(params) != "" && this.getCookie(params) !== "null") {
+        this[value] = this.getCookie(params);
+      } else {
+        this[value] = "";
       }
-    },
+    }
   },
   mounted() {
-    this.getUserInfo('userName','douyinNameVal')
-    this.getUserInfo('douyinId','douyinNumberVal')
-    this.getUserInfo('userPhone','userCellphoneNumber')
+    this.getUserInfo("userName", "douyinNameVal");
+    this.getUserInfo("douyinId", "douyinNumberVal");
+    this.getUserInfo("userPhone", "userCellphoneNumber");
   }
 };
 </script>
@@ -521,7 +545,8 @@ dl.htlist_dla dd img {
   vertical-align: top;
   margin-left: 7px;
   cursor: pointer;
-  width: 124px;height: 38px;
+  width: 124px;
+  height: 38px;
 }
 
 dl.htlist_dla dd input[type="button"] {
@@ -724,15 +749,17 @@ input[type="radio"].radio_checked {
   background: #ebebeb;
   cursor: not-allowed;
 }
-.auth_idcard{
+.auth_idcard {
   position: relative;
-  span.cancle_upload{
-  position: absolute;top:0;right: 0;
-  width: 20px;height: 20px;
-  text-align: center;
-  cursor: pointer;
+  span.cancle_upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
 }
-}
-
 </style>
 

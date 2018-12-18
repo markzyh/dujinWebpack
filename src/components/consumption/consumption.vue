@@ -18,14 +18,7 @@
               :key="index"
             >{{item.name}}</option>
           </select>
-          <!--                             <select name="" id="" class="select_time">
-                                <option value="下单时间">下单时间</option>
-                                <option value="1:00">1:00</option>
-                                <option value="2:00">2:00</option>
-          </select>-->
           <div class="orderDate">
-            <!-- <img src="images/date_icon.png" alt> -->
-            <!-- <input type="text" class="date-picker start_date" placeholder="开始日期"> -->
             <date-picker
               v-model="startDateVal"
               :first-day-of-week="1"
@@ -33,7 +26,6 @@
               @change="screenDate"
             ></date-picker>
             <span>至</span>
-            <!-- <input type="text" class="date-picker end_date" placeholder="结束日期"> -->
             <date-picker
               v-model="endDateVal"
               :first-day-of-week="2"
@@ -69,7 +61,6 @@
   </div>
 </template>
 <script>
-
 import DatePicker from "vue2-datepicker";
 export default {
   components: { DatePicker },
@@ -118,7 +109,11 @@ export default {
       let Status = ""; //暂时为空
       let Type = this.choosedTransactionType;
       if (this.chekDate(Start, End) == false) {
-        alert("开始时间必须在结束时间之前");
+        this.$Notification({
+          title: "警告",
+          message: "开始时间必须在结束时间之前!",
+          type: "warning"
+        });
         return false;
       } else {
         Start = this.transformDateStamp(this.startDateVal);
@@ -151,32 +146,23 @@ export default {
       this.getPaymentList(this.choosedTransactionType);
       console.log(this.choosedTransactionType);
     },
-    getPaymentList: function(type, start, end) {
+    getPaymentList(type, start, end) {
       var token = this.getCookie("token");
-      var _this = this;
       this.$axios
-        .post(
-          "/Payment/GetPaymentList",
-          {
-            Token: token,
-            Type: type,
-            End: end,
-            Start: start
+        .post("/Payment/GetPaymentList", {
+          Token: token,
+          Type: type,
+          End: end,
+          Start: start
+        })
+        .then(res => {
+          if (res) {
+            this.orderList = res.data.Data;
           }
-        )
-        .then((res) =>{
-          console.log(res);
-          if (res.data.Code == 11) {
-            alert("登录状态已过期,请重新登录");
-            this.globalLoginOut();
-            this.$store.dispatch("loginAction", false);
-            this.$store.dispatch("showLoginFormAction", true);
-          }
-          _this.orderList = res.data.Data;
         });
-    },
+    }
     //把时间戳转译成普通格式
-    transformDateStamp: function(param) {
+    /* transformDateStamp: function(param) {
       //var date = new Date(parseInt(param.substr(6, 19)));
       var timeYear = new Date(param).getFullYear();
       var timeMouth = new Date(param).getMonth() + 1;
@@ -197,7 +183,7 @@ export default {
         ":" +
         this.checkTen(timeSeconds);
       return time;
-    }
+    } */
   },
   mounted: function() {
     this.getPaymentList("");

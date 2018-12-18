@@ -7,7 +7,7 @@
           <div class="compony_auth_label">
             <b>*</b>抖音号：
           </div>
-          <input type="text"  class="zzSub_input" v-model="douyinName" placeholder="请输入要投放的抖音号">
+          <input type="text" class="zzSub_input" v-model="douyinName" placeholder="请输入要投放的抖音号">
         </div>
         <div class="zzSub_box">
           <div class="compony_auth_label">
@@ -148,7 +148,7 @@
             <b>*</b>图形验证码：
           </div>
           <input type="text" class="dxyz_input" placeholder="请输入验证码" v-model="imgCheckCode">
-          <img :src="imgCheckCodeUrl" alt class="imgCode" @click="getImgCheckCode">
+          <img :src="imgCheckCodeUrl" alt class="imgCode" @click="getImgCode">
           <!-- <input type="button" class="dxyz_btn phone_code_btn" v-model="watchPhoneCodeBtn" @click="getPhoneCode" :class="{disabled:!isLetPhoneCode}" :disabled="!isLetPhoneCode"> -->
         </div>
         <div class="zzSub_box">
@@ -209,7 +209,6 @@
   </div>
 </template>
 <script>
-import axios from "axios";
 export default {
   data() {
     return {
@@ -239,9 +238,8 @@ export default {
     },
     //确认提交
     confirmCompanyAuth: function() {
-      this.isConfirm = true;
-      //alert(0);
       if (this.checkCompanyAuthPage() == true) {
+        //this.isConfirm = true;
         var token = this.getCookie("token");
         var AuthType = "企业认证";
         var Name = this.douyinName; //抖音名
@@ -254,88 +252,89 @@ export default {
         var CorpPhone = this.operatePhone; //运营人电话
         var Code = this.phoneCheckCode; //手机验证码
         var _this = this;
-        axios
-          .post(
-            "/account/Update",
-            {
-              Token: token,
-              CorpName: CorpName,
-              Name: Name,
-              CorpId: CorpId,
-              CorpLicense: CorpLicense,
-              CorpPermit: CorpPermit,
-              AuthPub: AuthPub,
-              CorpUser: CorpUser,
-              CorpPhone: CorpPhone,
-              Code: Code,
-              AuthType: AuthType
-            },
-            {
-              headers: {
-                "content-type": "application/x-www-form-urlencoded"
-              }
-            }
-          )
+        this.$axios
+          .post("/account/Update", {
+            Token: token,
+            CorpName: CorpName,
+            Name: Name,
+            CorpId: CorpId,
+            CorpLicense: CorpLicense,
+            CorpPermit: CorpPermit,
+            AuthPub: AuthPub,
+            CorpUser: CorpUser,
+            CorpPhone: CorpPhone,
+            Code: Code,
+            AuthType: AuthType
+          })
           .then(res => {
             this.isConfirm = true;
-            //_this.$refs.auth_form.reset()
             return false;
-            console.log(res);
           });
       }
     },
-    //checkCompanyAuth
-    getImgCheckCode: function() {
-      this.createdToken = this.createToken();
-      console.log(this.createdToken);
-      this.imgCheckCodeUrl =
-        "http://dou.fudayiliao.com/account/getcode/" + this.createdToken;
-      console.log(this.imgCheckCodeUrl);
+    //全局main.js
+    getImgCode: function() {
+      var obj = this.getImgCheckCode();
+      this.createdToken = obj.createdToken;
+      this.imgCheckCodeUrl = obj.imgCheckCodeUrl;
     },
-    //获取验证码
-    getPhoneCode: function() {
+    checkPhoneCode() {
       if (this.operatePhone == "") {
-        alert("请您先输入电话号码");
+        this.$Notification({
+          title: "警告",
+          message: "请您先输入电话号码!",
+          type: "warning"
+        });
         return false;
       }
       if (this.checkPhone(this.operatePhone) == false) {
-        alert("请您输入正确的手机号");
+        this.$Notification({
+          title: "警告",
+          message: "请您输入正确的手机号!",
+          type: "warning"
+        });
+        return false;
+      }
+      if (this.imgCheckCode == "") {
+        this.$Notification({
+          title: "警告",
+          message: "请您输入验证码!",
+          type: "warning"
+        });
         return false;
       } else {
-        this.isLetPhoneCode = false;
+        return true;
+      }
+    },
+    //获取验证码
+    getPhoneCode() {
+      if (this.checkPhoneCode() == true) {
         var tInterval,
-          num = 5;
+          num = 60;
         var _this = this;
-        tInterval = setInterval(function() {
-          _this.phoneCodeBtn = num + "s";
-          console.log(_this.phoneCodeBtn);
-          num--;
-          if (num < 0) {
-            clearInterval(tInterval);
-            _this.phoneCodeBtn = "获取验证码";
-            _this.isLetPhoneCode = true;
-            return false;
-          }
-        }, 1000);
         var Key = this.createdToken;
         var Data = this.imgCheckCode;
-        var url =
-          "http://dou.fudayiliao.com/account/GetSmsCode/" + this.operatePhone;
-        axios
-          .post(
-            url,
-            {
-              Key: Key,
-              Data: Data
-            },
-            {
-              headers: {
-                "content-type": "application/x-www-form-urlencoded"
-              }
+        var url = "/account/GetSmsCode/" + this.operatePhone;
+        this.$axios
+          .post(url, {
+            Key: Key,
+            Data: Data
+          })
+          .then(res => {
+            if (res) {
+              this.isLetPhoneCode = false;
+              tInterval = setInterval(function() {
+                _this.phoneCodeBtn = num + "s";
+                console.log(_this.phoneCodeBtn);
+                num--;
+                if (num < 0) {
+                  clearInterval(tInterval);
+                  _this.phoneCodeBtn = "获取验证码";
+                  _this.isLetPhoneCode = true;
+                  return false;
+                }
+              }, 1000);
             }
-          )
-          .then(function(res) {
-            console.log(res);
           });
       }
     },
@@ -343,67 +342,15 @@ export default {
     changeAgree: function() {
       this.isAgree = !this.isAgree;
     },
-    //图片上传是验证图片
-    beforeUpload(file) {
-      var fileSize = 500 * 1024; //500k
-      var fileType1 = "JPG";
-      var fileType2 = "JPEG";
-      var uploadFileType = file.type.split("/")[1];
-      var uploadFileSize = file.size;
-      console.log(uploadFileType);
-      console.log(fileType2.toLowerCase());
-      if (
-        uploadFileType != fileType1 &&
-        uploadFileType != fileType2 &&
-        uploadFileType != fileType1.toLowerCase() &&
-        uploadFileType != fileType2.toLowerCase()
-      ) {
-        alert("图片只支持JPG或者JPEG格式");
-        return false;
-      }
-      if (uploadFileSize > fileSize) {
-        alert("图片大小不能超过500k");
-        return false;
-      } else {
-        return true;
-      }
-    },
     choosedAuth: function(index) {
       this.choosedAuthIndex = index;
     },
-    /* uploadCardFace:function(){
-			var file = this.$refs.upload_idcard_face.files[0]
-			var formData = new FormData()
-			formData.append('file',file)
-
-		}, */
     uploadCardFace: function(event, ref, attr) {
-      console.log(this.$refs[ref]);
-      var file = this.$refs[ref].files[0];
-      console.log(file);
-      if (this.beforeUpload(file) == true) {
-        var formData = new FormData();
-        //var file = this.$refs.upload_idcard_face.files[0]
-        formData.append("path", file);
-        var _this = this;
-        console.log(formData.get("path"));
-        var instance = axios.create();
-        instance({
-          url: "http://dou.fudayiliao.com/account/ImageUpload",
-          method: "post",
-          transformRequest: [
-            function(data) {
-              // 对 data 进行任意转换处理
-              return data;
-            }
-          ],
-          data: formData
-        }).then(function(res) {
-          console.log(res);
-          //console.log(_this)
-          console.log(attr);
-          _this[attr] = "http://dou.fudayiliao.com" + res.data.Data;
-          console.log(_this[attr]);
+      //上传图片,封装到全局main.js中,返回的是一个promise对象
+      let p = this.uploadImg(event, ref);
+      if (p) {
+        p.then(res => {
+          this[attr] = res;
         });
       }
     },
@@ -418,11 +365,19 @@ export default {
       var operatePhone = this.operatePhone; //运营人电话
       var phoneCheckCode = this.phoneCheckCode; //手机验证码
       if (douyinName == "" || companyName == "" || companyId == "") {
-        alert("输入框均为必填选项,请您填写完整!");
+        this.$Notification({
+          title: "警告",
+          message: "输入框均为必填选项,请您填写完整!",
+          type: "warning"
+        });
         return false;
       }
       if (!/^[a-zA-Z0-9_]{0,15}$/.test(douyinName)) {
-        alert("抖音号最多16位,只允许字母、下划线、点和数字");
+        this.$Notification({
+          title: "警告",
+          message: "抖音号最多16位,只允许字母、下划线、点和数字!",
+          type: "warning"
+        });
         return false;
       }
       if (
@@ -430,27 +385,51 @@ export default {
           companyId
         )
       ) {
-        alert("请您填写正确的营业执照注册号,注册号为15位或18位");
+        this.$Notification({
+          title: "警告",
+          message: "请您填写正确的营业执照注册号,注册号为15位或18位!",
+          type: "warning"
+        });
         return false;
       }
       if (companyIdUrl == false) {
-        alert("营业执照还未上传!");
+        this.$Notification({
+          title: "警告",
+          message: "营业执照还未上传!",
+          type: "warning"
+        });
         return false;
       }
       if (permitUrl == false) {
-        alert("行业许可证还未上传!");
+        this.$Notification({
+          title: "警告",
+          message: "行业许可证还未上传!",
+          type: "warning"
+        });
         return false;
       }
       if (authUrl == false) {
-        alert("认证公函还未上传!");
+        this.$Notification({
+          title: "警告",
+          message: "认证公函还未上传!",
+          type: "warning"
+        });
         return false;
       }
       if (operateName == "" || operatePhone == "" || phoneCheckCode == "") {
-        alert("输入框均为必填选项,请您填写完整!");
+        this.$Notification({
+          title: "警告",
+          message: "输入框均为必填选项,请您填写完整!",
+          type: "warning"
+        });
         return false;
       }
       if (!/^[\u4E00-\u9FA5]{2,4}$/.test(operateName)) {
-        alert("请您填写正确的姓名格式");
+        this.$Notification({
+          title: "警告",
+          message: "请您填写正确的姓名格式!",
+          type: "warning"
+        });
         return false;
       } else {
         return true;
@@ -459,7 +438,6 @@ export default {
     //提交企业认证
     submitAuth: function() {
       var token = this.getCookie("token");
-      var _this = this;
       if (this.checkCompanyAuthPage() == true) {
         var AuthType = "企业认证"; //认证类型
         var douyinName = this.douyinName; //抖音名
@@ -471,38 +449,36 @@ export default {
         var operateName = this.operateName; //运营人姓名
         var operatePhone = this.operatePhone; //运营人电话
         var phoneCheckCode = this.phoneCheckCode; //手机验证码
-        axios
-          .post(
-            "/account/Update",
-            {
-              Token: token,
-              Name: douyinName,
-              DouyinId: DouyinId,
-              AuthType: AuthType,
-              CorpId: CorpId,
-              CorpName: CorpName,
-              Face: Face,
-              FaceBack: FaceBack,
-              RealName: RealName
-            },
-            {
-              headers: {
-                "content-type": "application/x-www-form-urlencoded"
-              }
-            }
-          )
+        this.$axios
+          .post("/account/Update", {
+            Token: token,
+            Name: douyinName,
+            DouyinId: DouyinId,
+            AuthType: AuthType,
+            CorpId: CorpId,
+            CorpName: CorpName,
+            Face: Face,
+            FaceBack: FaceBack,
+            RealName: RealName
+          })
           .then(res => {
-            if (res.data.Code == 11) {
-              alert("登录状态已过期,请重新登录");
-              this.globalLoginOut();
+            if (res) {
+              this.$MessageBox.alert(
+                "企业认证资料提交完成,请等待审核",
+                "企业认证",
+                {
+                  confirmButtonText: "确定",
+                  type: "success",
+                  callback: action => {
+                    this.$router.push({ path: "/" });
+                  }
+                }
+              );
             }
-            //console.log(res)
-            alert("资料提交完成,请您重新登录");
-            userLoginOut();
           });
       }
     },
-    dyNameFocus: function() {
+    /*     dyNameFocus: function() {
       if (this.douyinNameVal == this.getCookie("userName")) {
         this.douyinNameVal = "";
       }
@@ -521,40 +497,26 @@ export default {
       if (this.douyinNameVal == "") {
         this.douyinNameVal = this.getCookie("douyinId");
       }
-    },
-    setUserInfo(){
-      this.douyinName = this.userInfo.DouyinId
-      this.companyName = this.userInfo.CorpName
-      this.companyId = this.userInfo.CorpId
-      this.companyIdUrl = this.userInfo.CorpLicense
-      this.permitUrl = this.userInfo.CorpPermit
+    }, */
+    setUserInfo() {
+      this.douyinName = this.userInfo.DouyinId;
+      this.companyName = this.userInfo.CorpName;
+      this.companyId = this.userInfo.CorpId;
+      this.companyIdUrl = this.userInfo.CorpLicense;
+      this.permitUrl = this.userInfo.CorpPermit;
     },
     getCompanyAuth() {
       let Token = this.getCookie("token");
-      axios
-        .post(
-          "/account/GetUserInfo",
-          {
-            Token: Token
-          },
-          {
-            headers: {
-              "content-type": "application/x-www-form-urlencoded"
-            }
-          }
-        )
+      this.$axios
+        .post("/account/GetUserInfo", {
+          Token: Token
+        })
         .then(res => {
-          console.log(res)
-          if (res.data.Code == 11) {
-            alert("登录状态已过期,请重新登录");
-            this.globalLoginOut();
-          }
-          console.log(res.data.Data.user.AuthType)
-          if (res.data.Data.user.AuthType == "企业认证") {
-            debugger
-            this.userInfo = res.data.Data.user;
-            this.setUserInfo();
-            console.log(this.userInfo);
+          if (res) {
+            if (res.data.Data.user.AuthType == "企业认证") {
+              this.userInfo = res.data.Data.user;
+              this.setUserInfo();
+            }
           }
         });
     }
@@ -565,7 +527,7 @@ export default {
     }
   },
   mounted: function() {
-    this.getImgCheckCode();
+    this.getImgCode();
     this.getCompanyAuth();
   }
 };
@@ -604,7 +566,8 @@ export default {
 }
 .zzSub_box .imgCode {
   margin-left: 8px;
-  width: 124px;height: 28px;
+  width: 124px;
+  height: 28px;
 }
 .zzSub_box input[type="text"],
 .zzSub_box input[type="number"],

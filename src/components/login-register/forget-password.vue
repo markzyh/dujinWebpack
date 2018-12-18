@@ -91,11 +91,19 @@ export default {
     //确认注册
     resetPassword() {
       if (this.forgetPassword == "" || this.confirmForgetPassword == "") {
-        alert("请您输入密码");
+        this.$Notification({
+          title: "警告",
+          message: "请您输入密码!",
+          type: "warning"
+        });
         return false;
       }
       if (this.forgetPassword != this.confirmForgetPassword) {
-        alert("您两次输入的密码不一致,请您重新输入");
+        this.$Notification({
+          title: "警告",
+          message: "您两次输入的密码不一致,请您重新输入!",
+          type: "warning"
+        });
         return false;
       }
 
@@ -104,20 +112,25 @@ export default {
       let Code = this.forgetPhoneCode;
       let ForgetPassword = true;
       this.$axios
-        .post(
-          "account/register",
-          {
-            Phone: Phone,
-            Password: Password,
-            Code: Code,
-            ForgetPassword: ForgetPassword
-          }
-        )
+        .post("account/register", {
+          Phone: Phone,
+          Password: Password,
+          Code: Code,
+          ForgetPassword: ForgetPassword
+        })
         .then(res => {
-          console.res;
-          alert("成功找回密码,请您重新登录");
-          this.globalLoginOut();
-          window.location.reload();
+          if (res) {
+          }
+          this.$MessageBox.alert({
+            title: "成功",
+            message: "成功找回密码,请您重新登录!",
+            type: "success",
+            callback: () => {
+              this.globalLoginOut();
+              window.location.reload();
+            }
+          });
+
           //this.$router.push({ path: "/personal-data" });
         });
     },
@@ -125,7 +138,11 @@ export default {
     forgetNext() {
       if (this.checkForgetForm() == true) {
         if (this.forgetPhoneCode == "") {
-          alert("请输入手机验证码");
+          this.$Notification({
+            title: "警告",
+            message: "请输入手机验证码!",
+            type: "warning"
+          });
           return false;
         } else {
           this.nextStep = true;
@@ -155,11 +172,19 @@ export default {
         this.forgetPhone == "" ||
         this.checkPhone(this.forgetPhone) == false
       ) {
-        alert("请您填写正确的手机号");
+        this.$Notification({
+          title: "警告",
+          message: "请您填写正确的手机号!",
+          type: "warning"
+        });
         return false;
       }
       if (this.forgetImgCode == "") {
-        alert("请您填写图形验证码");
+        this.$Notification({
+          title: "警告",
+          message: "请您填写图形验证码!",
+          type: "warning"
+        });
         return false;
       } else {
         return true;
@@ -168,29 +193,22 @@ export default {
     //获取手机验证码
     getForgetPhoneCheckNumber() {
       if (this.checkForgetForm() == true) {
-        this.disabledBtn(); //按钮不可点击
         let Key = this.createdToken; //自定义token
         let Data = this.forgetImgCode; //输入的图形验证码
         let forgetPhone = this.forgetPhone; //手机号
         let url = "/account/GetSmsCode/" + forgetPhone;
-        axios
-          .post(
-            url,
-            {
-              Key: Key,
-              Data: Data
-            }
-          )
+        this.$axios
+          .post(url, {
+            Key: Key,
+            Data: Data
+          })
           .then(res => {
-            console.log(res);
-            if (res.data.Code == 1) {
-              alert("验证码错误,请重新输入");
-              return false;
+            if (res) {
+              this.disabledBtn(); //按钮不可点击
             }
           });
       }
     },
-    //检测注册
 
     //获取图像验证码
     getImgCode() {
@@ -229,8 +247,9 @@ export default {
   width: 526px;
   padding-top: 1px;
   position: fixed;
-  top: 150px;
+  top: 50%;
   left: 50%;
+  transform: translateY(-50%);
   padding-bottom: 60px;
   margin-left: -180px;
   z-index: 9999;
@@ -272,11 +291,7 @@ export default {
   overflow: hidden;
   margin: 20px 0;
 }
-.flied_td .flied_te img {
-  vertical-align: middle; /*margin-left: 18px;margin-right: 18px;*/
-  margin-top: -4px;
-  cursor: pointer;
-}
+
 .flied_td .flied_te input {
   border: none;
   background-color: transparent;

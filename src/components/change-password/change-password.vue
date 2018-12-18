@@ -73,66 +73,54 @@ export default {
       var userNewPassword = this.userNewPassword;
       var confirmNewPassword = this.confirmNewPassword;
       var Token = this.getCookie("token");
-      console.log(Token);
       if (oldPassword == "" || userNewPassword == "") {
-        alert("密码不能为空!");
+        this.$Notification({
+          title: '警告',
+          message: '密码不能为空!',
+          type: 'warning'
+        })
         return false;
       }
       if (oldPassword == userNewPassword) {
-        alert("新密码与旧密码一致,请您输入新的密码");
+        this.$Notification({
+          title: '警告',
+          message: '新密码与旧密码一致,请您输入新的密码!',
+          type: 'warning'
+        })
         return false;
       }
       if (userNewPassword != confirmNewPassword) {
-        alert("两次输入密码不一致,请您重新输入");
+        this.$Notification({
+          title: '警告',
+          message: '两次输入密码不一致,请您重新输入!',
+          type: 'warning'
+        })
         return false;
       } else {
-        axios
+        this.$axios
           .post(
-            "http://dou.fudayiliao.com/account/Update",
+            "/account/Update",
             {
               Token: Token,
               Password: oldPassword,
               NewPassword: userNewPassword
-            },
-            {
-              headers: {
-                "content-type": "application/x-www-form-urlencoded"
-              }
             }
           )
           .then(res => {
-            console.log(res);
-            if (res.data.Code == 14) {
-              alert("您的原密码输入有误,请您重新输入");
-              return false;
+            if(res){
+              this.$MessageBox.alert("修改密码成功,请您重新登录", "修改密码", {
+                  confirmButtonText: "确定",  
+                  type:'success',
+                  callback: action => {
+                    this.globalLoginOut(); //清除cookie
+                    this.$store.dispatch("loginAction", false);
+                    this.$store.dispatch("showAction", true);
+                  }
+              });
+              
             }
-            if (res.data.Code == 11) {
-              alert("登录状态已过期,请重新登录");
-              this.globalLoginOut();
-              window.location.reload()
-            }
-            alert("修改密码成功,请您重新登录");
-            this.globalLoginOut(); //清除cookie
-            this.$store.dispatch("loginAction", false);
-            this.$store.dispatch("showLoginFormAction", true);
-            //console.log(this.$store.getters.getshowLoginForm)
+            
           });
-      }
-    },
-    inputFocus: function() {
-      if (this.douyinNameVal == "请输入您要投放的抖音昵称") {
-        this.douyinNameVal = "";
-      }
-      if (this.douyinNumberVal == "请输入您要投放的抖音号") {
-        this.douyinNumberVal = "";
-      }
-    },
-    inputBlur: function() {
-      if (this.douyinNameVal == "") {
-        this.douyinNameVal = "请输入您要投放的抖音昵称";
-      }
-      if (this.douyinNumberVal == "") {
-        this.douyinNumberVal = "请输入您要投放的抖音号";
       }
     }
   },

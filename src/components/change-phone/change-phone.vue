@@ -85,82 +85,63 @@ export default {
         var Code = this.cellphoneCheckCode;
         var Data = this.imgCheckCode;
         var Key = this.createdToken;
-        axios
-          .post(
-            "http://dou.fudayiliao.com//account/ChangePhone",
-            {
-              Token: Token,
-              Phone: Phone,
-              Code: Code,
-              Data: Data,
-              Key: Key
-            },
-            {
-              headers: {
-                "content-type": "application/x-www-form-urlencoded"
-              }
+        this.$axios
+          .post("/account/ChangePhone", {
+            Token: Token,
+            Phone: Phone,
+            Code: Code,
+            Data: Data,
+            Key: Key
+          })
+          .then(res => {
+            if (res) {
+              this.$MessageBox.alert(
+                "修改手机成功,请您重新登录",
+                "修改手机号",
+                {
+                  confirmButtonText: "确定",
+                  type: "success",
+                  callback: action => {
+                    this.globalLoginOut(); //清除cookie
+                    this.$store.dispatch("loginAction", false);
+                    this.$store.dispatch("showAction", true);
+                  }
+                }
+              );
             }
-          )
-          .then((res) =>{
-            console.log(res)
-            debugger
-            if (res.data.Code == 12) {
-              alert("您修改的手机号与原手机号一致,请您输入新的手机号");
-              return false;
-            }
-            if(res.data.Code == 1){
-              alert('验证码错误')
-              return false
-            }
-            if (res.data.Code == 11) {
-              alert("登录状态已过期,请重新登录");
-              this.globalLoginOut();
-              window.location.reload()
-            }
-            //console.log(res);
-            alert('修改成功,请您重新登录')
-            debugger    
-            this.globalLoginOut();
-            window.location.reload()
-            this.$store.dispatch("loginAction", false);
-            this.$store.dispatch("showLoginFormAction", true);
           });
       }
     },
     checkPersonalCellphone: function() {
       if (this.userNewPhone == "") {
-        alert("手机号必填,请您重新输入");
+        this.$Notification({
+          title: "警告",
+          message: "手机号必填,请您重新输入!",
+          type: "warning"
+        });
         return false;
       }
       if (this.checkPhone(this.userNewPhone) == false) {
-        alert("请您填写正确的手机号");
+        this.$Notification({
+          title: "警告",
+          message: "请您填写正确的手机号!",
+          type: "warning"
+        });
         return false;
       }
       if (this.imgCheckCode == "") {
-        alert("请您先填写图形验证码");
+        this.$Notification({
+          title: "警告",
+          message: "请您先填写图形验证码!",
+          type: "warning"
+        });
         return false;
-      }
-       else {
+      } else {
         return true;
       }
     },
-/*     checkPhone: function(phone) {
-      //var phone = document.getElementById('userphone').value;
-      if (
-        !/^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/.test(
-          phone
-        )
-      ) {
-        //alert("手机号码有误，请重填");
-        //$("#slider2").slider("restore"); //初始化
-        return false;
-      } else {
-        //getCheckNumberDisable()
-        return true;
-      }
-    }, */
     //获取手机验证码
-    getPhoneCode: function() {
+    getPhoneCode() {
       if (this.checkPersonalCellphone() == true) {
         this.isDisabled = true;
         var interval;
@@ -173,31 +154,22 @@ export default {
             clearInterval(interval);
             _this.isDisabled = false;
             _this.cellphoneBtnVal = "获取验证码";
-            //alert('999')
           }
         }, 1000);
         var Key = this.createdToken;
         var Data = this.imgCheckCode;
-        console.log(Key);
-        console.log(Data);
-        console.log(this.userNewPhone);
         var url =
           "http://dou.fudayiliao.com/account/GetSmsCode/" + this.userNewPhone;
-        axios
+        this.$axios
           .post(
             url,
             {
               Key: Key,
               Data: Data
-            },
-            {
-              headers: {
-                "content-type": "application/x-www-form-urlencoded"
-              }
             }
           )
-          .then(function(res) {
-            console.log(res);
+          .then((res) =>{
+            //console.log(res);
           });
       }
     },
@@ -209,11 +181,10 @@ export default {
     getCheckCode: function() {
       var phone = this.userNewPhone;
       //getImgCheckCode()在全局main.js里面
-      this.createdToken = this.getImgCheckCode().createdToken
+      this.createdToken = this.getImgCheckCode().createdToken;
       this.checkCodeUrl = this.getImgCheckCode().imgCheckCodeUrl.toString();
-      console.log(this.checkCodeUrl)
-    },
-
+      //console.log(this.checkCodeUrl);
+    }
   },
   mounted: function() {
     this.getCheckCode();
@@ -277,7 +248,8 @@ dl.htlist_dla dd img {
   vertical-align: top;
   margin-left: 7px;
   cursor: pointer;
-  width: 124px;height: 38px;
+  width: 124px;
+  height: 38px;
 }
 
 dl.htlist_dla dd input[type="button"] {

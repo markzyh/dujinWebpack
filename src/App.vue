@@ -99,7 +99,7 @@ export default {
         this.isLogin = true;
       } else {
         this.isLogin = false;
-        alert("登录信息已过期,请您重新登录");
+        /* alert("登录信息已过期,请您重新登录"); */
         //window.location.href = '/'
       }
     },

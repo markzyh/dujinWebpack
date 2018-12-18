@@ -18,15 +18,6 @@
             <option v-for="(item,index) in orderTimeLists" :key="index">{{item.name}}</option>
           </select>
           <div class="orderDate date_picker_group">
-            <!--  <img src="images/date_icon.png" alt=""> -->
-            <!-- <input
-              type="text"
-              name="dtBegin"
-              class="date-picker start_date"
-              placeholder="开始日期"
-              value
-              ref="start_date"
-            >-->
             <date-picker
               v-model="startDateVal"
               :first-day-of-week="1"
@@ -147,14 +138,14 @@ export default {
   },
   methods: {
     screenDate() {
+      if(this.startDateVal == '' || this.endDateVal == ''){
+        return false
+      }
       let Start = new Date(this.startDateVal).getTime();
       let End = new Date(this.endDateVal).getTime();
       let Status = this.choosedOrderStatus; //暂时为空
       let DataType = this.choosedOrderTime;
-      if (this.chekDate(Start, End) == false) {
-        alert("开始时间必须在结束时间之前");
-        return false;
-      } else {
+      if (this.chekDate(Start, End) == true) {
         Start = this.transformDateStamp(this.startDateVal)
         End = this.transformDateStamp(this.endDateVal)
         //this.getOrderList(Status, Start, End, DataType);
@@ -164,10 +155,12 @@ export default {
       }
     },
     //验证时间
-    chekDate: function(startDate, endDate) {
+    chekDate(startDate,endDate) {
       if (parseInt(startDate) > parseInt(endDate)) {
+        alert("开始时间必须在结束时间之前");
         return false;
-      } else {
+      }
+      else {
         return true;
       }
     },
@@ -184,14 +177,9 @@ export default {
       this.isShowProblems = false;
     },
     //选择筛选时间
-    /* chooseOrderTime: function () {
-			//this.getOrderListAttr(this.choosedOrderTime)
-			this.choosedOrderTime = this
-			console.log(this.choosedOrderTime)
-		}, */
     //选择订单状态,根据状态查询
     chooseOrderStatus: function() {
-      //var status = this.choosedOrderStatus
+
       var status;
       for (var i = 0; i < this.orderStatusLists.length; i++) {
         if (this.orderStatusLists[i].name == this.choosedOrderStatus) {
@@ -202,21 +190,12 @@ export default {
           }
         }
       }
-      //var status = this.choosedOrderStatus
-      //alert(this.choosedOrderStatus.value())
-      //var status = index
       this.getOrderList(status);
-      //this.getOrderListAttr(this.choosedOrderStatus)
       console.log(this.choosedOrderStatus);
-      //console.log(this.choosedOrderStatus)
     },
     //点击查询订单,把订单号写入cookie
     searchOrderNumber: function(orderNumber) {
-      //把orderNumber写入localStorage
-      //this.setCookie('orderNumber',orderNumber,1)
       console.log(this.getCookie("orderNumber"));
-      //localStorage.orderNumber = orderNumber;
-      //alert(localStorage.orderNumber)
     },
 
     getOrderList: function(status, start, end, dateType) {
@@ -252,7 +231,7 @@ export default {
         });
     },
     //把时间戳转译成普通格式
-    transformDateStamp: function(param) {
+    /* transformDateStamp: function(param) {
       //var date = new Date(parseInt(param.substr(6, 19)));
       var timeYear = new Date(param).getFullYear();
       var timeMouth = new Date(param).getMonth() + 1;
@@ -273,7 +252,7 @@ export default {
         ":" +
         this.checkTen(timeSeconds);
       return time;
-    },
+    }, */
 
     checkTen: function(num) {
       if (num < 10) {
@@ -310,7 +289,7 @@ export default {
   line-height: 40px !important;
   background: none !important;
   font-size: 14px !important;
-  padding-left: 40px !important;
+  padding:0 0 0 40px !important;
 }
 .mx-datepicker {
   margin-left: 20px;
@@ -331,6 +310,7 @@ export default {
   -webkit-appearance: none;
   background: url("../../assets/xl_icon.png") no-repeat scroll 90px center
     transparent;
+  background-size: 19px 11px;
   font-size: 16px;
   color: #666666;
   padding-left: 15px;

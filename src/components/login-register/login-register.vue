@@ -76,8 +76,9 @@
               :class="{disabled:!letGetPhoneCode}"
             >
           </div>
-          <p class="register_privacy">注册即表示同意
-            <a href="/service.html" target="_blank">度进营销用户服务协议及隐私条款</a>及
+          <p class="register_privacy">
+            注册即表示同意
+            <a href="/service.html" target="_blank">度进营销用户服务协议</a>及
             <a href="/privacy.html" target="_blank">隐私条款</a>
           </p>
           <input class="flied_tj" type="button" value="立即注册" @click="userRegister">
@@ -144,20 +145,25 @@ export default {
 
         let CancelToken = axios.CancelToken; //取消请求
         this.$axios
-          .post(
-            "account/register",
-            {
-              Phone: Phone,
-              Password: Password,
-              Code: Code
-            }
-          )
+          .post("account/register", {
+            Phone: Phone,
+            Password: Password,
+            Code: Code
+          })
           .then(res => {
             if (res) {
-              alert("注册成功");
-              this.$router.push({
-                path: "/personal-data"
-              });
+              this.$store.dispatch("loginAction", true); //vuex存储登录的状态
+              let userName = res.data.Data.Name;
+              let userPhone = res.data.Data.Phone;
+              let token = res.data.Token;
+              let douyinId = res.data.Data.DouyinId;
+              this.setCookie("userName", userName, 1);
+              this.setCookie("userPhone", userPhone, 1);
+              this.setCookie("token", token, 1);
+              this.setCookie("douyinId", douyinId, 1);
+              this.hideLoginForm(); //父组件事件,隐藏窗口
+              this.emitGetUsername(); //触发父组件获取用户名
+              window.location.href = "/dist/#/personal-data"
             }
           });
       }
@@ -187,19 +193,16 @@ export default {
         let registerPhone = this.registerPhone; //注册的手机号
         let url = "/account/GetSmsCode/" + registerPhone;
         this.$axios
-          .post(
-            url,
-            {
-              Key: Key,
-              Data: Data
-            }
-          )
+          .post(url, {
+            Key: Key,
+            Data: Data
+          })
           .then(res => {
             console.log(res);
             if (res.data.Code == 1) {
               alert("验证码错误,请重新输入");
               return false;
-            }else{
+            } else {
               this.disabledBtn(); //按钮不可点击
             }
           });
@@ -255,15 +258,12 @@ export default {
         let Phone = this.userLoginPhone;
         let Password = this.userLoginPassword;
         this.$axios
-          .post(
-            "/account/login",
-            {
-              Phone: Phone,
-              Password: Password
-            },
-          )
+          .post("/account/login", {
+            Phone: Phone,
+            Password: Password
+          })
           .then(res => {
-            if(res){
+            if (res) {
               this.$store.dispatch("loginAction", true); //vuex存储登录的状态
               let userName = res.data.Data.Name;
               let userPhone = res.data.Data.Phone;
@@ -341,10 +341,11 @@ export default {
   width: 526px;
   padding-top: 1px;
   position: fixed;
-  top: 150px;
+  top: 50%;
   left: 50%;
   padding-bottom: 60px;
   margin-left: -180px;
+  transform: translateY(-50%);
   z-index: 9999;
   border: 1px solid #efefef;
 }
@@ -393,10 +394,11 @@ export default {
 .flied_td .flied_te img {
   vertical-align: middle;
   /*margin-left: 18px;margin-right: 18px;*/
-  margin-top: -4px;
+  margin-top: 6px;
   cursor: pointer;
   width: 124px;
   height: 38px;
+  float: right;
 }
 
 .flied_td .flied_te input {
@@ -437,6 +439,7 @@ export default {
   text-indent: 0;
   text-align: center;
   background: #19be6b;
+  float: right;
 }
 
 .flied_td .flied_te .getphone_code.disabled {
