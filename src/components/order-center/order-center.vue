@@ -18,20 +18,21 @@
             <option v-for="(item,index) in orderTimeLists" :key="index">{{item.name}}</option>
           </select>
           <div class="orderDate date_picker_group">
-            <date-picker
+            <!-- <date-picker
               v-model="startDateVal"
               :first-day-of-week="1"
               class="dis-inline"
               @change="screenDate"
-            ></date-picker>
+            ></date-picker> -->
+            <date-picker></date-picker>
             <span>至</span>
             <!-- <input type="text" name="dtEnd" class="date-picker end_date" placeholder="结束日期"> -->
-            <date-picker
+            <!-- <date-picker
               v-model="endDateVal"
               :first-day-of-week="2"
               class="dis-inline"
               @change="screenDate"
-            ></date-picker>
+            ></date-picker> -->
           </div>
         </div>
         <div class="order_table">
@@ -72,7 +73,8 @@
 </template>
 <script>
 import axios from "axios";
-import DatePicker from "vue2-datepicker";
+//import DatePicker from "vue2-datepicker";
+import DatePicker from '@/base/date-picker'
 export default {
   components: { DatePicker },
   data() {
@@ -157,7 +159,11 @@ export default {
     //验证时间
     chekDate(startDate,endDate) {
       if (parseInt(startDate) > parseInt(endDate)) {
-        alert("开始时间必须在结束时间之前");
+        this.$Notification({
+          title: "警告",
+          message: "开始时间必须在结束时间之前!",
+          type: "warning"
+        });
         return false;
       }
       else {
@@ -165,21 +171,16 @@ export default {
       }
     },
     //转换时间格式,转换为时间戳格式
-    transformDate: function(dateString) {
+    /* transformDate(dateString) {
       var dateYear = dateString.substring(0, 4); //取年份
       var dateMounth = dateString.substring(5, 7); //取月份
       var dateDay = dateString.substring(8, 10); //取天数
       var parseDateString = dateYear + "-" + dateMounth + "-" + dateDay; //转换为标准时间格式,可以被解析
       console.log(Date.parse(parseDateString));
       return Date.parse(parseDateString); //返回时间戳
-    },
-    closeProblems: function() {
-      this.isShowProblems = false;
-    },
-    //选择筛选时间
+    }, */
     //选择订单状态,根据状态查询
     chooseOrderStatus: function() {
-
       var status;
       for (var i = 0; i < this.orderStatusLists.length; i++) {
         if (this.orderStatusLists[i].name == this.choosedOrderStatus) {
@@ -191,7 +192,6 @@ export default {
         }
       }
       this.getOrderList(status);
-      console.log(this.choosedOrderStatus);
     },
     //点击查询订单,把订单号写入cookie
     searchOrderNumber: function(orderNumber) {
@@ -201,14 +201,11 @@ export default {
     getOrderList: function(status, start, end, dateType) {
       //console.log(this.$route.params.orderStatus)
       if(this.$route.params.orderStatus){
-        //console.log(this.$route.params.orderStatus)
         status = this.$route.params.orderStatus
       }
-      //this.getToken()
       var token = this.getCookie("token");
-      //console.log(token)
-      var _this = this;
-      axios
+
+      this.$axios
         .post(
           "/order/GetOrderList",
           {
@@ -220,52 +217,12 @@ export default {
           }
         )
         .then(res => {
-          /* if (res.data.Code == 11) {
-            alert('登录状态已过期,请重新登录')
-            this.globalLoginOut()
-            this.$store.dispatch("loginAction", false);
-            this.$store.dispatch("showLoginFormAction", true);
-          } */
-          console.log(res);
           this.orderList = res.data.Data;
         });
     },
-    //把时间戳转译成普通格式
-    /* transformDateStamp: function(param) {
-      //var date = new Date(parseInt(param.substr(6, 19)));
-      var timeYear = new Date(param).getFullYear();
-      var timeMouth = new Date(param).getMonth() + 1;
-      var timeDate = new Date(param).getDate();
-      var timeHours = new Date(param).getHours();
-      var timeMinutes = new Date(param).getMinutes();
-      var timeSeconds = new Date(param).getSeconds();
-      var time =
-        this.checkTen(timeYear) +
-        "-" +
-        this.checkTen(timeMouth) +
-        "-" +
-        this.checkTen(timeDate) +
-        "   " +
-        this.checkTen(timeHours) +
-        ":" +
-        this.checkTen(timeMinutes) +
-        ":" +
-        this.checkTen(timeSeconds);
-      return time;
-    }, */
-
-    checkTen: function(num) {
-      if (num < 10) {
-        num = "0" + num;
-      }
-      return num;
-    }
   },
   mounted: function() {
-    //limit()//验证登录
     this.getOrderList();
-    //this.endDatePicker(); //必须页面渲染后先执行一次,不然无法点击出现时间框,暂时还没有理解为什么
-    //this.startDatePicker();
   },
   computed: {
     watchEndDateVal: function() {

@@ -104,6 +104,9 @@ export default {
   },
   methods: {
     screenDate() {
+      if(this.startDateVal == '' || this.endDateVal == ''){
+        return false
+      }
       let Start = new Date(this.startDateVal).getTime();
       let End = new Date(this.endDateVal).getTime();
       let Status = ""; //暂时为空

@@ -65,17 +65,6 @@ export default {
     };
   },
   methods: {
-    testElement() {
-      this.$MessageBox.alert("这是一段内容", "标题名称", {
-        confirmButtonText: "确定",  
-        callback: action => {
-          this.$Message({
-            type: "info",
-            message: `action: ${action}`
-          });
-        }
-      });
-    },
     //用户手动退出登录
     loginOut() {
       this.globalLoginOut();

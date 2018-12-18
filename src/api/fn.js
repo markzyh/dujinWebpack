@@ -97,7 +97,6 @@ export function createToken() {
 
 //获取图像验证码
 export function getImgCheckCode() {
-    console.log('9')
   let createdToken = createToken() //自定义token
   var imgCheckCodeUrl = 'http://dou.fudayiliao.com/account/getcode/' + createdToken //返回图片链接
   return {

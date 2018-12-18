@@ -4,13 +4,15 @@ import Vue from 'vue'
 import {
   MessageBox,
   Message,
-  Notification
+  Notification,
+  DatePicker
 } from 'element-ui';
 import App from './App'
 import router from './router'
 import originaxios from '@/api/http'
 import store from './store'
 
+Vue.use(DatePicker);
 Vue.prototype.$MessageBox = MessageBox;
 Vue.prototype.$Message = Message;
 Vue.prototype.$Notification = Notification;
