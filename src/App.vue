@@ -490,9 +490,9 @@ input[type="radio"] {
   width: 21px;
   height: 11px;
   position: absolute;
-  top: -11px;
+  top: 28px;
   left: 50%;
-  margin-left: -10px;
+  margin-left: -110px;
   z-index: 3;
 }
 

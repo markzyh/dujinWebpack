@@ -1380,7 +1380,7 @@
     font-weight: normal;
   }
 
-  .order_tips_description_tri {
+/*   .order_tips_description_tri {
     width: 21px;
     height: 11px;
     position: absolute;
@@ -1389,7 +1389,7 @@
     margin-left: -10px;
     z-index: 3;
   }
-
+ */
   .order_tips_icon {
     cursor: pointer;
     margin-bottom: -3px;

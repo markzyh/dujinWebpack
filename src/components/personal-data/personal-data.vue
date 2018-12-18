@@ -607,11 +607,11 @@ input[type="radio"].radio_checked {
   background: url(../../assets/radio_checked_bg.png) no-repeat;
   background-size: 19px 19px;
 }
-.order_typename_group .order_tips_description_tri {
+/* .order_typename_group .order_tips_description_tri {
   left: 30px;
   margin-left: 0;
   top: 26px;
-}
+} */
 .personal_center_rz {
   margin-top: 50px;
 }
