@@ -4,7 +4,7 @@
       <h3 class="create_title">账户中心</h3>
       <div class="orderCenter">
         <div class="order_select">
-          <select
+          <!-- <select
             name
             id
             class="select_or"
@@ -17,7 +17,10 @@
               :disabled="item.disabled"
               :key="index"
             >{{item.name}}</option>
-          </select>
+          </select> -->
+          <el-select class="select_or" v-model="choosedTransactionType" placeholder="请选择" @change="chooseTransactionType">
+            <el-option v-for="(item,index) in transactionTypeLists" :disabled="item.disabled" :key="index" :value="item.name">{{item.name}}</el-option>
+          </el-select>
           <div class="orderDate">
             <!-- <date-picker
               v-model="startDateVal"

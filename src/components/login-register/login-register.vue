@@ -163,7 +163,17 @@ export default {
               this.setCookie("douyinId", douyinId, 1);
               this.hideLoginForm(); //父组件事件,隐藏窗口
               this.emitGetUsername(); //触发父组件获取用户名
-              window.location.href = "/dist/#/personal-data"
+              this.$MessageBox.alert(
+              "您已注册成功,为了方便更好的为您服务,请您先完善您的个人信息",
+              "温馨提示",
+              {
+                confirmButtonText: "确定",
+                type: "success",
+                callback: action => {
+                  window.location.href = "/dist/#/personal-data"
+                }
+              }
+            );
             }
           });
       }
@@ -199,10 +209,7 @@ export default {
           })
           .then(res => {
             console.log(res);
-            if (res.data.Code == 1) {
-              alert("验证码错误,请重新输入");
-              return false;
-            } else {
+            if (res) {
               this.disabledBtn(); //按钮不可点击
             }
           });
@@ -212,12 +219,20 @@ export default {
     checkUserRegister() {
       //验证手机号规则
       if (this.checkPhone(this.registerPhone) == false) {
-        alert("请您填写正确的手机号");
+        this.$Notification({
+          title: "温馨提示",
+          message: "请您填写正确的手机号!",
+          type: "warning"
+        });
         return false;
       }
       //再验证两次密码是否相同
       if (this.registerPassword != this.confirmRegisterPassword) {
-        alert("您两次输入的密码不一致,请您重新输入");
+        this.$Notification({
+          title: "温馨提示",
+          message: "您两次输入的密码不一致,请您重新输入!",
+          type: "warning"
+        });
         return false;
       }
       if (
@@ -226,7 +241,11 @@ export default {
         this.confirmRegisterPassword == "" ||
         this.imgCheckCode == ""
       ) {
-        alert("您的信息没有填写完整,请您重新填写");
+        this.$Notification({
+          title: "温馨提示",
+          message: "您的信息没有填写完整,请您填写完整!",
+          type: "warning"
+        });
         return false;
       } else {
         return true;
@@ -265,17 +284,22 @@ export default {
           .then(res => {
             if (res) {
               this.$store.dispatch("loginAction", true); //vuex存储登录的状态
+              console.log(res.data.Data)
               let userName = res.data.Data.Name;
               let userPhone = res.data.Data.Phone;
               let token = res.data.Token;
               let douyinId = res.data.Data.DouyinId;
+              let authType = res.data.Data.AuthType;
+              if(authType !== 'null'){
+                this.setCookie("authType", authType, 1);
+              }
               this.setCookie("userName", userName, 1);
               this.setCookie("userPhone", userPhone, 1);
               this.setCookie("token", token, 1);
               this.setCookie("douyinId", douyinId, 1);
               this.hideLoginForm(); //父组件事件,隐藏窗口
               this.emitGetUsername(); //触发父组件获取用户名
-              window.location.reload();
+              //window.location.reload();
             }
           });
       }
@@ -283,11 +307,19 @@ export default {
     //检测用户登录
     checkUserLogin() {
       if (this.userLoginPhone == "" || this.userLoginPassword == "") {
-        alert("用户名和密码不能为空!");
+        this.$Notification({
+          title: "温馨提示",
+          message: "用户名和密码不能为空!",
+          type: "warning"
+        });
         return false;
       }
       if (this.checkPhone(this.userLoginPhone) == false) {
-        alert("请您填写正确的手机号");
+        this.$Notification({
+          title: "温馨提示",
+          message: "请您填写正确的手机号!",
+          type: "warning"
+        });
         return false;
       } else {
         return true;

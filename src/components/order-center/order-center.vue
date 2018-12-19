@@ -4,7 +4,7 @@
       <h3 class="create_title">订单中心</h3>
       <div class="orderCenter">
         <div class="order_select">
-          <select
+          <!-- <select
             name
             id
             class="select_or"
@@ -12,11 +12,17 @@
             @change="chooseOrderStatus"
           >
             <option v-for="(item,index) in orderStatusLists" :key="index">{{item.name}}</option>
-          </select>
+          </select> -->
+          <el-select class="select_or" v-model="choosedOrderStatus" placeholder="请选择" @change="chooseOrderStatus">
+            <el-option v-for="(item,index) in orderStatusLists" :key="index" :value="item.name">{{item.name}}</el-option>
+          </el-select>
           <!-- <select name="" id="" class="select_time" v-model="choosedOrderTime" @change="chooseOrderTime"> -->
-          <select name id class="select_time" v-model="choosedOrderTime">
+          <!-- <select name id class="select_time" v-model="choosedOrderTime">
             <option v-for="(item,index) in orderTimeLists" :key="index">{{item.name}}</option>
-          </select>
+          </select> -->
+          <el-select v-model="choosedOrderTime" class="select_time">
+            <el-option v-for="(item,index) in orderTimeLists" :key="index" :value="item.name">{{item.name}}</el-option>
+          </el-select>
           <div class="orderDate date_picker_group">
             <date-picker @screenDate="screenDate($event)"></date-picker>
             <!-- <date-picker></date-picker> -->
@@ -65,7 +71,7 @@ import axios from "axios";
 //import DatePicker from "vue2-datepicker";
 import DatePicker from "@/base/date-picker";
 export default {
-  components: { DatePicker },
+  components: { DatePicker},
   data() {
     return {
       token: "",
@@ -109,6 +115,10 @@ export default {
         {
           name: "已完成",
           value: 3
+        },
+        {
+          name: "未通过",
+          value: 4
         }
       ]
     };
@@ -153,6 +163,7 @@ export default {
     }, */
     //选择订单状态,根据状态查询
     chooseOrderStatus: function() {
+      this.$route.params.orderStatus = false
       var status;
       for (var i = 0; i < this.orderStatusLists.length; i++) {
         if (this.orderStatusLists[i].name == this.choosedOrderStatus) {

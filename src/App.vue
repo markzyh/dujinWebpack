@@ -40,9 +40,9 @@
       <nav-bar v-if="$route.path != '/order-details'"></nav-bar>
       <div class="create_box" :class="{dy_content:$route.path != '/order-details'}">
         <!-- <div class="dy_content create_box"> -->
-        <!--  <keep-alive> -->
-        <router-view></router-view>
-        <!--  </keep-alive> -->
+       <!--  <keep-alive> -->
+          <router-view></router-view>
+        <!-- </keep-alive> -->
       </div>
     </div>
   </div>
@@ -67,19 +67,18 @@ export default {
   methods: {
     //用户手动退出登录
     loginOut() {
-      this.globalLoginOut();
-      this.isLogin = false;
-      //alert("您已经退出登录");
-      this.$MessageBox.alert('您已经退出登录',{
-        confirmButtonText: "确定",
-        callback:action =>{
+      this.$MessageBox
+        .confirm("您确定要退出登录吗？","退出登录",{
+            distinguishCancelAndClose: true,
+            confirmButtonText: "确定",
+            cancelButtonText: "取消"
+          }).then(() => {
+          this.globalLoginOut();
+          this.isLogin = false;
           this.$store.dispatch("loginAction", false);
           this.$store.dispatch("showAction", true);
-        }
-      })
-/*    this.$store.dispatch("loginAction", false);
-      this.$store.dispatch("showAction", true); */
-      //this.deleteCookie();
+        }).catch(action => {
+      });
     },
     //获取用户名
     getUsername() {

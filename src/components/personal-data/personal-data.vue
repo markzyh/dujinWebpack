@@ -1,5 +1,5 @@
 <template>
-  <div class="personal-data">
+  <div class="personal-data" >
     <div class="htlist_ulC">
       <h3 class="create_title">编辑资料</h3>
       <dl class="htlist_dla">
@@ -62,7 +62,11 @@
           </div>
         </div>
       </label>
-      <div class="choose_authentication">
+      <div class="is-auth" v-if="choosedAuthIndex === 3">
+        您已经提交过"{{isAuthType}}"
+        <span @click="changeAuth">修改或重新认证</span><!-- <span @click="cancelAuth" v-if="choosedAuthIndex === 3">取消重新认证</span> -->
+      </div>
+      <div class="choose_authentication" v-if="choosedAuthIndex != 3">
         <div class="order_typename_group" v-for="(item,index) in authenticationLists" :key="index">
           <input
             type="radio"
@@ -88,7 +92,7 @@
               </span>
               <div class="dis-inline over-hidden">
                 <div class="dis-inline auth_idcard">
-                  <form id="auth_idcard_face">
+                   <form id="auth_idcard_face">
                     <label for="upload_idcard_face" v-if="idcardFaceURL == false">上传人像面</label>
                     <input
                       type="file"
@@ -102,7 +106,7 @@
                       v-if="idcardFaceURL != false"
                       class="cancle_upload"
                       @click="cancelUpload('idcardFaceURL')"
-                    >x</span>
+                    ></span>
                     <img :src="idcardFaceURL" alt v-if="idcardFaceURL != false">
                   </form>
                 </div>
@@ -123,7 +127,7 @@
                       v-if="idcardBackURL != false"
                       class="cancle_upload"
                       @click="cancelUpload('idcardBackURL')"
-                    >x</span>
+                    ></span>
                     <img :src="idcardBackURL" alt v-if="idcardBackURL != false">
                   </form>
                 </div>
@@ -170,7 +174,7 @@
                       v-if="companyIdUrl != false"
                       class="cancle_upload"
                       @click="cancelUpload('companyIdUrl')"
-                    >x</span>
+                    ></span>
                     <img :src="companyIdUrl" alt v-if="companyIdUrl != false">
                   </form>
                 </div>
@@ -197,7 +201,7 @@
                       v-if="industryCardURL != false"
                       class="cancle_upload"
                       @click="cancelUpload('industryCardURL')"
-                    >x</span>
+                    ></span>
                     <img :src="industryCardURL" alt v-if="industryCardURL != false">
                   </form>
                 </div>
@@ -231,10 +235,17 @@
   </div>
 </template>
 <script>
-import uploadaxios from "axios";
+import upload from "@/base/upload";
+
 export default {
+  components:{
+    upload
+  },
   data() {
     return {
+      //loading:true,
+      isAuthType: "",
+      isAuth: false, //用户是否是认证用户
       isAgree: false, //是否同意协议
       douyinNameVal: "",
       douyinNumberVal: "",
@@ -257,6 +268,24 @@ export default {
     };
   },
   methods: {
+    hoverCancel(){
+      alert(0)
+    },
+    //修改认证
+    changeAuth() {
+      this.$MessageBox.confirm('您已经提交过资料认证,确定修改认证或重新认证吗？', '修改认证', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        })
+          .then(() => {
+            this.choosedAuthIndex = 0;
+            this.isAuthType = "";
+          })
+          .catch(action => {
+            
+          });
+    },
     //同意协议
     changeAgree() {
       this.isAgree = !this.isAgree;
@@ -266,7 +295,15 @@ export default {
     },
     //取消上传图片
     cancelUpload(attr) {
-      this[attr] = false;
+      this.$MessageBox
+        .confirm("您确定要移除已上传的文件吗？","移除文件",{
+            distinguishCancelAndClose: true,
+            confirmButtonText: "确定",
+            cancelButtonText: "取消"
+          }).then(() => {
+          this[attr] = false;
+        }).catch(action => {
+      });
     },
     uploadCardFace(event, ref, attr) {
       //上传图片,封装到全局main.js中,返回的是一个promise对象
@@ -432,13 +469,17 @@ export default {
             this.setCookie("userPhone", userPhone, 1);
             //this.setCookie("token", token, 1);
             this.setCookie("douyinId", douyinId, 1);
-            this.$MessageBox.alert("资料提交完成", "修改资料", {
-              confirmButtonText: "确定",
-              type: "success",
-              callback: action => {
-                window.location.href = "/dist/#/create-order";
+            this.$MessageBox.alert(
+              "资料提交完成,后台人工审核中,审核通过后会有对应的客户经理联系您,请您耐心等待",
+              "资料认证",
+              {
+                confirmButtonText: "确定",
+                type: "success",
+                callback: action => {
+                  window.location.href = "/dist/#/create-order";
+                }
               }
-            });
+            );
           }
         });
     },
@@ -468,16 +509,66 @@ export default {
       } else {
         this[value] = "";
       }
+    },
+    getUserAuth() {
+      var token = this.getCookie("token");
+      this.$axios({
+        method: "post",
+        url: "/account/GetUserInfo",
+        data: {
+          Token: token
+        }
+      })
+        .then(res => {
+          this.isAuthType = res.data.Data.user.AuthType;
+          if(this.isAuthType == null || this.isAuthType == ''){
+            this.choosedAuthIndex = 0;
+            return false
+          }else{
+            this.choosedAuthIndex = 3
+          }
+          this.loading = false
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   mounted() {
     this.getUserInfo("userName", "douyinNameVal");
     this.getUserInfo("douyinId", "douyinNumberVal");
     this.getUserInfo("userPhone", "userCellphoneNumber");
+    if(this.douyinNameVal == this.userCellphoneNumber){
+      this.douyinNameVal = ''
+    }
+    this.getUserAuth();
+    //this.getUserInfo("authType", "isAuthType");
+    
+
+    
+    /* if(this.getCookie('douyinId') !== 'null'){
+      this.isAuth = true
+    } */
+    
   }
 };
 </script>
 <style lang="scss">
+
+.is-auth {
+  color: #999;
+  margin-top: 30px;
+  span {
+    display: inline-block;
+    color: #333;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 20px;
+    &:hover{
+      color: #ff0000;
+    }
+  }
+}
 .personal-data {
   padding: 50px;
 }
@@ -619,6 +710,12 @@ input[type="radio"].radio_checked {
   font-size: 16px;
   color: #333;
 }
+.choose_authentication{
+
+}
+.choose_authentication.show{
+  display: block;
+}
 .choose_authentication input {
   margin: 0px 9px -4px 0 !important;
 }
@@ -751,14 +848,35 @@ input[type="radio"].radio_checked {
 }
 .auth_idcard {
   position: relative;
-  span.cancle_upload {
+  .cancle_upload {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 4px;
+    right: 4px;
     width: 20px;
     height: 20px;
     text-align: center;
     cursor: pointer;
+    line-height: 20px;
+    background: #67c23a;
+    color: #fff;
+    border-radius: 50%;
+    font-family: element-icons!important;
+    speak: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    vertical-align: baseline;
+    display: inline-block;
+    &:hover{
+      background: transparent;
+      color: #333;
+      &:before{
+        content: "\E60F"
+      }
+    }
+  }
+  .cancle_upload:before{
+    content: "\E611"
   }
 }
 </style>

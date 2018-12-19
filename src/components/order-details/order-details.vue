@@ -332,9 +332,15 @@ export default {
       }
     },
     getOrderMessage: function() {
-      this.createTime = this.transformDateStamp(parseInt(this.orderInfo.CreateDateTime.substr(6, 19)));
-      this.payTime = this.transformDateStamp(parseInt(this.orderInfo.PayTime.substr(6, 19)));
-      this.completeTime = this.transformDateStamp(parseInt(this.orderInfo.CompleteTime.substr(6, 19)));
+      this.createTime = this.transformDateStamp(
+        parseInt(this.orderInfo.CreateDateTime.substr(6, 19))
+      );
+      this.payTime = this.transformDateStamp(
+        parseInt(this.orderInfo.PayTime.substr(6, 19))
+      );
+      this.completeTime = this.transformDateStamp(
+        parseInt(this.orderInfo.CompleteTime.substr(6, 19))
+      );
     },
     //根据订单信息渲染页面
     getUserMessage: function() {
@@ -354,13 +360,14 @@ export default {
       //this.chenckOrderStatus()//检查订单的状态,显示页面上
     },
     //检测是否为空,空就返回0
-    chenckIsNull(params) { 
+    chenckIsNull(params) {
       if (params == null) {
         return 0;
       } else {
         return params;
       }
     },
+    //获取订单信息
     getOrderInfo(orderNumber) {
       let token = this.getCookie("token");
       //var OrderNumber = this.orderNumber;
@@ -373,10 +380,23 @@ export default {
         .then(res => {
           if (res) {
             this.orderInfo = res.data.Data;
-            console.log(this.orderInfo)
             this.orderStatus = res.data.Data.Status;
             this.getOrderMessage();
             this.getUserMessage();
+            console.log(this.orderInfo)
+          }
+        });
+    },
+    //获取用户的账户信息
+    getPaymentList(){
+      let token = this.getCookie("token");
+      this.$axios
+        .post("/Payment/GetPaymentList", {
+          Token: token,
+        })
+        .then(res => {
+          if (res) {
+            console.log(res)
           }
         });
     }
@@ -384,7 +404,8 @@ export default {
   mounted() {
     this.orderNumber = this.$route.query.orderNumber;
     this.getOrderInfo(this.orderNumber);
-    console.log(this.$route.query.orderNumber);
+    this.getPaymentList()
+    //console.log(this.$route.query.orderNumber);
   },
   beforeCreate() {}
 };

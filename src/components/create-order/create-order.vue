@@ -1,5 +1,5 @@
 <template>
-  <div class="create-order">
+  <div class="create-order" v-loading="loading">
     <h3 class="create_title">新建计划</h3>
     <form action class="create_order_form">
       <div class="order_link">
@@ -376,9 +376,10 @@
     </form>
     <div class="dymain_cover" v-if="isPaySuccess"></div>
     <div class="pay_success" v-if="isPaySuccess" :class="{show:isPaySuccess}">
-      <h3>
-        <img src="../../assets/pay_success_03.jpg" alt>投放成功
+      <h3 >
+        <img src="../../assets/pay_success_03.jpg" alt> <span v-if="balance !== 0">投放成功</span><span v-if="balance == 0">未支付</span>
       </h3>
+      <h6 v-if="balance == 0">您的订单尚未支付 <br> 请等待客户经理联系您充值后开始投放</h6>
       <h4>
         <span>{{computedCountDownNumber}}秒</span>后将跳转到订单中心
       </h4>
@@ -397,6 +398,8 @@ export default {
   name: "",
   data() {
     return {
+      loading:false,
+      balance:'',//用户账户余额
       douyinId: "", //抖音Id
       userName: "", //用户抖音昵称
       userInputAddressName: "", //用户输入的地址
@@ -560,7 +563,7 @@ export default {
     };
   },
   methods: {
-    confirmOrder: function() {
+    confirmOrder() {
       if (this.orderLink == "" || this.orderLink == "请输入您所要投放的链接") {
         this.$Notification({
           title: "温馨提示",
@@ -569,6 +572,7 @@ export default {
         });
         return false;
       }
+      //this.loading = true//加载
       var _this = this;
       var token = this.getCookie("token");
       //debugger
@@ -598,10 +602,11 @@ export default {
               _this.successCountDownNumber--;
               if (_this.successCountDownNumber == 0) {
                 clearInterval(interval);
-                console.log(this);
-                this.$router.push({
+                /* this.$router.push({
                   path: "/order-center"
-                });
+                }); */
+                _this.isPaySuccess = false
+                window.location.href = '/dist/#/order-center'
               }
             }, 1000);
           }
@@ -958,18 +963,21 @@ export default {
         this.ischooseCitiesRadio = false; //城市变为单选
       }
       if (this.choosedFlag == true && index != this.userRegionIndex) {
-        this.$MessageBox.alert("地域只支持单选,如果选择其他区域,已选择的地域将会失效", "修改地域选择", {
-          confirmButtonText: "确定",
-          type: "warning",
-          callback: action => {
-            this.choosedValue = ""; //切换地域选择方式后,清空已经选择的
-            this.clearchooseAll(); //清空已经选择的,已经添加到数组中的值
-            if (index === 0) {
-              this.choosedValue = "全国";
+        this.$MessageBox.alert(
+          "地域只支持单选,如果选择其他区域,已选择的地域将会失效",
+          "修改地域选择",
+          {
+            confirmButtonText: "确定",
+            type: "warning",
+            callback: action => {
+              this.choosedValue = ""; //切换地域选择方式后,清空已经选择的
+              this.clearchooseAll(); //清空已经选择的,已经添加到数组中的值
+              if (index === 0) {
+                this.choosedValue = "全国";
+              }
             }
           }
-        });
-        
+        );
       }
       this.choosedFlag = true; //改变状态,证明已经选择过地区了
       //this.chooseParmas(index,attr,array)
@@ -1073,13 +1081,13 @@ export default {
       //console.log(this.orderTypeName)
     },
     checkCustomPayNumber: function(number) {
-      if(number == '¥ 请输入金额'){
+      if (number == "¥ 请输入金额") {
         this.$Notification({
-            title: "温馨提示",
-            message: "金额为空,请您输入计划投放的金额!",
-            type: "warning"
-          });
-          return false
+          title: "温馨提示",
+          message: "金额为空,请您输入计划投放的金额!",
+          type: "warning"
+        });
+        return false;
       }
       //监听自定义输入的金额
       if (this.nowIndex == 0) {
@@ -1139,10 +1147,32 @@ export default {
     },
     _getUsermessage: function() {
       //var userObj = getUsermessage();
-      var userName = this.getCookie("userName");
-      var douyinId = this.getCookie("douyinId");
+      let userName = this.getCookie("userName");
+      let douyinId = this.getCookie("douyinId");
       this.userName = userName;
       this.douyinId = douyinId;
+    },
+    getUserInfo() {
+      var token = this.getCookie("token");
+      this.$axios({
+        method: "post",
+        url: "/account/GetUserInfo",
+        data: {
+          Token: token
+        }
+      })
+        .then(res => {
+          console.log(res)
+          if(res.data.Data.balance){
+            this.balance = res.data.Data.balance
+          }else{
+            this.balance = 0
+          }
+          
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   computed: {
@@ -1237,7 +1267,8 @@ export default {
     }
   },
   mounted: function() {
-    this._getUsermessage();
+    this._getUsermessage();//cookie获取用户账号名
+    this.getUserInfo()//获取用户的余额
   },
   beforeCreate() {
     //alert(0)
@@ -1456,6 +1487,12 @@ input[type="radio"] {
   margin-top: 140px;
   font-size: 34px;
   font-weight: normal;
+}
+.pay_success h6{
+    font-weight: normal;
+    margin: 0 40px 40px;
+    margin-top: 60px;
+    font-size: 20px;
 }
 
 .pay_success h3 img {

@@ -37,7 +37,7 @@
     <div class="person_ding">
       <div class="ding">
         <img src="../../assets/grxx_icon01.png" alt>未支付订单
-        <router-link :to="{path:'OrderCenter',params:{orderStatus:1}}" tag="span">{{unpaidOrder}}</router-link>
+        <router-link :to="{name:'OrderCenter',params:{orderStatus:1}}" tag="span">{{unpaidOrder}}</router-link>
       </div>
       <div class="ding ywc">
         <img src="../../assets/grxx_icon02.png" alt>已完成订单
@@ -84,6 +84,7 @@
             this.userInfo = res.data.Data;
             this.setUserInfo();
             this.setOrderInfo();
+            console.log(this.userInfo)
           }).catch(err => {
             console.log(err)
           })

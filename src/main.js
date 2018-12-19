@@ -7,6 +7,10 @@ import {
   Notification,
   DatePicker,
   Loading,
+  Select,
+  Option,
+  Upload,
+  Button,
   MessageBox,
 } from 'element-ui';
 import App from './App'
@@ -16,6 +20,10 @@ import store from './store'
 
 
 Vue.use(Popover);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(Upload);
+Vue.use(Button);
 Vue.use(DatePicker);
 Vue.prototype.$MessageBox = MessageBox;
 Vue.prototype.$Message = Message;
@@ -94,24 +102,29 @@ Vue.prototype.chekIsLogin = function () {
 //router-link改title
 router.beforeEach((to, from, next) => {
   window.document.title = to.meta.title + "-上海度进信息科技有限公司";
-  //if(store.getters.getLoginStatus == false && to.path !== '/create-order'){ 
-  if (getCookie('token') == false && to.path !== '/create-order') {
-    //alert('您还没有登录,请您先登录')
+  if (getCookie('token') == '' && to.path !== '/create-order') {
     MessageBox.alert("您还没有登录,请您先登录", "登陆错误", {
       confirmButtonText: "确定",
       type:'error',
-      callback: action => {
-        /* Message({
-          type: "error",
-         // message: `action: ${action}`
-        }); */
+      callback: () => {
         store.dispatch("loginAction", false);
         store.dispatch("showAction", true);
       }
     });
     next('/create-order')
     return false
-  } else {
+  }
+  if(getCookie('douyinId') == 'null' && getCookie('token') !== '' && to.path !== '/personal-data'){
+    MessageBox.alert("您还没有完善您的资料,请您先完善您的个人资料", "资料编辑", {
+      confirmButtonText: "确定",
+      type:'error',
+      callback: () => {
+        next('/personal-data')
+        return false
+      }
+    });
+  }
+  else {
     next()
   }
 })

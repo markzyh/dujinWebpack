@@ -63,7 +63,7 @@ originaxios.interceptors.response.use(res => {
       title: '登录出错',
       type: 'error',
       onClose:() =>{
-        window.location.reload()
+        //window.location.reload()
       }
     });
     
