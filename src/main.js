@@ -24,6 +24,7 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(Upload);
 Vue.use(Button);
+Vue.use(Popover);
 Vue.use(DatePicker);
 Vue.prototype.$MessageBox = MessageBox;
 Vue.prototype.$Message = Message;

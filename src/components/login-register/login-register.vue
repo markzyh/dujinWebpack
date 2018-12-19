@@ -1,9 +1,7 @@
 <template>
   <div class="login-register">
     <div class="login-register-cover" v-if="watchShowLoginForm"></div>
-    <!-- 登录注册模块 -->
-    <!-- <transition name="show"> -->
-    <div class="flied_tc" :class="{show:watchShowLoginForm}" v-if="watchShowLoginForm">
+    <div class="flied_tc" :class="{show:watchShowLoginForm}" v-if="watchShowLoginForm" v-loading='loading'>
       <div class="close_login_form" @click="hideLoginForm">x</div>
       <div class="flied_td" v-if="!isforgetPassword">
         <h4 class="login_title">
@@ -14,7 +12,7 @@
             @click="switchLoginRegister(index)"
           >{{item}}</span>
         </h4>
-        <!-- <transition name="show"> -->
+        <!-- 登录注册模块 -->
         <form class="login_form" @keyup.enter="userLogin" v-if="wantToLogin">
           <div class="flied_te">
             <input type="tel" id="userphone" placeholder="输入手机号" v-model="userLoginPhone">
@@ -22,100 +20,35 @@
           <div class="flied_te">
             <input type="password" id="userpassword" placeholder="输入密码" v-model="userLoginPassword">
           </div>
-          <input class="flied_tj" type="button" value="立即登录" @click="userLogin">
+          <input class="flied_tj" type="button" value="立即登录" @click="userLogin" >
           <p class="forget_password_btn" @click="showForgetPassword">忘记密码</p>
         </form>
-        <!-- </transition> -->
-        <!-- <transition name="show"> -->
-        <!-- 注册模块 -->
-        <form class="login_form register_form" v-if="!wantToLogin" @keyup.enter="userRegister">
-          <div class="flied_te">
-            <input type="tel" id="registerPhone" placeholder="输入手机号" v-model="registerPhone">
-          </div>
-          <div class="flied_te">
-            <input
-              type="password"
-              id="registerPassword"
-              placeholder="请输入密码"
-              v-model="registerPassword"
-            >
-          </div>
-          <div class="flied_te">
-            <input
-              type="password"
-              id="confirmRegisterPassword"
-              placeholder="请再次输入密码"
-              v-model="confirmRegisterPassword"
-            >
-          </div>
-          <div class="flied_te">
-            <input
-              type="text"
-              id="imgCheckCode"
-              placeholder="请输入图形验证码"
-              class="partinput"
-              v-model="imgCheckCode"
-            >
-            <img :src="imgCodeUrl" id="imgCheckCodeUrl" alt srcset @click="getImgCode()">
-          </div>
-          <div class="flied_te">
-            <input
-              type="text"
-              id="getphone_code"
-              placeholder="请输入手机验证码"
-              class="partinput"
-              v-model="phoneCheckCode"
-            >
-            <input
-              class="getphone_code"
-              name="mobile"
-              type="text"
-              v-model="getPhoneCheckCodeBtn"
-              @click="getPhoneCheckNumber"
-              :disabled="!letGetPhoneCode"
-              :class="{disabled:!letGetPhoneCode}"
-            >
-          </div>
-          <p class="register_privacy">
-            注册即表示同意
-            <a href="/service.html" target="_blank">度进营销用户服务协议</a>及
-            <a href="/privacy.html" target="_blank">隐私条款</a>
-          </p>
-          <input class="flied_tj" type="button" value="立即注册" @click="userRegister">
-        </form>
-        <!-- </transition> -->
+        <!-- 登录注册模块end -->
+        <register  v-if="!wantToLogin" @hideloginform='hideLoginForm' @emitGetUsername='emitGetUsername'></register>
       </div>
       <forget-password v-if="isforgetPassword"/>
     </div>
-    <!-- </transition> -->
     <!-- 登录注册模块 end-->
   </div>
 </template>
 
 <script>
-import axios from "axios";
 import ForgetPassword from "@/components/login-register/forget-password";
+import Register from "@/components/login-register/register";
 export default {
   components: {
-    ForgetPassword
+    ForgetPassword,
+    Register
   },
   props: ["isShowLoginForm"],
   name: "login-register",
   data() {
     return {
+      loading:false,
       isforgetPassword: false, //是否忘记密码
-      registerPhone: "", //注册手机号
-      registerPassword: "", //注册密码
-      confirmRegisterPassword: "", //确认注册密码
-      imgCheckCode: "", //输入的图形验证码
-      phoneCheckCode: "", //手机验证码
-      imgCodeUrl: "", //图像验证码链接
-      createdToken: "", //自定义的token
       userLoginPhone: "", //登录手机号
       userLoginPassword: "", //登录密码
       wantToLogin: true, //用户是否想登录,用来切换登录注册
-      letGetPhoneCode: true, //允许获取手机验证码,用来控制按钮disabled
-      getPhoneCheckCodeBtn: "获取手机验证码", //获取手机验证码按钮的value
       userName: "",
       nowIndex: 0, //点击登录按钮的索引
       loginStatusName: ["快速登录", "新用户注册"]
@@ -135,145 +68,15 @@ export default {
         this.wantToLogin = false;
       }
     },
-    //确认注册
-    userRegister() {
-      if (this.checkUserRegister() == true) {
-        //注册验证
-        let Phone = this.registerPhone;
-        let Password = this.registerPassword;
-        let Code = this.phoneCheckCode;
-
-        let CancelToken = axios.CancelToken; //取消请求
-        this.$axios
-          .post("account/register", {
-            Phone: Phone,
-            Password: Password,
-            Code: Code
-          })
-          .then(res => {
-            if (res) {
-              this.$store.dispatch("loginAction", true); //vuex存储登录的状态
-              let userName = res.data.Data.Name;
-              let userPhone = res.data.Data.Phone;
-              let token = res.data.Token;
-              let douyinId = res.data.Data.DouyinId;
-              this.setCookie("userName", userName, 1);
-              this.setCookie("userPhone", userPhone, 1);
-              this.setCookie("token", token, 1);
-              this.setCookie("douyinId", douyinId, 1);
-              this.hideLoginForm(); //父组件事件,隐藏窗口
-              this.emitGetUsername(); //触发父组件获取用户名
-              this.$MessageBox.alert(
-              "您已注册成功,为了方便更好的为您服务,请您先完善您的个人信息",
-              "温馨提示",
-              {
-                confirmButtonText: "确定",
-                type: "success",
-                callback: action => {
-                  window.location.href = "/dist/#/personal-data"
-                }
-              }
-            );
-            }
-          });
-      }
-    },
-    //获取手机验证码的按钮读秒效果
-    disabledBtn() {
-      this.letGetPhoneCode = false;
-      let tInterval;
-      let seconds = 60;
-      tInterval = setInterval(() => {
-        this.getPhoneCheckCodeBtn = seconds - 1 + "s";
-        seconds--;
-        if (seconds < 0) {
-          this.getPhoneCheckCodeBtn = "获取手机验证码";
-          clearInterval(tInterval);
-          this.letGetPhoneCode = true;
-          return false;
-        }
-      }, 1000);
-      //this.btnSeconds('getPhoneCheckCodeBtn',60,this.getPhoneCheckCodeBtn)
-    },
-    //获取手机验证码
-    getPhoneCheckNumber() {
-      if (this.checkUserRegister() == true) {
-        let Key = this.createdToken; //自定义token
-        let Data = this.imgCheckCode; //输入的图形验证码
-        let registerPhone = this.registerPhone; //注册的手机号
-        let url = "/account/GetSmsCode/" + registerPhone;
-        this.$axios
-          .post(url, {
-            Key: Key,
-            Data: Data
-          })
-          .then(res => {
-            console.log(res);
-            if (res) {
-              this.disabledBtn(); //按钮不可点击
-            }
-          });
-      }
-    },
-    //检测注册
-    checkUserRegister() {
-      //验证手机号规则
-      if (this.checkPhone(this.registerPhone) == false) {
-        this.$Notification({
-          title: "温馨提示",
-          message: "请您填写正确的手机号!",
-          type: "warning"
-        });
-        return false;
-      }
-      //再验证两次密码是否相同
-      if (this.registerPassword != this.confirmRegisterPassword) {
-        this.$Notification({
-          title: "温馨提示",
-          message: "您两次输入的密码不一致,请您重新输入!",
-          type: "warning"
-        });
-        return false;
-      }
-      if (
-        this.registerPhone == "" ||
-        this.registerPassword == "" ||
-        this.confirmRegisterPassword == "" ||
-        this.imgCheckCode == ""
-      ) {
-        this.$Notification({
-          title: "温馨提示",
-          message: "您的信息没有填写完整,请您填写完整!",
-          type: "warning"
-        });
-        return false;
-      } else {
-        return true;
-      }
-    },
-    //获取图像验证码
-    getImgCode() {
-      var obj = this.getImgCheckCode();
-      this.createdToken = obj.createdToken;
-      this.imgCodeUrl = obj.imgCheckCodeUrl;
-    },
-    //用户登录信息写入
-    setUserMessage() {
-      var d = new Date();
-      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000); //设置过期时间,现在的时间加上期望的过期时间
-      var expires = "expires=" + d.toUTCString(); //
-      document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/"; // 这个很重要代表在那个层级下可以访问cookie
-      console.log(d);
-    },
-    //从cookie中获取用户姓名
     //传递用户名和登录状态给父组件,emit,触发父组件事件
     emitGetUsername() {
       this.$emit("getUsername");
     },
     //用户登录
     userLogin() {
-      //alert(0)
+
       if (this.checkUserLogin() == true) {
+        this.loading = true
         let Phone = this.userLoginPhone;
         let Password = this.userLoginPassword;
         this.$axios
@@ -283,6 +86,7 @@ export default {
           })
           .then(res => {
             if (res) {
+              this.loading = false
               this.$store.dispatch("loginAction", true); //vuex存储登录的状态
               console.log(res.data.Data)
               let userName = res.data.Data.Name;
@@ -341,7 +145,7 @@ export default {
     }
   },
   mounted() {
-    this.getImgCode();
+    //this.getImgCode();
     //this.chekIsLogin();
   }
 };

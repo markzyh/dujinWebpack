@@ -40,9 +40,9 @@
       <nav-bar v-if="$route.path != '/order-details'"></nav-bar>
       <div class="create_box" :class="{dy_content:$route.path != '/order-details'}">
         <!-- <div class="dy_content create_box"> -->
-       <!--  <keep-alive> -->
+       <keep-alive>
           <router-view></router-view>
-        <!-- </keep-alive> -->
+         </keep-alive> 
       </div>
     </div>
   </div>
