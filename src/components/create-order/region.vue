@@ -207,10 +207,6 @@ export default {
     return {
       userInputAddressName: "", //用户输入的地址
       oldAddress: "",
-      payNumberValue: 800, //充值金额
-      customPayNumber: "¥ 请输入金额", //自定义充值金额
-      isShowDefaultValue: false,
-      showUserInputMoney: true, //是否显示用户自定义金额
       userAgeIndex: [1],
       userSexIndex: 0,
       userRegionIndex: 0,
@@ -226,8 +222,6 @@ export default {
       //chooseCountiesIndex:0,//单选县区
       ischooseCitiesRadio: false, //控制城市是否单选
       ischooseCountiesRadio: false, //控制区县是否单选
-      orderLink: "请输入您所要投放的链接",
-      orderTypeName: "智能投放", //投放方式
       userSex: "不限",
       userAge: "18-22岁",
       submitAddress: "", //手动输入的地址
@@ -253,28 +247,6 @@ export default {
         {
           name: "8km",
           value: 8
-        }
-      ],
-      orderTypeLists: [
-        {
-          name: "系统智能投放",
-          orderTypeName: "系统智能投放",
-          isChecked: true,
-          isCustom: false
-        },
-        {
-          name: "自定义定向投放",
-          orderTypeName: "自定义定向投放",
-          isChecked: false,
-          isCustom: false
-        }
-      ],
-      PayLists: [
-        {
-          name: "系统定义金额"
-        },
-        {
-          name: "自定义投放"
         }
       ],
       sexLists: ["不限", "男", "女"],
@@ -314,13 +286,11 @@ export default {
   },
   methods: {
     //选择地域最下面的确认按钮,只用来关闭窗口
-    confirmProvice: function(index) {
-      console.log(index + "测试index");
-      //this.isShowProvince = false
+    confirmProvice(index) {
       this.showProvinceForm(false);
-      console.log(this.isShowProvince);
     },
-    getChoosedValue: function() {
+    //返回选择的地域的值
+    getChoosedValue() {
       //console.log(this.chooseProviceIndex+'index')
       var choosedProvice = this.proviceLists[this.chooseProviceIndex].name; //省名字
       if (this.ischooseCitiesRadio == false) {
@@ -340,6 +310,7 @@ export default {
         var choosedCitiesString = choosedCitiesName.join(",");
         //console.log(choosedCitiesString)
         this.choosedValue = choosedProvice + "-" + choosedCitiesString;
+        
       }
       if (this.ischooseCitiesRadio == true) {
         //城市单选时
@@ -363,8 +334,7 @@ export default {
             choosedCountiesName.join(",");
         } else {
           var choosedRadioCounties =
-            _this[this.chooseCitiesIndex].counties[this.chooseCountiesIndex]
-              .name; //单选,县区的名字
+            _this[this.chooseCitiesIndex].counties[this.chooseCountiesIndex].name; //单选,县区的名字
           var choosedCirclesName = [];
           var choosedCirclesArray = this.chooseCirclesArray; //多选择区数组
           for (var i = 0; i < choosedCirclesArray.length; i++) {
@@ -384,9 +354,7 @@ export default {
             choosedCirclesName.join(",");
         }
       }
-      /*         if(this.ischooseCitiesRadio == true && this.ischooseCountiesRadio == true){//都单选时
-
-                      } */
+      this.emitChoosedParmas('choosedValue',this.choosedValue)
     },
     chooseAll: function(index, attr) {
       //全选
@@ -430,13 +398,11 @@ export default {
     deleteChoosedNearby: function(index) {
       this.choosedNearbyLists.splice(index, 1);
       this.oldAddress = "";
+      this.stringNearBy(this.choosedNearbyLists)
     },
     //添加一条附近投放的记录
     addNearbyKmList: function() {
-      if (
-        this.oldAddress != "" &&
-        this.oldAddress == this.userInputAddressName
-      ) {
+      if (this.oldAddress != "" && this.oldAddress == this.userInputAddressName) {
         this.$Notification({
           title: "温馨提示",
           message: "您选择的地址重复了!",
@@ -444,13 +410,6 @@ export default {
         });
         return false;
       }
-      var address = this.userInputAddressName;
-      this.oldAddress = this.userInputAddressName;
-      var km = this.customRangeLists[this.choosedRangeIndex].name;
-      var obj = {
-        name: address,
-        km: km
-      };
       if (address == "") {
         this.$Notification({
           title: "温馨提示",
@@ -459,72 +418,76 @@ export default {
         });
         return false;
       } else {
-        this.choosedNearbyLists.push(obj); //将已经选择的,地域+km的对象,存入数组中
+        var address = this.userInputAddressName;
+        this.oldAddress = this.userInputAddressName;
+        var km = this.customRangeLists[this.choosedRangeIndex].name; 
+        let obj = {
+          name: address,
+          km: km
+        };
+        this.choosedNearbyLists.push(obj);
+        this.stringNearBy(this.choosedNearbyLists)
+      }
+    },
+    //把附近的数组数据转换为字符串
+    stringNearBy(kmArray){
+         //将已经选择的,地域+km的对象,存入数组中
         var array = [];
-        for (var i = 0; i < this.choosedNearbyLists.length; i++) {
+        for (var i = 0; i < kmArray.length; i++) {
           //遍历数组,数组的每一项都是对象
           array[i] =
-            this.choosedNearbyLists[i].name.toString() +
+            kmArray[i].name.toString() +
             "    " +
-            this.choosedNearbyLists[i].km.toString();
+            kmArray[i].km.toString();
         }
         //this.choosedValue//这是最后提交时的地址
         this.choosedValue = array.join(",");
-        console.log(this.choosedValue);
-      }
+        this.emitChoosedParmas('choosedValue',this.choosedValue)
     },
     //输入地址的地图
     localMap() {
-      let promise = new Promise((resolve, reject) => {
-        debugger
-        var map = new BMap.Map("allmap");
-        var point = new BMap.Point(116.331398, 39.897445);
-        map.centerAndZoom(point, 12);
-
-        function myFun(result) {
-          var cityName = result.name;
-          map.setCenter(cityName);
-        }
-        var myCity = new BMap.LocalCity();
-        myCity.get(myFun);
-        resolve(map);
-      });
-      promise.then(map => {
-        debugger
-        var _thisMap = map;
-        //异步是因为实例化地图对象需要重做一遍,需要时间
-        _thisMap.clearOverlays(); //先清除地图标注
-        console.log(_thisMap);
-        var values = this.userInputAddressName;
-        var myGeo = new BMap.Geocoder();
-        myGeo.getPoint(
-          values,
-          point => {
-            console.log(_thisMap);
-            if (point) {
-              var mPoint = new BMap.Point(point.lng, point.lat);
-              _thisMap.enableScrollWheelZoom();
-              _thisMap.centerAndZoom(mPoint, 12);
-              var marker = new BMap.Marker(mPoint); // 创建标注
-              _thisMap.addOverlay(marker);
-              var range = this.choosedRangeValue;
-              var circle = new BMap.Circle(mPoint, range, {
-                fillColor: "blue",
-                strokeWeight: 1,
-                fillOpacity: 0.2,
-                strokeOpacity: 0.2
-              });
-              _thisMap.addOverlay(circle);
-            }
-          },
-          "myFun"
-        );
-      });
+      let map = this.openMap();
+      map.clearOverlays(); //先清除地图标注
+      let values = this.userInputAddressName;
+      let myGeo = new BMap.Geocoder();
+      myGeo.getPoint(
+        values,
+        point => {
+          if (point) {
+            let mPoint = new BMap.Point(point.lng, point.lat);
+            map.enableScrollWheelZoom();
+            map.centerAndZoom(mPoint, 12);
+            let marker = new BMap.Marker(mPoint); // 创建标注
+            map.addOverlay(marker);
+            let range = this.choosedRangeValue;
+            let circle = new BMap.Circle(mPoint, range, {
+              fillColor: "blue",
+              strokeWeight: 1,
+              fillOpacity: 0.2,
+              strokeOpacity: 0.2
+            });
+            map.addOverlay(circle);
+          }
+        },
+        "myFun"
+      );
+    },
+    //本地地图
+    openshMap() {
+      let map = this.openMap();
+      function myFun(result) {
+        let cityName = result.name;
+        map.setCenter(cityName);
+      }
+      let myCity = new BMap.LocalCity();
+      myCity.get(myFun);
     },
     openMap() {
-      //let flag = false;
-      this.localMap();
-      //console.log(map);
+      //let promise = new Promise((resolve, reject) => {
+      let map = new BMap.Map("allmap");
+      let point = new BMap.Point(116.331398, 39.897445);
+      map.centerAndZoom(point, 12);
+      return map;
     },
     //用户输入框输入地址,change事件
     userInputAddress: function() {
@@ -550,7 +513,7 @@ export default {
     },
     //选择附近
     chooseNearby: function() {
-      this.openMap();
+      this.openshMap();
     },
     //选择商圈
     chooseCircles: function(index) {
@@ -602,7 +565,6 @@ export default {
       if (this.ischooseCitiesRadio == false) {
         if (this.choosecitiesArray.indexOf(index) == -1) {
           this.choosecitiesArray.push(index);
-          console.log(this.choosecitiesArray + "城市数组");
         } else {
           //找到点击的index在数组中的位置
           for (var i = 0; i < this.choosecitiesArray.length; i++) {
@@ -633,6 +595,7 @@ export default {
         this.choosedValue = "全国";
         this.showProvinceForm(false);
         this.ischooseCitiesRadio = false;
+        this.emitChoosedParmas('choosedValue',this.choosedValue)
       } else if (index === 1) {
         this.chooseRegionTitle = "按省市选择";
         this.showProvinceForm(true);
@@ -669,14 +632,25 @@ export default {
             confirmButtonText: "确定",
             type: "warning",
             callback: action => {
-              this.choosedValue = ""; //切换地域选择方式后,清空已经选择的
+              
+            }
+          }
+        );
+        /* this.$MessageBox.confirm('地域只支持单选,如果选择其他区域,已选择的地域将会失效,确定修改吗？', '修改地域选择', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        })
+          .then(() => {
+            this.choosedValue = ""; //切换地域选择方式后,清空已经选择的
               this.clearchooseAll(); //清空已经选择的,已经添加到数组中的值
               if (index === 0) {
                 this.choosedValue = "全国";
               }
-            }
-          }
-        );
+          })
+          .catch(action => {
+            
+          }); */
       }
       this.choosedFlag = true; //改变状态,证明已经选择过地区了
       //this.chooseParmas(index,attr,array)
@@ -685,6 +659,11 @@ export default {
     },
     //年龄选择按钮
     chooseAge: function(index) {
+/*       if(index === 0){//选择年龄不限制的时候
+        this.userAgeIndex = [0]
+        this.emitChoosedParmas('choosedAge','不限')
+        return false
+      } */
       if (this.userAgeIndex.indexOf(index) === -1) {
         this.userAgeIndex.push(index);
       } else {
@@ -696,114 +675,31 @@ export default {
           }
         }
       }
-      var choosedAgeArray = [];
-      for (var j = 0; j < this.userAgeIndex.length; j++) {
-        choosedAgeArray.push(this.ageLists[j]);
-        //console.log(this.ageLists[j]+'年龄组')
+      let array = this.userAgeIndex.sort()
+      let choosedAgeArray = [];
+      for (var j = 0; j < array.length; j++) {
+        let index = array[j]
+        choosedAgeArray.push(this.ageLists[index]);
       }
-      this.choosedAge = choosedAgeArray;
+      this.choosedAge = choosedAgeArray.toString();
+      this.emitChoosedParmas('choosedAge',this.choosedAge)
     },
 
     //单选按钮,改变单选的值,改变已经选择的值
-    chooseParmas: function(index, attr, array) {
+    chooseParmas: function(index, attr, array) { 
       this[attr] = index;
       var _thisArray = this[array]; //取得对应数组的值
       this.choosedSex = _thisArray[index];
+      this.emitChoosedParmas('choosedSex',this.choosedSex)
     },
-
-
-
-
-  },
-  computed: {
-    limitMoney: function() {
-      if (this.putwayIndex == 0) {
-        return 800;
+    //向父组件传递的已选择的值
+    emitChoosedParmas(key,val){
+      if(!this.choosedObj){
+        this.choosedObj = {}
       }
-      if (this.putwayIndex == 1) {
-        return 500;
-      }
-    },
-    computedCountDownNumber: function() {
-      //提交成功后的倒计时
-      if (this.isPaySuccess == true) {
-        var number;
-        number = this.successCountDownNumber;
-        return number;
-      }
-    },
-    autoPriceIndex: function() {
-      if (this.putwayIndex == 0) {
-        //选择智能投放时
-        return 3;
-      }
-      if (this.putwayIndex == 1) {
-        //选择智能投放时
-        return 2;
-      }
-    },
-    increNumber: function() {
-      if (
-        (this.putwayIndex == 1 &&
-          this.nowPayIndex == 0 &&
-          this.userRegionIndex == 3) ||
-        this.userRegionIndex == 4
-      ) {
-        //当自定义投放下,商圈和附近,且点击选择金额时
-        var base = 3300;
-        if (this.nowPayAutoIndex == 2) {
-          return base * 5;
-        }
-        if (this.nowPayAutoIndex == 3) {
-          return base * 8;
-        } else {
-          return base * (this.nowPayAutoIndex - 2) * 5;
-        }
-      }
-      if (
-        (this.putwayIndex == 1 &&
-          this.nowPayIndex != 0 &&
-          this.userRegionIndex == 3) ||
-        this.userRegionIndex == 4
-      ) {
-        //当自定义投放下,商圈和附近,且手动输入金额
-        var base = 3300;
-        //this.payNumberValue/100 //100的多少倍
-        return parseInt((base * this.payNumberValue) / 100);
-      }
-      if (this.putwayIndex == 0 && this.nowPayIndex == 0) {
-        //智能投放下的点击选择金额
-        var base = 5000; //基数5000
-        if (this.nowPayAutoIndex == 3) {
-          return base * 8;
-        } else {
-          return base * (this.nowPayAutoIndex - 2) * 5;
-        }
-      }
-      if (this.putwayIndex == 0 && this.nowPayIndex != 0) {
-        //智能投放下的自定义输入金额
-        var base = 5000; //基数5000
-        //alert(this.customPayNumber)
-        //this.payNumberValue/100 //100的多少倍
-        return parseInt((base * this.payNumberValue) / 100);
-      }
-      if (this.putwayIndex == 1 && this.nowPayIndex == 0) {
-        //自定义投放下的点击选择金额
-        var base = 4000;
-        if (this.nowPayAutoIndex == 2) {
-          return base * 5;
-        }
-        if (this.nowPayAutoIndex == 3) {
-          return base * 8;
-        } else {
-          return base * (this.nowPayAutoIndex - 2) * 5;
-        }
-      }
-      if (this.putwayIndex == 1 && this.nowPayIndex != 0) {
-        //自定义投放下的自定义输入金额
-        var base = 4000;
-        return parseInt((base * this.payNumberValue) / 100);
-      }
+      this.choosedObj[key] = val
+      this.choosedObj['userRegionIndex'] = this.userRegionIndex
+      this.$emit('getChoosedVal',this.choosedObj)
     }
   },
   mounted() {

@@ -103,7 +103,7 @@ export default {
               this.setCookie("douyinId", douyinId, 1);
               this.hideLoginForm(); //父组件事件,隐藏窗口
               this.emitGetUsername(); //触发父组件获取用户名
-              //window.location.reload();
+              window.location.reload();
             }
           });
       }

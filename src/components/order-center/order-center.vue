@@ -4,39 +4,20 @@
       <h3 class="create_title">订单中心</h3>
       <div class="orderCenter">
         <div class="order_select">
-          <!-- <select
-            name
-            id
-            class="select_or"
-            v-model="choosedOrderStatus"
-            @change="chooseOrderStatus"
-          >
-            <option v-for="(item,index) in orderStatusLists" :key="index">{{item.name}}</option>
-          </select> -->
+
           <el-select class="select_or" v-model="choosedOrderStatus" placeholder="请选择" @change="chooseOrderStatus">
             <el-option v-for="(item,index) in orderStatusLists" :key="index" :value="item.name">{{item.name}}</el-option>
           </el-select>
-          <!-- <select name="" id="" class="select_time" v-model="choosedOrderTime" @change="chooseOrderTime"> -->
-          <!-- <select name id class="select_time" v-model="choosedOrderTime">
-            <option v-for="(item,index) in orderTimeLists" :key="index">{{item.name}}</option>
-          </select> -->
+
           <el-select v-model="choosedOrderTime" class="select_time">
             <el-option v-for="(item,index) in orderTimeLists" :key="index" :value="item.name">{{item.name}}</el-option>
           </el-select>
           <div class="orderDate date_picker_group">
             <date-picker @screenDate="screenDate($event)"></date-picker>
-            <!-- <date-picker></date-picker> -->
-            <!-- <span>至</span> -->
-            <!-- <input type="text" name="dtEnd" class="date-picker end_date" placeholder="结束日期"> -->
-            <!-- <date-picker
-              v-model="endDateVal"
-              class="dis-inline"
-              @change="screenDate"
-            ></date-picker>-->
           </div>
         </div>
-        <div class="order_table" v-loading="loading">
-          <table cellspacing="0" class="tableOrder">
+        <div class="order_table" v-loading="loading" >
+          <table cellspacing="0" class="tableOrder" v-if="!loading">
             <tr>
               <th>订单编号</th>
               <th>创建时间</th>

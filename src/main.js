@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import {
   Popover,
+  Dialog,
   Message,
   Notification,
   DatePicker,
@@ -19,6 +20,7 @@ import originaxios from '@/api/http'
 import store from './store'
 
 
+Vue.use(Dialog);
 Vue.use(Popover);
 Vue.use(Select);
 Vue.use(Option);
