@@ -16,7 +16,7 @@
             <date-picker @screenDate="screenDate($event)"></date-picker>
           </div>
         </div>
-        <div class="order_table" v-loading="loading" >
+        <div class="order_table" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
           <table cellspacing="0" class="tableOrder" v-if="!loading">
             <tr>
               <th>订单编号</th>

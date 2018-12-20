@@ -1,5 +1,5 @@
 <template>
-  <div class="personal-data" >
+  <div class="personal-data" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" >
     <div class="htlist_ulC">
       <h3 class="create_title">编辑资料</h3>
       <dl class="htlist_dla">
@@ -66,7 +66,7 @@
         您已经提交过"{{isAuthType}}"
         <span @click="changeAuth">修改或重新认证</span><!-- <span @click="cancelAuth" v-if="choosedAuthIndex === 3">取消重新认证</span> -->
       </div>
-      <div class="choose_authentication" v-if="choosedAuthIndex != 3">
+      <div class="choose_authentication" v-if="choosedAuthIndex != 3 && loading == false">
         <div class="order_typename_group" v-for="(item,index) in authenticationLists" :key="index">
           <input
             type="radio"
@@ -243,7 +243,7 @@ export default {
   },
   data() {
     return {
-      //loading:true,
+      loading:true,
       isAuthType: "",
       isAuth: false, //用户是否是认证用户
       isAgree: false, //是否同意协议
@@ -527,7 +527,7 @@ export default {
           }else{
             this.choosedAuthIndex = 3
           }
-          this.loading = false
+            this.loading = false
         })
         .catch(err => {
           console.log(err);
@@ -542,10 +542,7 @@ export default {
       this.douyinNameVal = ''
     }
     this.getUserAuth();
-    //this.getUserInfo("authType", "isAuthType");
-    
-
-    
+    //this.getUserInfo("authType", "isAuthType");   
     /* if(this.getCookie('douyinId') !== 'null'){
       this.isAuth = true
     } */

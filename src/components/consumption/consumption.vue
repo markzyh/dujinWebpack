@@ -4,42 +4,15 @@
       <h3 class="create_title">账户中心</h3>
       <div class="orderCenter">
         <div class="order_select">
-          <!-- <select
-            name
-            id
-            class="select_or"
-            @change="chooseTransactionType"
-            v-model="choosedTransactionType"
-          >
-            <option
-              v-for="(item,index) in transactionTypeLists"
-              :value="item.name"
-              :disabled="item.disabled"
-              :key="index"
-            >{{item.name}}</option>
-          </select> -->
           <el-select class="select_or" v-model="choosedTransactionType" placeholder="请选择" @change="chooseTransactionType">
             <el-option v-for="(item,index) in transactionTypeLists" :disabled="item.disabled" :key="index" :value="item.name">{{item.name}}</el-option>
           </el-select>
           <div class="orderDate">
-            <!-- <date-picker
-              v-model="startDateVal"
-              :first-day-of-week="1"
-              class="dis-inline"
-              @change="screenDate"
-            ></date-picker>
-            <span>至</span>
-            <date-picker
-              v-model="endDateVal"
-              :first-day-of-week="2"
-              class="dis-inline"
-              @change="screenDate"
-            ></date-picker> -->
             <date-picker @screenDate="screenDate($event)"></date-picker>
           </div>
         </div>
-        <div class="order_table">
-          <table cellspacing="0" class="tableOrder" v-loading="loading">
+        <div class="order_table" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" >
+          <table cellspacing="0" class="tableOrder" v-if="!loading">
             <tr>
               <th class="consumption_number">订单编号</th>
               <th>交易类型</th>
