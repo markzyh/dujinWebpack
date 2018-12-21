@@ -4,11 +4,9 @@
       <h3 class="create_title">订单中心</h3>
       <div class="orderCenter">
         <div class="order_select">
-
           <el-select class="select_or" v-model="choosedOrderStatus" placeholder="请选择" @change="chooseOrderStatus">
             <el-option v-for="(item,index) in orderStatusLists" :key="index" :value="item.name">{{item.name}}</el-option>
           </el-select>
-
           <el-select v-model="choosedOrderTime" class="select_time">
             <el-option v-for="(item,index) in orderTimeLists" :key="index" :value="item.name">{{item.name}}</el-option>
           </el-select>

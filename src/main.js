@@ -1,6 +1,13 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import App from './App'
+import router from './router'
+import originaxios from '@/api/http'
+import store from './store'
+
+
+//element-ui样式------------------------------------------------------
 import {
   Popover,
   Dialog,
@@ -14,12 +21,6 @@ import {
   Button,
   MessageBox,
 } from 'element-ui';
-import App from './App'
-import router from './router'
-import originaxios from '@/api/http'
-import store from './store'
-
-
 Vue.use(Dialog);
 Vue.use(Popover);
 Vue.use(Select);
@@ -34,7 +35,11 @@ Vue.prototype.$Notification = Notification;
 Vue.prototype.$axios = originaxios
 Vue.use(Loading.directive);
 Vue.prototype.$loading = Loading.service;
+//element-ui样式end------------------------------------------------------
 
+
+
+//全局的api,来自fn,js------------------------------------------------------
 import {
   setCookie,
   globalLoginOut,
@@ -45,11 +50,10 @@ import {
   transformDateStamp,
   createToken,
   getImgCheckCode,
-  uploadImg
+  uploadImg,
+  chekIsLogin,
+  checkTen
 } from '@/api/fn'
-
-
-//全局的api------------------------------------------------------
 
 //设置cookie
 Vue.prototype.setCookie = setCookie
@@ -81,32 +85,28 @@ Vue.prototype.transformDateStamp = transformDateStamp
 //上传图片
 Vue.prototype.uploadImg = uploadImg
 
-//全局的api------------------------------------------------------------------
-
-Vue.prototype.checkTen = function (num) {
-  if (num < 10) {
-    num = "0" + num
-  }
-  return num
-}
 //检测cookie中的值,用于app.vue,mounted后检测
-Vue.prototype.chekIsLogin = function () {
-  if (this.checkCookie("userName") != false) {
-    //cookie中存在
-    this.userName = this.getCookie("userName");
-    this.$store.dispatch("loginAction", true);
-    //this.$store.dispatch("showLoginFormAction", true);
-    this.$store.dispatch("showAction", false);
-  } else {
-    this.$store.dispatch("loginAction", false);
-    this.$store.dispatch("showAction", true);
-  }
-}
-//router-link改title
+Vue.prototype.chekIsLogin = chekIsLogin
+
+//时间,检测是否大于10
+Vue.prototype.checkTen = checkTen
+
+//全局的api------end------------------------------------------------------------
+
+
+
+
+
+
+
+
+//全局路由守卫------------------------------------------------------------------
 router.beforeEach((to, from, next) => {
+  //改变页面的title
   window.document.title = to.meta.title + "-上海度进信息科技有限公司";
+  //检测登录
   if (getCookie('token') == '' && to.path !== '/create-order') {
-    MessageBox.alert("您还没有登录,请您先登录", "登陆错误", {
+    MessageBox.alert("您还没有登录,请您先登录", "温馨提示", {
       confirmButtonText: "确定",
       type:'error',
       callback: () => {
@@ -117,6 +117,7 @@ router.beforeEach((to, from, next) => {
     next('/create-order')
     return false
   }
+  //检测是否完善资料
   if(getCookie('douyinId') == 'null' && getCookie('token') !== '' && to.path !== '/personal-data'){
     MessageBox.alert("您还没有完善您的资料,请您先完善您的个人资料", "资料编辑", {
       confirmButtonText: "确定",
@@ -131,6 +132,12 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+//全局路由守卫--------------end----------------------------------------------------
+
+
+
+
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

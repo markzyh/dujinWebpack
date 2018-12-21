@@ -1,16 +1,33 @@
-import {
-  MessageBox,
-  Message,
-  Notification
-} from 'element-ui';
+import {Notification} from 'element-ui';
+import store from '../store'
+import router from '../router'
 import originaxios from '@/api/http'
+
+//全局退出登录
 export function globalLoginOut() {
   deleteCookie("userName");
   deleteCookie("userPhone");
   deleteCookie("token");
   deleteCookie("douyinId");
+  store.dispatch("loginAction", false);
+  store.dispatch("showAction", true);
+  router.push({path:'/create-order'})
 }
 
+
+//检测cookie中的值,用于app.vue,mounted后检测
+export function chekIsLogin() {
+  if (this.checkCookie("userName") != false) {
+    //cookie中存在
+    this.userName = this.getCookie("userName");
+    this.$store.dispatch("loginAction", true);
+    //this.$store.dispatch("showLoginFormAction", true);
+    this.$store.dispatch("showAction", false);
+  } else {
+    this.$store.dispatch("loginAction", false);
+    this.$store.dispatch("showAction", true);
+  }
+}
 //删除cookie
 export function deleteCookie(cname) {
   setCookie(cname, '', -1)
@@ -78,13 +95,12 @@ export function transformDateStamp(param) {
   return time
 }
 
-function checkTen(num) {
+export function checkTen(num) {
   if (num < 10) {
     num = "0" + num
   }
   return num
 }
-
 //自定义token,用来获取图形验证码
 export function createToken() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

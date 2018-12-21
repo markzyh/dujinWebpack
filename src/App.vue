@@ -59,9 +59,7 @@ export default {
   name: "App",
   data() {
     return {
-      //isShowLoginForm: false,
       userName: "", //用户名
-      isLogin: false //是否登录
     };
   },
   methods: {
@@ -73,10 +71,7 @@ export default {
             confirmButtonText: "确定",
             cancelButtonText: "取消"
           }).then(() => {
-          this.globalLoginOut();
-          this.isLogin = false;
-          this.$store.dispatch("loginAction", false);
-          this.$store.dispatch("showAction", true);
+          this.globalLoginOut()
         }).catch(action => {
       });
     },
@@ -84,19 +79,14 @@ export default {
     getUsername() {
       if (this.checkCookie("userName") == true) {
         this.userName = this.getCookie("userName");
-        this.isLogin = true;
       } else {
-        this.isLogin = false;
-        /* alert("登录信息已过期,请您重新登录"); */
-        //window.location.href = '/'
+        this.globalLoginOut()
       }
     },
-    //打开登录窗口,控制子组件显示隐藏
+    //打开登录窗口
     openUserLogin() {
-      //this.isShowLoginForm = true;
       this.$store.dispatch("showAction", true);
     },
-
     hideLoginForm() {
       //this.isShowLoginForm = false;
     }
@@ -111,8 +101,6 @@ export default {
     }
   },
   mounted() {
-    //this.getUsername();
-    //this.$store.dispatch('decre',this.num)
     this.chekIsLogin(); //检测cookie是否存在,改变store,通过监听store的变化,来改变页面显示
   }
 };

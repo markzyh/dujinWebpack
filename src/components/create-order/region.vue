@@ -379,7 +379,6 @@
       //本地地图
       openshMap() {
         let map = this.openMap();
-
         function myFun(result) {
           let cityName = result.name;
           map.setCenter(cityName);

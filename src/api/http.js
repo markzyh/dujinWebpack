@@ -1,19 +1,12 @@
 import originaxios from 'axios'
 import {globalLoginOut} from '@/api/fn'
-import {
-  MessageBox,
-  Message,
-  Notification 
-} from 'element-ui';
-import { resolve } from 'path';
+import {Notification } from 'element-ui';
 
 originaxios.defaults.baseURL = 'http://dou.fudayiliao.com'
 originaxios.defaults.headers = {
   'Content-Type': 'application/x-www-form-urlencoded'
 }
 
-//let CancelToken = axios.CancelToken;
-//let source = CancelToken.source();
 
 // 添加请求 拦截器
 originaxios.interceptors.request.use(config => {
@@ -30,7 +23,7 @@ originaxios.interceptors.request.use(config => {
   Notification({
     message:'请求超时',
     title:'请求错误',
-    type:'erroe'
+    type:'error'
   })
   return Promise.reject(error);
 });
@@ -53,21 +46,19 @@ originaxios.interceptors.response.use(res => {
       title: '注册出错',
       type: 'error'
     });
-    return res
+    return false
   }
   if (res.data.Code == 11) {
-    globalLoginOut();
     let msg = '登录状态已过期,请重新登录'
     Notification({
       message: msg,
       title: '登录出错',
       type: 'error',
       onClose:() =>{
+        globalLoginOut();
         //window.location.reload()
       }
     });
-    
-    
     return false
     //
   }

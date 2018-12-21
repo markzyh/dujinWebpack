@@ -24,7 +24,7 @@
           <p class="forget_password_btn" @click="showForgetPassword">忘记密码</p>
         </form>
         <!-- 登录注册模块end -->
-        <register  v-if="!wantToLogin" @hideloginform='hideLoginForm' @emitGetUsername='emitGetUsername'></register>
+        <register  v-if="!wantToLogin" @emitGetUsername='emitGetUsername'></register>
       </div>
       <forget-password v-if="isforgetPassword"/>
     </div>
@@ -74,7 +74,6 @@ export default {
     },
     //用户登录
     userLogin() {
-
       if (this.checkUserLogin() == true) {
         this.loading = true
         let Phone = this.userLoginPhone;
@@ -88,7 +87,7 @@ export default {
             if (res) {
               this.loading = false
               this.$store.dispatch("loginAction", true); //vuex存储登录的状态
-              console.log(res.data.Data)
+              //console.log(res.data.Data)
               let userName = res.data.Data.Name;
               let userPhone = res.data.Data.Phone;
               let token = res.data.Token;
@@ -108,7 +107,7 @@ export default {
           });
       }
     },
-    //检测用户登录
+    //检测用户登录事件
     checkUserLogin() {
       if (this.userLoginPhone == "" || this.userLoginPassword == "") {
         this.$Notification({
